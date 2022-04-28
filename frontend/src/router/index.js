@@ -11,7 +11,7 @@ const routes = [
   },
   {
     path: '/',
-    name: 'test',
+    name: 'LD',
     component: () => import('../views/Landing.vue') // set home as path '/'
   },
   {
