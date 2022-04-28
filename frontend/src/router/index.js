@@ -11,8 +11,13 @@ const routes = [
   },
   {
     path: '/',
-    name: 'Landing',
+    name: 'test',
     component: () => import('../views/Landing.vue') // set home as path '/'
+  },
+  {
+    path: '/create-room',
+    name: 'Home',
+    component: () => import('../views/CreateRoom.vue') // set home as path '/'
   },
 ]
 
