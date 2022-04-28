@@ -2,9 +2,6 @@
   <div id="app" style="background-color: #131022">
     <NavBar :msg="$route.fullPath"/>
     <router-view :key="$route.fullPath" />
-    <div>
-      {{$route.fullPath}}
-    </div>
   </div>
 </template>
 
