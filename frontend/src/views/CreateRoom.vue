@@ -1,6 +1,6 @@
 <template >
 <div style="background-color: #131022; height: 100vh;">
-  <div class="container pt-5" style="background-color: #131022;">
+  <div class="container pt-2" style="background-color: #131022;">
     <h1 class="text-start fw-bold mb-4">Create New Room</h1>
     <form class="row">
       <div class="row" style="z-index: 1">
@@ -19,7 +19,7 @@
                     <span class="fw-light" style="float: left;">{{show_select_type}}</span>
                   </button>
                   <ul class="dropdown-menu" aria-labelledby="roomtype">
-                    <li v-for="type in dropdown_room_type" :key="type.type_name"><button class="dropdown-item" type="button" @click="type_name, show_select_type = type.type_name">{{type.type_name}}</button></li>
+                    <li style="width: 290px" v-for="type in dropdown_room_type" :key="type.type_name"><button class="dropdown-item" type="button" @click="type_name = type.type_name, show_select_type = type.type_name">{{type.type_name}}</button></li>
                   </ul>
                 </div>
             </div>
@@ -32,7 +32,7 @@
                     <span class="fw-light" style="float: left;">{{show_select_status}}</span>
                   </button>
                   <ul class="dropdown-menu" aria-labelledby="roomstatus">
-                    <li v-for="status in dropdown_room_status" :key="status.room_status"><button class="dropdown-item" type="button" @click="room_status, show_select_status = status.room_status">{{status.room_status}}</button></li>
+                    <li style="width: 290px" v-for="status in dropdown_room_status" :key="status.room_status"><button class="dropdown-item" type="button" @click="room_status = status.room_status, show_select_status = status.room_status">{{status.room_status}}</button></li>
                   </ul>
                 </div>
             </div>
@@ -44,7 +44,7 @@
           <div class="row mb-4">
             <div class="col text-start">
               <label for="roomdescription" class="form-label text-white">Room Description</label>
-              <textarea class="form-control form-control-lg input-bg" rows="7" aria-label="Room Description" placeholder="Write a Room Description" v-model="room_description"></textarea>
+              <textarea class="form-control form-control-lg input-bg" rows="5" aria-label="Room Description" placeholder="Write a Room Description" v-model="room_description"></textarea>
             </div>
           </div>
           <div class="row mb-4">
@@ -101,9 +101,11 @@
       </div>
     </form>
     
+    <!-- blur bg -->
     <div class="circle1"></div>
     <div class="circle2"></div>
 
+    <!-- incomplete toast -->
     <div class="position-fixed bottom-0 start-0 p-3" style="z-index: 11;">
       <div id="incompleteToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-header text-white bg-danger fw-light">
@@ -117,6 +119,20 @@
       </div>
     </div>
     
+    <!-- success toast -->
+    <div class="position-fixed bottom-0 start-0 p-3" style="z-index: 11;">
+      <div id="successToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header text-white bg-success fw-light">
+          <span class="me-2"><i class="bi bi-check-circle"></i></span>
+          <strong class="me-auto">Success</strong>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body text-sucess text-start">
+          '{{name_room_toast}}' has been created!
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 </template>
@@ -165,7 +181,8 @@ export default {
         {instrument_id: 7, quantity: '1', instrument_name: 'SQUIER  JAGUAR (Bass)'},
         {instrument_id: 8, quantity: '2', instrument_name: 'FENDER  STRATOCASTER JAPAN (Guitar)'},
       ],
-      field_name: ''
+      field_name: '',
+      name_room_toast: ''
     }
   },
   created() {
@@ -191,7 +208,9 @@ export default {
                     autohide: true,
                     delay: 4000}
       var toast = document.getElementById('incompleteToast')
+      var toast2 = document.getElementById('successToast')
       var incomplete_toast = new Toast(toast, option)
+      var succcess_toast = new Toast(toast2, option)
 
       if(this.room_name === ''){
         incomplete_toast.show()
@@ -210,6 +229,9 @@ export default {
         this.field_name = 'Room Description'
       }else{
         this.rooms.push(newRoom)
+
+        this.name_room_toast = this.room_name
+        succcess_toast.show()
 
         this.room_id = 0
         this.room_name = ''
