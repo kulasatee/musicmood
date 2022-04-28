@@ -19,6 +19,11 @@ const routes = [
     name: 'Home',
     component: () => import('../views/CreateRoom.vue') // set home as path '/'
   },
+  {
+    path: '/room-detail',
+    name: 'RoomDetail',
+    component: () => import('../views/RoomDetail.vue') // set home as path '/'
+  },
 ]
 
 const router = new VueRouter({
