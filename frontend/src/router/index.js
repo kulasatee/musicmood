@@ -29,6 +29,11 @@ const routes = [
     name: 'RoomDetail',
     component: () => import('../views/RoomDetail.vue') // set home as path '/'
   },
+  {
+    path: '/reservation-list',
+    name: 'ReservationList',
+    component: () => import('../views/ReservationList.vue') // set home as path '/'
+  },
 ]
 
 const router = new VueRouter({

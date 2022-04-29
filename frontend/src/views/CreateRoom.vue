@@ -19,7 +19,7 @@
                     <span class="fw-light" style="float: left;">{{show_select_type}}</span>
                   </button>
                   <ul class="dropdown-menu" aria-labelledby="roomtype">
-                    <li style="width: 290px" v-for="type in dropdown_room_type" :key="type.type_name"><button class="dropdown-item" type="button" @click="type_name = type.type_name, show_select_type = type.type_name">{{type.type_name}}</button></li>
+                    <li style="width: 18rem" v-for="type in dropdown_room_type" :key="type.type_name"><button class="dropdown-item" type="button" @click="type_name = type.type_name, show_select_type = type.type_name">{{type.type_name}}</button></li>
                   </ul>
                 </div>
             </div>
@@ -107,7 +107,7 @@
 
     <!-- incomplete toast -->
     <div class="position-fixed bottom-0 start-0 p-3" style="z-index: 11;">
-      <div id="incompleteToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+      <div id="incompleteToast" class="toast hide bg-white" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-header text-white bg-danger fw-light">
           <span class="me-2"><i class="bi bi-exclamation-circle"></i></span>
           <strong class="me-auto">Incomplete</strong>
@@ -121,13 +121,13 @@
     
     <!-- success toast -->
     <div class="position-fixed bottom-0 start-0 p-3" style="z-index: 11;">
-      <div id="successToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header text-white bg-success fw-light">
+      <div id="successToast" class="toast hide bg-white" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header text-white fw-light" style="background-color: #22C55E">
           <span class="me-2"><i class="bi bi-check-circle"></i></span>
           <strong class="me-auto">Success</strong>
           <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
-        <div class="toast-body text-sucess text-start">
+        <div class="toast-body text-start" style="color: #22C55E">
           '{{name_room_toast}}' has been created!
         </div>
       </div>
@@ -143,6 +143,7 @@ export default {
   name: 'CreateRoom',
   data() {
     return {
+      //for dropdown
       show_select_type: '',
       show_select_status: '',
       dropdown_room_type: [
@@ -154,7 +155,9 @@ export default {
         {room_status: 'พร้อมใช้งาน'},
         {room_status: 'ไม่พร้อมใช้งาน'}
       ],
+      //>>for dropdown
 
+      //v-model for input
       room_id: 0,
       room_name: '',
       type_name: '',
@@ -165,13 +168,21 @@ export default {
       room_photo: '',
       quantity: '',
       instrument_name: '',
-      
+      //>>v-model for input
+
+      //array for add new room
       rooms: [],
+      //>>array for add new room
       
+      //array for instrument
       instrument_id: 0,
       instruments: [],
+      //>>array for instrument
+
+      //msg for toast
       field_name: '',
       name_room_toast: ''
+      //>>msg for toast
     }
   },
   created() {
