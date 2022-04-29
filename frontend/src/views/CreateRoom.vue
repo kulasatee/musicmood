@@ -293,28 +293,6 @@ textarea:focus {
   color: #807B8A;
   background-color: #2A2838;
 }
-.circle1 {
-  position: absolute;
-  width: 150px;
-  height: 150px;
-  left: 950px;
-  top: 64px;
-
-  background: #D647EF;
-  mix-blend-mode: normal;
-  filter: blur(135px);
-}
-.circle2 {
-  position: absolute;
-  width: 150px;
-  height: 150px;
-  left: 1175px;
-  top: 220px;
-
-  background: #6366F1;
-  mix-blend-mode: normal;
-  filter: blur(135px);
-}
 .dropdown-item {
   color: white
 }

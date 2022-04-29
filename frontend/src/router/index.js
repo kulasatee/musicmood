@@ -16,7 +16,7 @@ const routes = [
   },
   {
     path: '/create-room',
-    name: 'Home',
+    name: 'CreateRoom',
     component: () => import('../views/CreateRoom.vue') // set home as path '/'
   },
   {
@@ -38,6 +38,21 @@ const routes = [
     path: '/edit-account',
     name: 'EditAccountPage',
     component: () => import('../views/EditAccount.vue') // set home as path '/'
+  },
+  {  
+    path: '/edit-room',
+    name: 'EditRoom',
+    component: () => import('../views/EditRoom.vue') // set home as path '/'
+  },
+  {
+    path: '/room-detail',
+    name: 'RoomDetail',
+    component: () => import('../views/RoomDetail.vue') // set home as path '/'
+  },
+  {
+    path: '/staff-room-detail',
+    name: 'StaffRoomDetail',
+    component: () => import('../views/StaffRoomDetail.vue') // set home as path '/'
   },
 ]
 
