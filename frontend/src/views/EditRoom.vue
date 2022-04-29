@@ -1,7 +1,7 @@
 <template >
 <div style="background-color: #131022; height: 100vh;">
   <div class="container pt-2" style="background-color: #131022;">
-    <h1 class="text-start fw-bold mb-4">Create New Room</h1>
+    <h1 class="text-start fw-bold mb-4">Edit Room</h1>
     <form class="row">
       <div class="row" style="z-index: 1">
         <!-- spilt 2 column -->
@@ -96,7 +96,7 @@
         <!-- submit form button -->
           <div class="col pt-2 text-end me-5">
             <button type="button" class="btn btn-lg btn-sec">CANCEL</button>
-            <button type="button" class="btn btn-lg btn-pri ms-4" @click="addRoom()">CREATE ROOM</button>
+            <button type="button" class="btn btn-lg btn-pri ms-4" @click="editRoom()">SAVE</button>
           </div>
       </div>
     </form>
@@ -128,7 +128,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
         <div class="toast-body text-sucess text-start">
-          '{{name_room_toast}}' has been created!
+          '{{name_room_toast}}' has been edited!
         </div>
       </div>
     </div>
@@ -140,7 +140,7 @@
 <script>
 import {Toast} from 'bootstrap'
 export default {
-  name: 'CreateRoom',
+  name: 'EditRoom',
   data() {
     return {
       show_select_type: '',
@@ -166,8 +166,20 @@ export default {
       quantity: '',
       instrument_name: '',
       
-      rooms: [],
-      
+      edit_room: {room_id: 1,
+            room_name: 'ห้องซ้อม P01',
+            type_name: 'ห้องซ้อมดนตรี',
+            room_status: 'พร้อมใช้งาน',
+            room_price: 300,
+            room_description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.',
+            room_instrument: [{instrument_id: 1, quantity: '1', instrument_name: 'SQUIER  JAGUAR (Bass)'},
+                                {instrument_id: 2, quantity: '2', instrument_name: 'FENDER  STRATOCASTER JAPAN (Guitar)'},
+                                {instrument_id: 3, quantity: '1', instrument_name: 'SQUIER  JAGUAR (Bass)'},
+                                {instrument_id: 4, quantity: '2', instrument_name: 'FENDER  STRATOCASTER JAPAN (Guitar)'},
+                                {instrument_id: 5, quantity: '1', instrument_name: 'SQUIER  JAGUAR (Bass)'}]}
+      ,
+      rooms: {},
+
       instrument_id: 0,
       instruments: [],
       field_name: '',
@@ -175,13 +187,21 @@ export default {
     }
   },
   created() {
-    this.room_id = this.rooms.length
+    this.room_id = this.edit_room.room_id
+    this.room_name = this.edit_room.room_name
+    this.type_name = this.edit_room.type_name
+    this.room_status = this.edit_room.room_status
+    this.show_select_type = this.edit_room.type_name
+    this.show_select_status = this.edit_room.room_status
+    this.room_price = this.edit_room.room_price
+    this.room_description = this.edit_room.room_description
+    this.instruments = this.edit_room.room_instrument
+
     this.instrument_id = this.instruments.length
   },
   methods: {
-    addRoom() {
-      this.room_id++
-      const newRoom = {
+    editRoom() {
+      const editRoom = {
         room_id: this.room_id,
         room_name: this.room_name,
         type_name: this.type_name,
@@ -214,24 +234,23 @@ export default {
         incomplete_toast.show()
         this.field_name = 'Room Description'
       }else{
-        this.rooms.push(newRoom)
+        this.rooms = editRoom
 
         this.name_room_toast = this.room_name
         succcess_toast.show()
 
-        this.room_id = 0
-        this.room_name = ''
-        this.type_name = ''
-        this.room_status = ''
-        this.room_price = ''
-        this.room_description = ''
-        this.banner = ''
-        this.room_photo = ''
+        this.room_id = this.rooms.room_id
+        this.room_name = this.rooms.room_name
+        this.type_name = this.rooms.type_name
+        this.room_status = this.rooms.room_status
+        this.show_select_type = this.rooms.type_name
+        this.show_select_status = this.rooms.room_status
+        this.room_price = this.rooms.room_price
+        this.room_description = this.rooms.room_description
+        this.instruments = this.rooms.room_instrument
+
         this.quantity = ''
         this.instrument_name = ''
-        this.instruments = []
-        this.show_select_type = ''
-        this.show_select_status = ''
       }
     },
     addInstrument() {

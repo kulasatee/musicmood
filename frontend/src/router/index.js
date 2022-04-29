@@ -16,8 +16,13 @@ const routes = [
   },
   {
     path: '/create-room',
-    name: 'Home',
+    name: 'CreateRoom',
     component: () => import('../views/CreateRoom.vue') // set home as path '/'
+  },
+  {
+    path: '/edit-room',
+    name: 'EditRoom',
+    component: () => import('../views/EditRoom.vue') // set home as path '/'
   },
   {
     path: '/room-detail',
