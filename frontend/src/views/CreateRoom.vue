@@ -1,6 +1,6 @@
 <template >
 <div style="background-color: #131022; height: 100vh;">
-  <div class="container pt-5" style="background-color: #131022;">
+  <div class="container pt-2" style="background-color: #131022;">
     <h1 class="text-start fw-bold mb-4">Create New Room</h1>
     <form class="row">
       <div class="row" style="z-index: 1">
@@ -19,7 +19,7 @@
                     <span class="fw-light" style="float: left;">{{show_select_type}}</span>
                   </button>
                   <ul class="dropdown-menu" aria-labelledby="roomtype">
-                    <li v-for="type in dropdown_room_type" :key="type.type_name"><button class="dropdown-item" type="button" @click="type_name, show_select_type = type.type_name">{{type.type_name}}</button></li>
+                    <li style="width: 18rem" v-for="type in dropdown_room_type" :key="type.type_name"><button class="dropdown-item" type="button" @click="type_name, show_select_type = type.type_name">{{type.type_name}}</button></li>
                   </ul>
                 </div>
             </div>
@@ -260,6 +260,7 @@ export default {
   
 }
 </script>
+
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
