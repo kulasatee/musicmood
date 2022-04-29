@@ -12,7 +12,7 @@ const routes = [
   {
     path: '/',
     name: 'LandingPage',
-    component: () => import('../views/Landing.vue') // set home as path '/'
+    component: () => import('../views/LandingPage.vue') // set home as path '/'
   },
   {
     path: '/create-room',
@@ -20,6 +20,26 @@ const routes = [
     component: () => import('../views/CreateRoom.vue') // set home as path '/'
   },
   {
+    path: '/login',
+    name: 'LoginPage',
+    component: () => import('../views/LoginPage.vue') // set home as path '/'
+  },
+  {
+    path: '/signup',
+    name: 'SignupPage',
+    component: () => import('../views/SignupPage.vue') // set home as path '/'
+  },
+  {
+    path: '/account-detail',
+    name: 'AccountDetailPage',
+    component: () => import('../views/AccountDetail.vue') // set home as path '/'
+  },
+  {
+    path: '/edit-account',
+    name: 'EditAccountPage',
+    component: () => import('../views/EditAccount.vue') // set home as path '/'
+  },
+  {  
     path: '/edit-room',
     name: 'EditRoomPage',
     component: () => import('../views/EditRoom.vue') // set home as path '/'
@@ -28,6 +48,11 @@ const routes = [
     path: '/room-detail',
     name: 'RoomDetailPage',
     component: () => import('../views/RoomDetail.vue') // set home as path '/'
+  },
+  {
+    path: '/reservation-list',
+    name: 'ReservationList',
+    component: () => import('../views/ReservationList.vue') // set home as path '/'
   },
   {
     path: '/staff-room-detail',
