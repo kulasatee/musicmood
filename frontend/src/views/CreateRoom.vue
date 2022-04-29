@@ -32,7 +32,7 @@
                     <span class="fw-light" style="float: left;">{{show_select_status}}</span>
                   </button>
                   <ul class="dropdown-menu" aria-labelledby="roomstatus">
-                    <li v-for="status in dropdown_room_status" :key="status.room_status"><button class="dropdown-item" type="button" @click="room_status, show_select_status = status.room_status">{{status.room_status}}</button></li>
+                    <li style="width: 290px" v-for="status in dropdown_room_status" :key="status.room_status"><button class="dropdown-item" type="button" @click="room_status = status.room_status, show_select_status = status.room_status">{{status.room_status}}</button></li>
                   </ul>
                 </div>
             </div>
@@ -44,7 +44,7 @@
           <div class="row mb-4">
             <div class="col text-start">
               <label for="roomdescription" class="form-label text-white">Room Description</label>
-              <textarea class="form-control form-control-lg input-bg" rows="7" aria-label="Room Description" placeholder="Write a Room Description" v-model="room_description"></textarea>
+              <textarea class="form-control form-control-lg input-bg" rows="5" aria-label="Room Description" placeholder="Write a Room Description" v-model="room_description"></textarea>
             </div>
           </div>
           <div class="row mb-4">
@@ -101,9 +101,11 @@
       </div>
     </form>
     
+    <!-- blur bg -->
     <div class="circle1"></div>
     <div class="circle2"></div>
 
+    <!-- incomplete toast -->
     <div class="position-fixed bottom-0 start-0 p-3" style="z-index: 11;">
       <div id="incompleteToast" class="toast hide bg-white" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-header text-white bg-danger fw-light">
@@ -199,14 +201,13 @@ export default {
         room_description: this.room_description,
         banner: '',
         room_photo: '',
-        quantity: this.quantity,
         room_instrument: this.instruments
       }
-      var option = {animation: true,
-                    autohide: true,
-                    delay: 4000}
+      var option = {animation: true, autohide: true, delay: 4000}
       var toast = document.getElementById('incompleteToast')
+      var toast2 = document.getElementById('successToast')
       var incomplete_toast = new Toast(toast, option)
+      var succcess_toast = new Toast(toast2, option)
 
       if(this.room_name === ''){
         incomplete_toast.show()
@@ -226,6 +227,9 @@ export default {
       }else{
         this.rooms.push(newRoom)
 
+        this.name_room_toast = this.room_name
+        succcess_toast.show()
+
         this.room_id = 0
         this.room_name = ''
         this.type_name = ''
@@ -236,6 +240,9 @@ export default {
         this.room_photo = ''
         this.quantity = ''
         this.instrument_name = ''
+        this.instruments = []
+        this.show_select_type = ''
+        this.show_select_status = ''
       }
     },
     addInstrument() {
@@ -254,11 +261,6 @@ export default {
     removeInstrument(instrument_id) {
       let index = this.instruments.findIndex((val) => val.instrument_id === instrument_id)
       this.instruments.splice(index, 1)
-    },
-    toast(){
-      var myToastEl = document.getElementById('incompleteToast')
-      var myToast = new Toast(myToastEl)
-      myToast.show()
     }
   },
   computed: {
@@ -275,7 +277,6 @@ export default {
   
 }
 </script>
-
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
@@ -307,6 +308,28 @@ textarea:focus {
 .btn-dis {
   color: #807B8A;
   background-color: #2A2838;
+}
+.circle1 {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  left: 950px;
+  top: 64px;
+
+  background: #D647EF;
+  mix-blend-mode: normal;
+  filter: blur(135px);
+}
+.circle2 {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  left: 1175px;
+  top: 220px;
+
+  background: #6366F1;
+  mix-blend-mode: normal;
+  filter: blur(135px);
 }
 .dropdown-item {
   color: white
