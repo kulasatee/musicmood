@@ -2,7 +2,7 @@
     <div class="container">
         <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #131022;">
             <div class="container-fluid">
-                <a class="navbar-brand mx-5 my-3" href="#" style="color: white; font-size: 2.25rem">
+                <a class="navbar-brand mx-0 my-3" href="#" style="color: white; font-size: 2.25rem">
                     <img src="../assets/MusicMoodLOGO.png" alt="" width="52" height="52">
                     <span class="px-3">MusicMood</span>
                 </a>
