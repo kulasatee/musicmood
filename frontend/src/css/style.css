@@ -1,0 +1,22 @@
+.linear-color {
+    background: -webkit-linear-gradient(180deg, #d647ef, #6865f2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+.input-bg {
+    background-color: #1F1C2D; 
+    border-color: #5C5B64;
+    border-width: 0.5px;
+    color: white;
+  }
+input:focus {
+    background-color: #1F1C2D;
+    color: white;
+  }
+textarea:focus {
+    background-color: #1F1C2D;
+    color: white;
+  }
+  ::-ms-reveal {
+    filter: invert(100%);
+  }

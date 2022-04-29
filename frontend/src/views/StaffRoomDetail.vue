@@ -6,6 +6,7 @@
       </div>
     </div>
     <div class="container">
+      <!-- first row -->
       <div class="row">
         <div class="col py-5 ps-0 text-start">
           <span
@@ -20,11 +21,29 @@
             {{ room.room_name }}</span
           >
           <span class="h2 ps-3 pe-3" style="color: #afacb6">
-            {{ room.type_name }}</span
+            {{ room.room_type }}</span
           >
           <span class="btn mb-3 pb-1 readystatus" :class="room.room_status == 'พร้อมใช้งาน' ? 'readystatus':'unreadystatus'">{{room.room_status}}</span>
+          
+          <span
+            type="button"
+            class="btn btn btn-outline-danger ms-3 mb-3 pb-1 float-end"
+            @click="showDeleteRoomModal(room.room_id)"
+          >
+            Delete
+          </span>
+          <a href="/create-room"
+            ><span
+              type="button"
+              class="btn btn-outline-warning mb-3 pb-1 float-end"
+            >
+              Edit
+            </span></a
+          >
         </div>
       </div>
+
+      <!-- room detail -->
       <div class="row">
         <div class="col-7 ps-0 text-start">
           <h1 style="color: #ffffff">Room Description</h1>
@@ -47,68 +66,14 @@
           </div>
           <div class="row mt-5">
             <div class="col text-center">
-              <h1 style="color: #ffffff">{{ room.room_price }} บาท / ชั่วโมง</h1>
+              <h1 style="color: #ffffff">
+                {{ room.room_price }} บาท / ชั่วโมง
+              </h1>
             </div>
           </div>
         </div>
         <div class="col"></div>
 
-        <!-- reservation input -->
-        <div
-          class="p-5 card pb-5 col-4 text-start"
-          style="
-            background-color: #2a2838;
-            border-width: 1px;
-            border-color: #5c5b64;
-          "
-        >
-          <div>
-            <label style="color: #ffffff" for="reserve_date" class="form-label"
-              >Select Date</label
-            >
-            <input
-              type="date"
-              class="form-control fw-light"
-              id="reserve_date"
-              placeholder="Example input placeholder"
-              v-model="reserve_date"
-              style="
-                background-color: #2a2838;
-                color: #ffffff;
-                border-color: #5c5b64;
-              "
-            />
-          </div>
-          <div class="row">
-            <div class="col-6 mt-2" v-for="time in time_value" :key="time">
-              <input
-                :disabled="(reserved_hour.includes(time)) || (todayDate > reserve_date)"
-                type="checkbox"
-                class="btn-check"
-                :id="'btn-check' + time"
-                :value="time"
-                v-model="reserve_hour"
-              />
-              <label
-                class="btn btn-custom w-100"
-                v-bind:class="[
-                  (reserved_hour.includes(time)) || (todayDate > reserve_date) ? disablebtn : activebtn,
-                ]"
-                :for="'btn-check' + time"
-                >{{ time }}.00 - {{ time + 1 }}.00</label
-              >
-            </div>
-          </div>
-          <div class="col-12 mt-4 text-center">
-            <span style="color: #ffffff">ราคาทั้งหมด</span>
-          </div>
-          <div class="col-12 mt-3 text-center">
-            <h1 style="color: #ffffff">{{ totalPrice }} บาท</h1>
-          </div>
-          <div class="col-12 mt-3 text-center">
-            <button @click="showReserveModal" id="reserveButton" style="background-color:#6366f1" :disabled="(todayDate > reserve_date) || (reserved_hour.length == 10) || (reserve_hour.length == 0) || (room.room_status) ? true : false" class="btn text-white">RESERVE</button>
-          </div>
-        </div>
       </div>
 
       <!-- Gallery -->
@@ -149,10 +114,11 @@
             comment.commentDate
           }}</span>
           <span
-            @click="showDeleteCommentModal(comment.commentBy, comment.commentId)"
-            v-show="user.userId == comment.commentById"
+            @click="
+              showDeleteCommentModal(comment.commentBy, comment.commentId)
+            "
             class="float-end bi bi-trash3 fs-6"
-            style="color: #c4c4c4; cursor: pointer;"
+            style="color: #c4c4c4; cursor: pointer"
           ></span>
         </div>
         <div class="col-12 mt-2 fw-light" style="color: #c4c4c4">
@@ -160,74 +126,124 @@
         </div>
       </div>
 
-      <!-- delete modal -->
-      <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Delete Comment</h5>
-        <button type="button" class="btn-close" @click="deleteCommentModal.hide()" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body text-start">
-              Are you sure you want to delete <span class="fw-bold">{{commentByToDelete}}</span>'s comment ?
+      <!-- delete comment modal -->
+      <div
+        class="modal fade"
+        id="deleteCommentModal"
+        tabindex="-1"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Delete Comment</h5>
+              <button
+                type="button"
+                class="btn-close"
+                @click="deleteCommentModal.hide()"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
             </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline-danger" @click="deleteCommentModal.hide()" data-bs-dismiss="modal">CANCEL</button>
-        <button type="button" class="btn btn-danger" @click="deleteComment()">DELETE</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-      <!-- reserve modal -->
-      <div class="modal fade" id="reserveModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel"> <span><i class="bi bi-info-circle"></i></span> Information</h5>
-        <button type="button" class="btn-close" @click="reserveModal.hide()" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body text-start">
-              This room can be used when this reservation status is <span class="fw-bold">Approved</span>. You can check your reservation status at <span class="fw-bold">Reservation Status tab</span> 
+            <div class="modal-body text-start">
+              Are you sure you want to delete
+              <span class="fw-bold">{{ commentByToDelete }}</span
+              >'s comment ?
             </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline-purple" @click="reserveModal.hide()" data-bs-dismiss="modal">CANCEL</button>
-        <button type="button" class="btn btn-purple" @click="reserveRoom()">RESERVE</button>
-      </div>
-    </div>
-  </div>
-</div>
-      
-      <!-- reserve toast -->
-      <div class="position-fixed bottom-0 start-0 p-3" style="z-index: 11;">
-      <div id="reserveToast" class="toast hide bg-white" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header text-white fw-light" style="background-color: #22C55E">
-          <span class="me-2"><i class="bi bi-check-circle"></i></span>
-          <strong class="me-auto">Success</strong>
-          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-outline-danger"
+                @click="deleteCommentModal.hide()"
+                data-bs-dismiss="modal"
+              >
+                CANCEL
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger"
+                @click="deleteComment()"
+              >
+                DELETE
+              </button>
+            </div>
+          </div>
         </div>
-        <div class="toast-body text-start" style="color: #22C55E">
-          Your Reservation has been sent!
-        </div>
       </div>
-    </div>
 
-    <!-- delete comment toast -->
-      <div class="position-fixed bottom-0 start-0 p-3" style="z-index: 11;">
-      <div id="deleteCommentToast" class="toast hide bg-white" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header text-white fw-light" style="background-color: #22C55E">
-          <span class="me-2"><i class="bi bi-check-circle"></i></span>
-          <strong class="me-auto">Success</strong>
-          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body text-start fw-light" style="color: #22C55E">
-        <span class="fw-normal">{{commentByToDelete}}</span>'s comment has been deleted!
-            
+      <!-- delete room modal -->
+      <div
+        class="modal fade"
+        id="deleteRoomModal"
+        tabindex="-1"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" >Delete Room</h5>
+              <button
+                type="button"
+                class="btn-close"
+                @click="deleteRoomModal.hide()"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body text-start">
+              Are you sure you want to delete
+              <span class="fw-bold">{{ room.room_name }}</span
+              > ?
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-outline-danger"
+                @click="deleteRoomModal.hide()"
+                data-bs-dismiss="modal"
+              >
+                CANCEL
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger"
+                @click="deleteRoom()"
+              >
+                DELETE
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    
+      <!-- delete comment toast -->
+      <div class="position-fixed bottom-0 start-0 p-3" style="z-index: 11">
+        <div
+          id="deleteCommentToast"
+          class="toast hide bg-white"
+          role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+        >
+          <div
+            class="toast-header text-white fw-light"
+            style="background-color: #22c55e"
+          >
+            <span class="me-2"><i class="bi bi-check-circle"></i></span>
+            <strong class="me-auto">Success</strong>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="toast"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="toast-body text-start fw-light" style="color: #22c55e">
+            <span class="fw-normal">{{ commentByToDelete }}</span
+            >'s comment has been deleted!
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -235,7 +251,7 @@
 <script>
 import { Modal, Toast } from "bootstrap";
 export default {
-  name: "RoomDetail",
+  name: "StaffRoomDetail",
   data() {
     return {
       user: {
@@ -258,13 +274,8 @@ export default {
         {source: "roomImage2.jpg", main: 0},
         {source: "roomImage3.jpg", main: 0},
         {source: "roomImage4.jpg", main: 0}
-      ]},
-      time_value: [11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
-      reserve_hour: [],
-      reserved_hour: [16, 17, 18, 19, 20],
-      activebtn: "selecttimebtn",
-      disablebtn: "reserve_hourbtn",
-      reserve_date: null,
+      ]
+      },
       instruments: [
         { id: 1, quantity: 1, instrument_name: "1 VOX TELSTAR MAPLE (Drum)" },
         {
@@ -333,25 +344,30 @@ export default {
           commentId: 3,
           commentBy: "Kulasatee Dul",
           commentById: 3,
-          commentDetail:
-            "พนักงานบริการดี เป็นกันเองค่ะ แต่แอร์ดังไปหน่อยค่ะ",
+          commentDetail: "พนักงานบริการดี เป็นกันเองค่ะ แต่แอร์ดังไปหน่อยค่ะ",
           commentDate: "28-04-2022",
-        }
+        },
       ],
       commentIdtoDelete: null,
       commentByToDelete: null,
       deleteCommentModal: null,
-      todayDate: null,
-      reserveModal: null,
-      reserveToast: null,
       deleteCommentToast: null,
+      deleteRoomModal: null,
+      deleteRoomToast: null,
+      roomIdtoDelete: null,
+      todayDate: null,
       imageNonMain: [],
       imageMain: []
     };
   },
   methods: {
     showDeleteCommentModal(commentBy, commentId) {
-      this.deleteCommentModal = new Modal(document.getElementById("deleteModal"));
+      if(this.deleteCommentToast != null){
+        this.deleteCommentToast.hide();
+      }
+      this.deleteCommentModal = new Modal(
+        document.getElementById("deleteCommentModal")
+      );
       this.deleteCommentModal.show();
       this.commentIdtoDelete = commentId;
       this.commentByToDelete = commentBy;
@@ -364,44 +380,33 @@ export default {
       this.deleteCommentModal.hide();
       this.showDeleteCommentToast();
     },
-    showReserveModal(){
-      this.reserveModal = new Modal(document.getElementById("reserveModal"));
-      this.reserveModal.show();
-    },
-    reserveRoom(){
-      console.log("Room ... has been reserved.")
-      this.reserveModal.hide();
-      this.showReserveToast();
-    },
-    showReserveToast(){
-      this.reserveToast = new Toast(document.getElementById("reserveToast"));
-      this.reserveToast.show();
-    },
-    showDeleteCommentToast(){
-      this.deleteCommentToast = new Toast(document.getElementById("deleteCommentToast"));
+    showDeleteCommentToast() {
+      this.deleteCommentToast = new Toast(
+        document.getElementById("deleteCommentToast")
+      );
       this.deleteCommentToast.show();
+    },
+    showDeleteRoomModal(room_id) {
+      this.deleteRoomModal = new Modal(
+        document.getElementById("deleteRoomModal")
+      );
+      this.deleteRoomModal.show();
+      this.roomIdtoDelete = room_id;
+    },
+    deleteRoom() {
+      // let index = this.commentList.findIndex(
+      //   (val) => val.commentId === this.commentIdtoDelete
+      // );
+      // this.commentList.splice(index, 1);
+      this.deleteRoomModal.hide();
+      window.location.href="/create-room";
     }
   },
   created() {
-    this.todayDate = new Date();
-    var yyyy = this.todayDate.getFullYear();
-    let mm = this.todayDate.getMonth() + 1; // Months start at 0!
-    let dd = this.todayDate.getDate();
-
-    if (dd < 10) dd = "0" + dd;
-    if (mm < 10) mm = "0" + mm;
-
-    this.todayDate = yyyy + "-" + mm + "-" + dd;
-
-    this.reserve_date = this.todayDate;
-
     this.imageNonMain = this.room.room_image.filter((val) => val.main == 0);
     this.imageMain = this.room.room_image.filter((val) => val.main == 1);
   },
   computed: {
-    totalPrice() {
-      return this.reserve_hour.length * this.room.room_price;
-    },
     countComment() {
       return this.commentList.length;
     }
@@ -413,37 +418,14 @@ export default {
 ::-webkit-calendar-picker-indicator {
   filter: invert(1);
 }
-.btn-outline-purple{
+.btn-outline-purple {
   border-color: #6366f1;
   color: #6366f1;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
-.btn-purple{
+.btn-purple {
   background-color: #6366f1;
   color: #ffffff;
-}
-
-.circle1 {
-  position: absolute;
-  width: 150px;
-  height: 150px;
-  left: 950px;
-  top: 64px;
-
-  background: #d647ef;
-  mix-blend-mode: normal;
-  filter: blur(135px);
-}
-.circle2 {
-  position: absolute;
-  width: 150px;
-  height: 150px;
-  left: 1175px;
-  top: 220px;
-
-  background: #6366f1;
-  mix-blend-mode: normal;
-  filter: blur(135px);
 }
 input[type="checkbox"]:checked + label {
   background-color: #6366f1;
@@ -454,7 +436,7 @@ input[type="checkbox"]:checked + label {
   color: #6366f1;
   background-color: #2a2838;
 }
-.reserve_hourbtn {
+.selectedTimebtn {
   color: #807b8a;
   background-color: #2a2838;
 }
@@ -466,7 +448,7 @@ input[type="checkbox"]:checked + label {
   color: #6366f1;
 }
 .readystatus {
-  cursor: context-menu;
+  cursor: default;
   color: #22c55e;
   background-color: #2a2838;
 }
@@ -476,9 +458,10 @@ input[type="checkbox"]:checked + label {
   background-color: #2A2838;
 }
 
+
 .hero-image {
   /* Use "linear-gradient" to add a darken background effect to the image (photographer.jpg). This will make the text easier to read */
-  background-image: url("../assets/banner.jpg");
+  /* background-image: url("../assets/banner.jpg"); */
 
   /* Set a specific height */
 
