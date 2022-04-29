@@ -106,7 +106,7 @@
             <h1 style="color: #ffffff">{{ totalPrice }} บาท</h1>
           </div>
           <div class="col-12 mt-3 text-center">
-            <button @click="showReserveModal" id="reserveButton" style="background-color:#6366f1" :disabled="(todayDate > reserve_date) || (reserved_hour.length == 10) || (reserve_hour.length == 0) || (room.room_status) ? true : false" class="btn text-white">RESERVE</button>
+            <button @click="showReserveModal" id="reserveButton" style="background-color:#6366f1" :disabled="(todayDate > reserve_date) || (reserved_hour.length == 10) || (reserve_hour.length == 0) || (room.room_status == 'ไม่พร้อมใช้งาน') ? true : false" class="btn text-white">RESERVE</button>
           </div>
         </div>
       </div>
@@ -248,7 +248,7 @@ export default {
         room_id: 1,
         room_name: "ห้องซ้อม P01",
         type_name: "ห้องอัดเสียง",
-        room_status: "ไม่พร้อมใช้งาน",
+        room_status: "พร้อมใช้งาน",
         room_price: 300,
         room_description:
           "Beside the Studio area we also have a private lounge for both Studio A and B, a courtyard with outdoor seating, and a big garden with bar and BBQ stove,…",

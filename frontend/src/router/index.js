@@ -6,33 +6,38 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/room-list',
-    name: 'RoomList',
+    name: 'RoomListPage',
     component: () => import('../views/RoomList.vue') // set home as path '/'
   },
   {
     path: '/',
-    name: 'Landing',
+    name: 'LandingPage',
     component: () => import('../views/Landing.vue') // set home as path '/'
   },
   {
     path: '/create-room',
-    name: 'CreateRoom',
+    name: 'CreateRoomPage',
     component: () => import('../views/CreateRoom.vue') // set home as path '/'
   },
   {
     path: '/edit-room',
-    name: 'EditRoom',
+    name: 'EditRoomPage',
     component: () => import('../views/EditRoom.vue') // set home as path '/'
   },
   {
     path: '/room-detail',
-    name: 'RoomDetail',
+    name: 'RoomDetailPage',
     component: () => import('../views/RoomDetail.vue') // set home as path '/'
   },
   {
     path: '/staff-room-detail',
-    name: 'StaffRoomDetail',
+    name: 'StaffRoomDetailPage',
     component: () => import('../views/StaffRoomDetail.vue') // set home as path '/'
+  },
+  {
+    path: '/reservation-modal',
+    name: 'ReservationModal',
+    component: () => import('../views/ReservationModal.vue') // set home as path '/'
   },
 ]
 

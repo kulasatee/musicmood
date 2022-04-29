@@ -40,6 +40,13 @@
               Edit
             </span></a
           >
+           <span
+            type="button"
+            class="btn btn btn-outline-primary me-3 ms-3 mb-3 pb-1 float-end"
+            @click="showReservationModal(room.room_id)"
+          >
+            Show
+          </span>
         </div>
       </div>
 
@@ -53,8 +60,8 @@
           <h1 class="mt-5" style="color: #ffffff">This room includes:</h1>
           <div class="row fw-light mt-3">
             <div
-              v-for="instru in instruments"
-              :key="instru.id"
+              v-for="(instru, index) in instruments"
+              :key="index"
               class="col-6"
               style="color: #afacb6"
             >
@@ -80,8 +87,9 @@
       <div class="row text-center mt-5">
         <h1 style="color: #ffffff">Gallery</h1>
       </div>
+      <!-- Gallery Image-->
       <div class="row mt-3">
-        <div v-for="image in imageNonMain" :key="image" class="col-3">
+        <div v-for="(image, index) in imageNonMain" :key="index" class="col-3">
           <img
             :src="require(`../assets/${image.source}`)"
             class="img-fluid rounded shadow-lg"
@@ -99,8 +107,8 @@
       </div>
       <!-- each comments -->
       <div
-        v-for="comment in commentList"
-        :key="comment.commentId"
+        v-for="(comment, index) in commentList"
+        :key="index"
         class="row text-start p-4"
         style="
           border-bottom-style: solid;
@@ -244,6 +252,77 @@
           </div>
         </div>
       </div>
+
+      <!-- reservation modal -->
+      <div
+        class="modal fade"
+        id="reservationModal"
+        tabindex="-1"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <span class="modal-title fs-3">{{reservation.room_name}}</span><span class="ms-3 fw-light">Created Date: {{reservation.inform_date}}</span> 
+              <button v-if="reservation.reserve_status == 'pending'" type="button" disabled class="btn btn-warning btn-sm ms-3">Pending</button>
+              <button v-if="reservation.reserve_status == 'approved'" type="button" disabled class="btn btn-success btn-sm ms-3">Approved</button>
+              <button v-if="reservation.reserve_status == 'rejected'" type="button" disabled class="btn btn-danger btn-sm ms-3">Rejected</button>
+              <button
+                type="button"
+                class="btn-close"
+                @click="reservationModal.hide()"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body text-start">
+              <div class="mt-2"><span>Room Type:</span><span class="fw-light ms-3">{{reservation.type_name}}</span></div>
+              <div class="mt-2"><span>Reserve Date:</span><span class="fw-light ms-3">{{reservation.reserve_date}}</span></div>
+              <div class="mt-2"><span>Reserve Time:</span></div>
+              <div class="row mt-2">
+                <div v-for="(hour, index) in reservation.reserve_hours" :key="index" class="col-3 p-1"><input
+                disabled
+                type="checkbox"
+                class="btn-check"
+                :id="'btn-check' + hour">
+              <label
+                class="selecttimebtn w-100 text-center rounded p-1"
+                :for="'btn-check' + hour"
+                style=""
+                >{{ hour }}.00 - {{ hour + 1 }}.00</label
+              ></div>
+              </div>
+              <div class="mt-2"><span>Total Price:</span><span class="fw-light ms-3">{{reservation.room_price}}</span></div>
+              <div class="mt-2"><span>Customer Name:</span><span class="fw-light ms-3">{{user.name + ' ' + user.lastName}}</span></div>
+              <div class="mt-2"><span>Phone:</span><span class="fw-light ms-3">{{user.phone}}</span></div>
+              <div class="mt-2" v-if="reservation.reserve_status == 'pending'">
+                <label for="exampleFormControlTextarea1" class="form-label">Remark:</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="write some remark" rows="3" v-model="reservation_remark"></textarea>
+              </div>
+              <div class="mt-2" v-if="reservation.reserve_status == 'rejected' || reservation.reserve_status == 'approved'">
+              <div class="mt-2"><span>Remark:</span><span class="fw-light ms-3">{{reservation.reserve_remark}}</span></div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-outline-danger"
+                @click="reservationModal.hide()"
+                data-bs-dismiss="modal"
+              >
+                REJECT
+              </button>
+              <button
+                type="button"
+                class="btn btn-purple"
+              >
+                APPROVE
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </template>
@@ -256,8 +335,8 @@ export default {
     return {
       user: {
         userId: 2,
-        Name: "Chaiyawat",
-        LastName: "Roongrueng",
+        name: "Chaiyawat",
+        lastName: "Roongrueng",
         phone: "080-123-4567",
       },
       room: {
@@ -348,6 +427,7 @@ export default {
           commentDate: "28-04-2022",
         },
       ],
+      reservation:{reserve_id: 3, inform_date: '20/04/2022', room_name: 'ห้องซ้อม P03', type_name: 'ห้องอัดเสียง', room_price: 600, reserve_date: '27/04/2022', reserve_hours: [18, 19, 20], reserve_status: 'rejected', reserve_remark: 'ร้านปิดให้บริการเนื่องจากวันสงกรานต์'},
       commentIdtoDelete: null,
       commentByToDelete: null,
       deleteCommentModal: null,
@@ -357,10 +437,19 @@ export default {
       roomIdtoDelete: null,
       todayDate: null,
       imageNonMain: [],
-      imageMain: []
+      imageMain: [],
+
+      reservationModal:null,
+      reservation_remark: null
     };
   },
   methods: {
+    showReservationModal() {
+      this. reservationModal = new Modal(
+        document.getElementById("reservationModal")
+      );
+      this.reservationModal.show();
+    },
     showDeleteCommentModal(commentBy, commentId) {
       if(this.deleteCommentToast != null){
         this.deleteCommentToast.hide();
@@ -371,6 +460,7 @@ export default {
       this.deleteCommentModal.show();
       this.commentIdtoDelete = commentId;
       this.commentByToDelete = commentBy;
+
     },
     deleteComment() {
       let index = this.commentList.findIndex(
@@ -431,17 +521,8 @@ input[type="checkbox"]:checked + label {
   background-color: #6366f1;
   color: #ffffff;
 }
-.selecttimebtn {
-  border-color: #6366f1;
-  color: #6366f1;
-  background-color: #2a2838;
-}
-.selectedTimebtn {
-  color: #807b8a;
-  background-color: #2a2838;
-}
-.selecttimebtn:hover {
-  background-color: #4044ee;
+.selecttimebtn{
+  background-color: #6865F2;
   color: #ffffff;
 }
 .textpurple {
