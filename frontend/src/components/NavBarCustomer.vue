@@ -28,9 +28,9 @@
                         <button class="btn btn-custom dropdown-toggle" type="button" style="border-color:#6865F2; color:#6865F2" v-if="msg=='/room-list' || msg=='/reservation-list' || msg=='/reservation-status'" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person-circle me-2"></i>Salinya</button>
                         <ul class="dropdown-menu" style="background-color:#1C192B" aria-labelledby="navbarDropdown">
                             <li class="py-1"><a class="dropdown-item text-white btn" href="/account-detail">My Account</a></li>
-                            <li class="py-1"><a class="dropdown-item text-white btn" href="#">Edit Account</a></li>
+                            <li class="py-1"><a class="dropdown-item text-white btn" href="/edit-account-detail">Edit Account</a></li>
                             <li class="py-1"><hr class="dropdown-divider text-white"></li>
-                            <li class="py-1"><a class="dropdown-item btn" style="color:#EF4444" href="#">Log Out <span class="float-end"><i class="bi bi-box-arrow-right"></i></span>
+                            <li class="py-1"><a class="dropdown-item btn" style="color:#EF4444" href="/">Log Out <span class="float-end"><i class="bi bi-box-arrow-right"></i></span>
 </a></li>
                         </ul>
                     </div>

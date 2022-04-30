@@ -3,7 +3,7 @@
       <div class="row justify-content-center">
           <div class="col-10">
             <div class="row justify-content-center">
-                <div class="col-6 px-5">
+                <div class="col-6 px-5" style="z-index: 1">
                     <div class="d-flex flex-column text-start">
                         <div class="h1 text-white" style="font-size: 3rem">
                             Create Account
@@ -14,31 +14,31 @@
                         <div class="d-flex flex-row mt-4">
                                 <div class="text-white me-2" style="font-size: 1rem;">
                                     <label for="firstname" class="form-label text-white">First name</label>
-                                    <input type="text" class="form-control form-control-lg input-bg " id="firstname" v-model="first_name">
+                                    <input type="text" class="form-control form-control-lg input-bg " id="firstname" v-model="form_input.first_name">
                                 </div>
                                 <div class="text-white ms-2" style="font-size: 1rem;">
                                     <label for="lastname" class="form-label text-white">Last name</label>
-                                    <input type="text" class="form-control form-control-lg input-bg " id="lastname" v-model="last_name">
+                                    <input type="text" class="form-control form-control-lg input-bg " id="lastname" v-model="form_input.last_name">
                                 </div>
                         </div>
                         <div class="text-white mt-4" style="font-size: 1rem">
                             <label for="phonenumber" class="form-label text-white">Phone number</label>
-                            <input type="text" class="form-control form-control-lg input-bg " id="phonenumber" v-model="phone_number">
+                            <input type="text" class="form-control form-control-lg input-bg " id="phonenumber" v-model="form_input.phone_number">
                         </div>
                         <div class="text-white mt-4" style="font-size: 1rem">
                             <label for="username" class="form-label text-white">Username</label>
-                            <input type="text" class="form-control form-control-lg input-bg " id="username" v-model="username">
+                            <input type="text" class="form-control form-control-lg input-bg " id="username" v-model="form_input.username">
                         </div>
                         <div class="text-white mt-4" style="font-size: 1rem">
                             <label for="password" class="form-label text-white">Password</label>
-                            <input type="password" class="form-control form-control-lg input-bg " id="password" v-model="password">
+                            <input type="password" class="form-control form-control-lg input-bg " id="password" v-model="form_input.password">
                         </div>
                         <div class="text-white mt-4" style="font-size: 1rem">
                             <label for="confirm_password" class="form-label text-white">Confirm Password</label>
-                            <input type="password" class="form-control form-control-lg input-bg" id="confirm_password" v-model="confirm_password">
+                            <input type="password" class="form-control form-control-lg input-bg" id="confirm_password" v-model="form_input.confirm_password">
                         </div>
-                        <div class="btn text-white btn-custom mt-5 py-2" style="font-size: 1rem; background-color: #6366F1">
-                            SIGN UP
+                        <div class="mt-4 text-center" type="button" style="font-size: 1rem;">
+                            <a href="/login" class="text-white py-2 rounded" style="text-decoration: none; background-color: #6366F1; display: block">SIGN UP</a>
                         </div>
                     </div>
                 </div>
@@ -54,6 +54,8 @@
 import {} from 'bootstrap'
 export default {
   name: "LoginPage",
+  components: {
+  },
   data () {
     return {
         form_input: {

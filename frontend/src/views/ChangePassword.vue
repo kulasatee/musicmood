@@ -6,31 +6,25 @@
                 <div class="col-6 px-5" style="z-index: 1">
                     <div class="d-flex flex-column text-start">
                         <div class="h1 text-white" style="font-size: 3rem">
-                            {{account.username}} Account
-                        </div>
-                        <div class="d-flex flex-row mt-4">
-                                <div class="text-white me-2" style="font-size: 1rem;">
-                                    <label for="firstname" class="form-label text-white">First name</label>
-                                    <input type="text" class="form-control form-control-lg input-bg " disabled id="firstname" v-model="account.first_name">
-                                </div>
-                                <div class="text-white ms-2" style="font-size: 1rem;">
-                                    <label for="lastname" class="form-label text-white">Last name</label>
-                                    <input type="text" class="form-control form-control-lg input-bg " disabled id="lastname" v-model="account.last_name">
-                                </div>
+                            Change Password
                         </div>
                         <div class="text-white mt-4" style="font-size: 1rem">
-                            <label for="phonenumber" class="form-label text-white">Phone number</label>
-                            <input type="text" class="form-control form-control-lg input-bg " disabled id="phonenumber" v-model="account.phone_number">
+                            <label for="current_password" class="form-label text-white">Current Password</label>
+                            <input type="password" class="form-control form-control-lg input-bg " id="current_password" v-model="current_password">
                         </div>
                         <div class="text-white mt-4" style="font-size: 1rem">
-                            <label for="username" class="form-label text-white">Username</label>
-                            <input type="text" class="form-control form-control-lg input-bg " disabled id="username" v-model="account.username">
+                            <label for="new_password" class="form-label text-white">New Password</label>
+                            <input type="password" class="form-control form-control-lg input-bg " id="new_password" v-model="new_password">
+                        </div>
+                        <div class="text-white mt-4" style="font-size: 1rem">
+                            <label for="confirm_new_password" class="form-label text-white">Confirm New Password</label>
+                            <input type="password" class="form-control form-control-lg input-bg " id="confirm_new_password" v-model="confirm_new_password">
                         </div>
                         <div class="mt-5 text-center" type="button" style="font-size: 1rem;">
-                            <a href="/edit-account-detail" class="text-white py-2 rounded" style="text-decoration: none; background-color: #6366F1; display: block">EDIT PROFILE</a>
+                            <a href="/edit-account-detail" class="text-white py-2 rounded" style="text-decoration: none; background-color: #6366F1; display: block" @click="saveChangePassword()">SAVE</a>
                         </div>
                         <div class="mt-4 text-center rounded" style="font-size: 1rem; border: solid 1px; border-color: #6366F1">
-                            <a href="/room-list" class="py-2 rounded" style="text-decoration: none; color: #6366F1; display: block">BACK</a>
+                            <a href="/edit-account-detail" class="py-2 rounded" style="text-decoration: none; color: #6366F1; display: block">CANCEL</a>
                         </div>
                     </div>
                 </div>
@@ -53,10 +47,20 @@ export default {
             last_name: 'Timklip',
             phone_number: '0908940562',
             username: 'Salinya',
-            checked: false
-        }
+            checked: false,
+            password: '123456'
+        },
+        current_password: null,
+        new_password: null,
+        confirm_new_password: null
         
     };
+  },
+  saveChangePassword(){
+    if((this.password == this.current_password) && (this.new_password == this.confirm_new_password)){
+      this.password = this.confirm_new_password
+      // window.location.replace("/edit-account-detail");
+    }
   }
 };
 </script>

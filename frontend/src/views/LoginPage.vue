@@ -1,30 +1,31 @@
 <template>
   <div class="container pt-5">
-      <div class="row justify-content-center">
-          <div class="col-10">
-            <div class="row justify-content-center">
-                <div class="col-6 px-5">
-                    <div class="d-flex flex-column text-start">
+      <div class="row justify-content-center" >
+          <div class="col-10" >
+            <div class="row justify-content-center" >
+                <div class="col-6 px-5" style="z-index: 1">
+                    <div class="d-flex flex-column text-start" >
                         <div class="h1 text-white" style="font-size: 3rem">
                             Welcome Back
                         </div>
                         <div class="text-white fw-light" style="font-size: 1rem">
-                            Don't have an account yet ? <a class="ps-1" href="/signup" style="color: #6865F2; text-decoration: underline">Registerd here</a>
+                            Don't have an account yet? <a href="/signup" class="ps-1" style="color: #6865F2; text-decoration: underline;">Register here</a>
                         </div>
+                        
                         <div class="text-white mt-5" style="font-size: 1rem">
                             <label for="username" class="form-label text-white">Username</label>
-                            <input type="text" class="form-control form-control-lg input-bg " id="username" v-model="username">
+                            <input type="text" class="form-control form-control-lg input-bg " id="username" v-model="form_input.username">
                         </div>
                         <div class="text-white mt-4" style="font-size: 1rem">
                             <label for="password" class="form-label text-white">Password</label>
-                            <input type="password" class="form-control form-control-lg input-bg " id="password" v-model="password">
+                            <input type="password" class="form-control form-control-lg input-bg " id="password" v-model="form_input.password">
                         </div>
                         <div class="text-white mt-4 fw-light" style="font-size: 1rem">
-                            <input type="checkbox" id="checkbox" v-model="checked">
+                            <input type="checkbox" id="checkbox" v-model="form_input.rememberUser">
                             <label for="checkbox" class="px-2" style="color: #AFACB6">Remember me ? </label>
                         </div>
-                        <div class="btn text-white btn-custom mt-4 py-2" style="font-size: 1rem; background-color: #6366F1">
-                            LOG IN
+                        <div class="mt-5 text-center" type="button" style="font-size: 1rem;">
+                            <a href="/room-list" class="text-white py-2 rounded" style="text-decoration: none; background-color: #6366F1; display: block">LOG IN</a>
                         </div>
                     </div>
                 </div>
@@ -32,7 +33,7 @@
           </div>
       </div>
       <div class="circle1"></div>
-    <div class="circle2"></div> 
+      <div class="circle2"></div> 
   </div>
 </template>
 
@@ -45,7 +46,7 @@ export default {
         form_input: {
             username: '',
             password: '',
-            checked: false
+            rememberUser: false
         }
         
     };

@@ -35,9 +35,14 @@ const routes = [
     component: () => import('../views/AccountDetail.vue') // set home as path '/'
   },
   {
-    path: '/edit-account',
-    name: 'EditAccountPage',
-    component: () => import('../views/EditAccount.vue') // set home as path '/'
+    path: '/edit-account-detail',
+    name: 'EditAccountDetailPage',
+    component: () => import('../views/EditAccountDetail.vue') // set home as path '/'
+  },
+  {
+    path: '/change-password',
+    name: 'ChangePasswordPage',
+    component: () => import('../views/ChangePassword.vue') // set home as path '/'
   },
   {  
     path: '/edit-room',
