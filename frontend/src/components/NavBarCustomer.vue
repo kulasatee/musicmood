@@ -15,10 +15,10 @@
                         <a class="nav-link active px-5" aria-current="page" href="#" style="color: white; font-size: 1.25rem" :style="msg=='/room-list' ? {'color': '#6865F2'}:''">Room List</a>
                     </li>
                     <li class="nav-item px-5">
-                        <a class="nav-link" href="#" v-if="msg=='/room-list' || msg=='reservation-list'" style="color: white; font-size: 1.25rem">Reservation status</a>
+                        <a class="nav-link" href="/reservation-status" v-if="msg=='/room-list' || msg=='reservation-list'" style="color: white; font-size: 1.25rem">Reservation status</a>
                     </li>
                     <li class="nav-item px-5">
-                        <a class="nav-link" href="#" v-if="msg=='/staff' || msg=='/staff'" style="color: white; font-size: 1.25rem">Reservation list</a>
+                        <a class="nav-link" href="/reservation-list" v-if="msg=='/staff' || msg=='/staff'" style="color: white; font-size: 1.25rem">Reservation list</a>
                     </li>
                 </ul>
                 <form class="d-flex">
