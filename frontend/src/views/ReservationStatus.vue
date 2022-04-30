@@ -1,7 +1,7 @@
 <template >
 <div style="background-color: #131022; height: 100vh;">
   <div class="container pt-5" style="background-color: #131022;">
-    <h1 class="text-start mb-4 linear-color fw-bold">Reservation List</h1>
+    <h1 class="text-start mb-4 linear-color fw-bold">Reservation Status</h1>
 
     <!-- Status nav -->
     <div class="row">
@@ -35,14 +35,14 @@
     </div>
 
     <div class="row mt-3">
-        <ul class="list-group list-group-horizontal res-list-group py-3 text-start fw-light align-items-center" v-for="reservation in filteredReservation" :key="reservation.reservation_id" @click="showReservationModal(reservation)">
+        <ul class="list-group list-group-horizontal res-list-group py-3 text-start fw-light align-items-center" :id="reservation.reserve_id" v-for="reservation in filteredReservation" :key="reservation.reservation_id" @click="showReservationModal(reservation)">
             <li class="list-group-item ps-5" style="width: 11rem">{{reservation.inform_date}}</li>
             <li class="list-group-item">{{reservation.room_name}}</li>
             <li class="list-group-item">{{reservation.type_name}}</li>
             <li class="list-group-item" style="width: 7rem">{{reservation.room_price}} บาท</li>
             <li class="list-group-item" style="width: 8rem">{{reservation.reserve_date}}</li>
             <li class="list-group-item" style="width: 29rem">{{reservation.hours}}</li>
-            <li class="list-group-item" v-if="reservation.reserve_status === 'pending'"><button type="button" class="btn btn-outline-warning" style="cursor: pointer">Pending</button></li>
+            <li class="list-group-item" v-if="reservation.reserve_status === 'pending'"><span class="fw-normal text-warning">Pending</span></li>
             <li class="list-group-item" v-else-if="reservation.reserve_status === 'approved'"><span class="fw-normal" style="color: #22C55E">Approved</span></li>
             <li class="list-group-item" v-else-if="reservation.reserve_status === 'rejected'"><span class="fw-normal text-danger">Rejected</span></li>
         </ul>
@@ -73,18 +73,11 @@
             <div class="mt-2"><span>Total Price:</span><span class="fw-light ms-3">{{selected_reservation.room_price}} บาท</span></div>
             <div class="mt-2"><span>Customer Name:</span><span class="fw-light ms-3">{{selected_reservation.firstname + ' ' + selected_reservation.lastname}}</span></div>
             <div class="mt-2"><span>Phone:</span><span class="fw-light ms-3">{{selected_reservation.phone}}</span></div>
-            <div class="mt-2" v-if="selected_reservation.reserve_status == 'pending'">
-              <label for="exampleFormControlTextarea1" class="form-label">Remark:</label>
-              <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="write some remark" rows="3" v-model="reservation_remark" style="resize: none"></textarea>
-            </div>
-            <div class="mt-2" v-else-if="selected_reservation.reserve_status == 'rejected' || selected_reservation.reserve_status == 'approved'">
+            <div class="mt-2" v-if="selected_reservation.reserve_status == 'rejected' || selected_reservation.reserve_status == 'approved'">
               <label for="exampleFormControlTextarea2" class="form-label">Remark:</label>
               <textarea class="form-control" id="exampleFormControlTextarea2" rows="3" disabled v-model="selected_reservation.reserve_remark" style="resize: none"></textarea>
             </div>
-          </div>
-          <div class="modal-footer" v-if="selected_reservation.reserve_status == 'pending'">
-            <button type="button" class="btn btn-outline-danger" @click="rejectReservation()" data-bs-dismiss="modal">REJECT</button>
-            <button type="button" class="btn btn-green" @click="approveReservation()">APPROVE</button>
+            <div v-if="selected_reservation.reserve_status == 'approved'" class="mt-2" style="color: #6366F1"><span><i class="bi bi-info-circle"></i></span><span class="fw-light ms-2">หลังใช้บริการห้องแล้ว สามารถรีวิวห้องได้<a href="/room-detail" style="color: #6366F1"><span class="ms-1 text-decoration-underline fw-normal" style="cursor: pointer">ที่นี่</span></a></span></div>
           </div>
         </div>
       </div>
@@ -93,27 +86,13 @@
     <!-- blur bg -->
     <div class="circle1"></div>
     <div class="circle2"></div>
-    
-    <!-- success toast -->
-    <div class="position-fixed bottom-0 start-0 p-3" style="z-index: 11;">
-      <div id="successToast" class="toast hide bg-white" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header text-white fw-light" style="background-color: #22C55E">
-          <span class="me-2"><i class="bi bi-check-circle"></i></span>
-          <strong class="me-auto">Success</strong>
-          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body text-start" style="color: #22C55E">
-          Reservation has been {{status_for_toast}} successfully!
-        </div>
-      </div>
-    </div>
 
   </div>
 </div>
 </template>
 
 <script>
-import { Modal, Toast } from 'bootstrap';
+import { Modal } from 'bootstrap';
 export default {
   name: 'ReservationList',
   data() {
@@ -134,14 +113,7 @@ export default {
         reservation_modal:null,
         selected_reservation: {},
         reservation_remark: '',
-        //>>for modal
-
-        //for toast
-        succcess_toast: null,
-        status_for_toast: '',
-        //>>for toast
-
-        
+        //>>for modal        
     }
   },
   created() {
@@ -164,30 +136,6 @@ export default {
 
       this.selected_reservation = reservation
       this.reservation_modal.show();
-    },
-    approveReservation() {
-      let index = this.reservation_customer.findIndex((val) => val.reservation_id === this.selected_reservation.reservation_id);
-      (this.reservation_customer[index])['reserve_status'] = 'approved';
-      (this.reservation_customer[index])['reserve_remark'] = this.reservation_remark;
-      
-      this.reservation_modal.hide();
-
-      var option = {animation: true, autohide: true, delay: 4000}
-      this.succcess_toast = new Toast(document.getElementById('successToast'), option)
-
-      this.status_for_toast = 'approved'
-      this.succcess_toast.show()
-    },
-    rejectReservation() {
-      let index = this.reservation_customer.findIndex((val) => val.reservation_id === this.selected_reservation.reservation_id);
-      (this.reservation_customer[index])['reserve_status'] = 'rejected'
-      this.reservation_modal.hide();
-
-      var option = {animation: true, autohide: true, delay: 4000}
-      this.succcess_toast = new Toast(document.getElementById('successToast'), option)
-
-      this.status_for_toast = 'rejected'
-      this.succcess_toast.show()
     }
   },
   computed: {
@@ -255,8 +203,8 @@ h1 {
   background-color: #6865F2;
   color: #ffffff;
 }
-.btn-green {
-  background-color: #22C55E;
+.btn-purple {
+  background-color: #6366f1;
   color: #ffffff;
 }
 .res-list-group {
