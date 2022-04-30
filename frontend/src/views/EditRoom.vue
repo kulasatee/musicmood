@@ -66,16 +66,15 @@
           <div class="row mb-2">
             <div class="col col-2 text-start">
               <label for="quantity" class="form-label text-white">Quantity</label>
-              <input type="number" min="1" class="form-control form-control-lg input-bg" id="quantity" v-model="quantity">
+              <input type="number" min="1" class="form-control form-control-lg input-bg" :class="isInputDisabled? 'input-dis':''" :disabled="isInputDisabled" id="quantity" v-model="quantity">
             </div>
             <div class="col text-start">
               <label for="instrument" class="form-label text-white">Room Instrument (Maximum of 10)</label>
-              <input type="text" class="form-control form-control-lg input-bg" id="instrument" v-model="instrument_name">
+              <input type="text" class="form-control form-control-lg input-bg" :class="isInputDisabled? 'input-dis':''" :disabled="isInputDisabled" id="instrument" v-model="instrument_name">
               <p class="mt-2" style="color: #AFACB6">e.g. Fender Stratocaster (Guitar)</p>
             </div>
             <div class="col col-3 text-start pt-2">
-              <button v-show="isBtnActive" type="button" class="btn btn-lg mt-4 btn-dis" :disabled="isBtnActive" @click="addInstrument()">Add</button>
-              <button v-show="!isBtnActive" type="button" class="btn btn-lg mt-4 btn-sec" :disabled="isBtnActive" @click="addInstrument()">Add</button>
+              <button type="button" class="btn btn-lg mt-4" :class="isBtnDisabled? 'btn-dis':'btn-sec'" :disabled="isBtnDisabled" @click="addInstrument()">Add</button>
             </div>
           </div>
           <div class="row ">
@@ -286,10 +285,17 @@ export default {
     }
   },
   computed: {
-    isBtnActive() {
+    isBtnDisabled() {
       if(this.quantity === '' || this.instrument_name === ''){
         return true
       }else if(this.instruments.length === 10){
+        return true
+      }else{
+        return false
+      }
+    },
+    isInputDisabled() {
+      if(this.instruments.length === 10){
         return true
       }else{
         return false
@@ -314,6 +320,9 @@ h1 {
 input:focus {
   background-color: #1F1C2D;
   color: white;
+}
+.input-dis {
+  border: none;
 }
 textarea:focus {
   background-color: #1F1C2D;

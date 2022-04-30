@@ -35,7 +35,7 @@
     </div>
 
     <div class="row mt-3">
-        <ul class="list-group list-group-horizontal res-list-group py-3 text-start fw-light align-items-center" v-for="reservation in reservations" :key="reservation.reservation_id">
+        <ul class="list-group list-group-horizontal res-list-group py-3 text-start fw-light align-items-center" v-for="reservation in filteredReservation" :key="reservation.reservation_id">
             <li class="list-group-item ps-5" style="width: 11rem">{{reservation.inform_date}}</li>
             <li class="list-group-item">{{reservation.room_name}}</li>
             <li class="list-group-item">{{reservation.type_name}}</li>
@@ -87,7 +87,7 @@
 </template>
 
 <script>
-// import {Toast} from 'bootstrap'
+import {} from 'bootstrap'
 export default {
   name: 'ReservationList',
   data() {
@@ -100,7 +100,7 @@ export default {
         ],
         //>>array for reservation
 
-        selected_status: ''
+        selected_status: '',
     }
   },
   created() {
@@ -119,7 +119,21 @@ export default {
 
   },
   computed: {
-
+      filteredReservation() {
+          let filter_reservation = []
+          if(this.selected_status == 'pending'){
+              filter_reservation = this.reservations.filter((val) => val.reserve_status == 'pending')
+              return filter_reservation
+          }else if(this.selected_status == 'approved'){
+              filter_reservation = this.reservations.filter((val) => val.reserve_status == 'approved')
+              return filter_reservation
+          }else if(this.selected_status == 'rejected'){
+              filter_reservation = this.reservations.filter((val) => val.reserve_status == 'rejected')
+              return filter_reservation
+          }else{
+              return this.reservations
+          }
+      }
   }
   
 }
