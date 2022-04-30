@@ -2,7 +2,7 @@
   <div style="background-color: #131022" class="pb-5">
     <div>
       <div class="container-fluid p-0" style="height: 60vh">
-        <img class="bg-danger w-100" :src="require(`../assets/${imageMain[0].source}`)" alt="" style="height: 60vh; object-fit: cover">
+        <img class="w-100" :src="require(`../assets/${imageMain[0].source}`)" alt="" style="height: 60vh; object-fit: cover">
       </div>
     </div>
     <div class="container">

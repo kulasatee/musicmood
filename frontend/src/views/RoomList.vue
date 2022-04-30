@@ -3,7 +3,7 @@
       <div class="d-flex flex-row justify-content-between">
           <div class="text-start d-flex flex-row align-items-center ">
             <div class="linear-color h1" >Room List</div>
-            <div class="mx-4 flex-row align-content-center align-item-center" ><button class="btn btn-custom" style="border-color:#6865F2; color: white; background-color: #6865F2;">Add a new room</button></div>
+            <div class="mx-4 flex-row align-content-center align-item-center" ><a href="create-room"><button class="btn btn-custom" style="border-color:#6865F2; color: white; background-color: #6865F2;">Add a new room</button></a></div>
           </div>
           <div class="d-flex flex-row align-items-center justify-content-end w-50">
               <div class="col col-6 text-start">
@@ -12,15 +12,15 @@
                     <span class="fw-light" style="float: left;">{{show_select_type}}</span>
                   </button>
                   <ul class="dropdown-menu" aria-labelledby="room_type">
-                    <li style="width: 20rem" v-for="type in dropdown_room_type" :key="type.type_name"><button class="dropdown-item" type="button" @click="type_name, show_select_type = type.type_name">{{type.type_name}}</button></li>
+                    <li style="width: 20rem" v-for="(type, index) in dropdown_room_type" :key="index"><button class="dropdown-item" type="button" @click="type_name, show_select_type = type.type_name">{{type.type_name}}</button></li>
                   </ul>
                 </div>
             </div>
           </div>
       </div>
       <div class="row mt-5">
-          <div class="col-6 pb-5" style="z-index: 2" v-for="room in all_room" :key="room.room_id" v-show="show_select_type == room.room_type || show_select_type == 'All type'">
-            <a href="" class="" style="text-decoration: none;">
+          <div class="col-6 pb-5" style="z-index: 2" v-for="(room, index) in all_room" :key="index" v-show="show_select_type == room.room_type || show_select_type == 'All type'">
+            <a href="/room-detail" class="" style="text-decoration: none;">
               <div class="d-flex flex-row">
                 <div class="d-flex" style="width: 33%; height: 17rem">
                   <img :src="require(`../assets/${room.room_image}`)" class="img-fluid" style="object-fit: cover" alt="">
@@ -41,7 +41,8 @@
                       </div>
                     </div>
                     <div class="text-white px-3">
-                      <span type="button" class="btn btn-outline-warning"> Edit </span>
+                      <a href="/edit-room"><span type="button" class="btn btn-outline-warning"> Edit </span></a>
+                      
                     </div>
                   </div>
                   <div class="d-flex flex-column align-items-start">

@@ -3,34 +3,37 @@
       <div class="row justify-content-center">
           <div class="col-10">
             <div class="row justify-content-center">
-                <div class="col-6 px-5">
+                <div class="col-6 px-5" style="z-index: 1">
                     <div class="d-flex flex-column text-start">
                         <div class="h1 text-white" style="font-size: 3rem">
-                            {{account.username}} Account
+                            Edit Account
                         </div>
                         <div class="d-flex flex-row mt-4">
                                 <div class="text-white me-2" style="font-size: 1rem;">
                                     <label for="firstname" class="form-label text-white">First name</label>
-                                    <input type="text" class="form-control form-control-lg input-bg " disabled id="firstname" v-model="account.first_name">
+                                    <input type="text" class="form-control form-control-lg input-bg " id="firstname" v-model="account.first_name">
                                 </div>
                                 <div class="text-white ms-2" style="font-size: 1rem;">
                                     <label for="lastname" class="form-label text-white">Last name</label>
-                                    <input type="text" class="form-control form-control-lg input-bg " disabled id="lastname" v-model="account.last_name">
+                                    <input type="text" class="form-control form-control-lg input-bg " id="lastname" v-model="account.last_name">
                                 </div>
                         </div>
                         <div class="text-white mt-4" style="font-size: 1rem">
                             <label for="phonenumber" class="form-label text-white">Phone number</label>
-                            <input type="text" class="form-control form-control-lg input-bg " disabled id="phonenumber" v-model="account.phone_number">
+                            <input type="text" class="form-control form-control-lg input-bg " id="phonenumber" v-model="account.phone_number">
                         </div>
                         <div class="text-white mt-4" style="font-size: 1rem">
                             <label for="username" class="form-label text-white">Username</label>
-                            <input type="text" class="form-control form-control-lg input-bg " disabled id="username" v-model="account.username">
+                            <input type="text" class="form-control form-control-lg input-bg " id="username" v-model="account.username">
                         </div>
-                        <div class="btn text-white btn-custom mt-5 py-2" style="font-size: 1rem; background-color: #6366F1">
-                            EDIT PROFILE
+                        <div class="text-white mt-4 fw-light" style="font-size: 1rem">
+                            <a href="/change-password" class="ps-1" style="color: #6865F2; text-decoration: underline">Change my password</a>
                         </div>
-                        <div class="btn btn-custom mt-4 py-2" style="color: #6366F1;font-size: 1rem; border: solid 1px; border-color: #6366F1">
-                            SIGN UP
+                        <div class="mt-5 text-center" type="button" style="font-size: 1rem;">
+                            <a href="/account-detail" class="text-white py-2 rounded" style="text-decoration: none; background-color: #6366F1; display: block" @click="saveEditProfile()">SAVE</a>
+                        </div>
+                        <div class="mt-4 text-center rounded" style="font-size: 1rem; border: solid 1px; border-color: #6366F1">
+                            <a href="/account-detail" class="py-2 rounded" style="text-decoration: none; color: #6366F1; display: block">BACK</a>
                         </div>
                     </div>
                 </div>
@@ -57,6 +60,9 @@ export default {
         }
         
     };
+  },
+  saveEditProfile(){
+    console.log("edit account successfully")
   }
 };
 </script>
