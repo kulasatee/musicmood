@@ -103,41 +103,12 @@
     <!-- blur bg -->
     <div class="circle1"></div>
     <div class="circle2"></div>
-
-    <!-- incomplete toast -->
-    <div class="position-fixed bottom-0 start-0 p-3" style="z-index: 11;">
-      <div id="incompleteToast" class="toast hide bg-white" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header text-white bg-danger fw-light">
-          <span class="me-2"><i class="bi bi-exclamation-circle"></i></span>
-          <strong class="me-auto">Incomplete</strong>
-          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body text-danger text-start">
-          Please fill out '{{field_name}}'
-        </div>
-      </div>
-    </div>
-    
-    <!-- success toast -->
-    <div class="position-fixed bottom-0 start-0 p-3" style="z-index: 11;">
-      <div id="successToast" class="toast hide bg-white" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header text-white fw-light" style="background-color: #22C55E">
-          <span class="me-2"><i class="bi bi-check-circle"></i></span>
-          <strong class="me-auto">Success</strong>
-          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body text-start" style="color: #22C55E">
-          '{{name_room_toast}}' has been created!
-        </div>
-      </div>
-    </div>
-
   </div>
 </div>
 </template>
 
 <script>
-import {Toast} from 'bootstrap'
+import {} from 'bootstrap'
 export default {
   name: 'CreateRoom',
   data() {
@@ -177,11 +148,6 @@ export default {
       instrument_id: 0,
       instruments: [],
       //>>array for instrument
-
-      //msg for toast
-      field_name: '',
-      name_room_toast: ''
-      //>>msg for toast
     }
   },
   created() {
@@ -202,32 +168,21 @@ export default {
         room_photo: '',
         room_instrument: this.instruments
       }
-      var option = {animation: true, autohide: true, delay: 4000}
-      var toast = document.getElementById('incompleteToast')
-      var toast2 = document.getElementById('successToast')
-      var incomplete_toast = new Toast(toast, option)
-      var succcess_toast = new Toast(toast2, option)
 
-      if(this.room_name === ''){
-        incomplete_toast.show()
-        this.field_name = 'Room Name'   
-      }else if(this.type_name === ''){
-        incomplete_toast.show()
-        this.field_name = 'Room Type'
-      }else if(this.room_status === ''){
-        incomplete_toast.show()
-        this.field_name = 'Room Status'
-      }else if(this.room_price === ''){
-        incomplete_toast.show()
-        this.field_name = 'Room Price'
-      }else if(this.room_description === ''){
-        incomplete_toast.show()
-        this.field_name = 'Room Description'
+      if(!this.room_name){
+        this.$toast.error(`Please fill out 'Room Name'`)   
+      }else if(!this.type_name){
+        this.$toast.error(`Please fill out 'Room Type'`)   
+      }else if(!this.room_status){
+        this.$toast.error(`Please fill out 'Room Status'`)   
+      }else if(!this.room_price){
+        this.$toast.error(`Please fill out 'Room Price'`)   
+      }else if(!this.room_description){
+        this.$toast.error(`Please fill out 'Room Description'`)   
       }else{
         this.rooms.push(newRoom)
-
-        this.name_room_toast = this.room_name
-        succcess_toast.show()
+        
+        this.$toast.success(`'${this.room_name}' has been created!`)
 
         this.room_id = 0
         this.room_name = ''

@@ -93,27 +93,12 @@
     <!-- blur bg -->
     <div class="circle1"></div>
     <div class="circle2"></div>
-    
-    <!-- success toast -->
-    <div class="position-fixed bottom-0 start-0 p-3" style="z-index: 11;">
-      <div id="successToast" class="toast hide bg-white" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header text-white fw-light" style="background-color: #22C55E">
-          <span class="me-2"><i class="bi bi-check-circle"></i></span>
-          <strong class="me-auto">Success</strong>
-          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body text-start" style="color: #22C55E">
-          Reservation has been {{status_for_toast}} successfully!
-        </div>
-      </div>
-    </div>
-
   </div>
 </div>
 </template>
 
 <script>
-import { Modal, Toast } from 'bootstrap';
+import { Modal } from 'bootstrap';
 export default {
   name: 'ReservationList',
   data() {
@@ -135,13 +120,6 @@ export default {
         selected_reservation: {},
         reservation_remark: '',
         //>>for modal
-
-        //for toast
-        succcess_toast: null,
-        status_for_toast: '',
-        //>>for toast
-
-        
     }
   },
   created() {
@@ -172,22 +150,14 @@ export default {
       
       this.reservation_modal.hide();
 
-      var option = {animation: true, autohide: true, delay: 4000}
-      this.succcess_toast = new Toast(document.getElementById('successToast'), option)
-
-      this.status_for_toast = 'approved'
-      this.succcess_toast.show()
+      this.$toast.success(`Reservation has been approved successfully!`)
     },
     rejectReservation() {
       let index = this.reservation_customer.findIndex((val) => val.reservation_id === this.selected_reservation.reservation_id);
       (this.reservation_customer[index])['reserve_status'] = 'rejected'
       this.reservation_modal.hide();
 
-      var option = {animation: true, autohide: true, delay: 4000}
-      this.succcess_toast = new Toast(document.getElementById('successToast'), option)
-
-      this.status_for_toast = 'rejected'
-      this.succcess_toast.show()
+      this.$toast.success(`Reservation has been rejected successfully!`)
     },
   },
   computed: {
