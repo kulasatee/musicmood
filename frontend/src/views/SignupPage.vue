@@ -38,7 +38,7 @@
                             <input type="password" class="form-control form-control-lg input-bg" id="confirm_password" v-model="form_input.confirm_password">
                         </div>
                         <div class="mt-4 text-center" type="button" style="font-size: 1rem;">
-                            <a href="/login" class="text-white py-2 rounded" style="text-decoration: none; background-color: #6366F1; display: block">SIGN UP</a>
+                            <div class="text-white py-2 rounded" style="text-decoration: none; background-color: #6366F1; display: block" @click="validate_form()">SIGN UP</div>
                         </div>
                     </div>
                 </div>
@@ -69,6 +69,27 @@ export default {
         }
         
     };
+  },
+  methods: {
+      validate_form(){
+          if(this.form_input.username == ''){
+              alert('please fill in username')
+          }else if(this.form_input.password == ''){
+               alert('please fill in password')
+          }
+          else if(this.form_input.first_name == ''){
+               alert('please fill in password')
+          }
+          else if(this.form_input.last_name == ''){
+               alert('please fill in password')
+          }
+          else if(this.form_input.phone_number == ''){
+               alert('please fill in password')
+          }else if(this.form_input.confirm_password == ''){
+               alert('please fill in password')
+          }
+          this.$router.replace('/room-list')
+      }
   }
 };
 </script>

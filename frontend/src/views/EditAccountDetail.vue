@@ -30,7 +30,7 @@
                             <a href="/change-password" class="ps-1" style="color: #6865F2; text-decoration: underline">Change my password</a>
                         </div>
                         <div class="mt-5 text-center" type="button" style="font-size: 1rem;">
-                            <a href="/account-detail" class="text-white py-2 rounded" style="text-decoration: none; background-color: #6366F1; display: block" @click="saveEditProfile()">SAVE</a>
+                            <div class="text-white py-2 rounded" style="text-decoration: none; background-color: #6366F1; display: block" @click="saveEditProfile()">SAVE</div>
                         </div>
                         <div class="mt-4 text-center rounded" style="font-size: 1rem; border: solid 1px; border-color: #6366F1">
                             <a href="/account-detail" class="py-2 rounded" style="text-decoration: none; color: #6366F1; display: block">BACK</a>
@@ -61,8 +61,23 @@ export default {
         
     };
   },
-  saveEditProfile(){
-    console.log("edit account successfully")
+  methods: {
+      validate_form(){
+          if(this.account.first_name == ''){
+              alert('please fill in username')
+          }else if(this.account.last_name == ''){
+               alert('please fill in password')
+          }else if(this.account.phone_number == ''){
+               alert('please fill in password')
+          }else if(this.account.username == ''){
+               alert('please fill in password')
+          }
+          this.$router.replace('/edit-account-detail')
+      },
+      saveEditProfile(){
+          console.log("edit account successfully")
+          this.validate_form()
+      }
   }
 };
 </script>

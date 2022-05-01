@@ -56,10 +56,12 @@ export default {
         
     };
   },
-  saveChangePassword(){
-    if((this.password == this.current_password) && (this.new_password == this.confirm_new_password)){
-      this.password = this.confirm_new_password
-      // window.location.replace("/edit-account-detail");
+  methods: {
+      saveChangePassword(){
+      if((this.password == this.current_password) && (this.new_password == this.confirm_new_password)){
+        this.password = this.confirm_new_password
+        // window.location.replace("/edit-account-detail");
+      }
     }
   }
 };
