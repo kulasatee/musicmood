@@ -528,7 +528,8 @@ export default {
       );
       this.reviewList.splice(index, 1);
       this.deletereviewModal.hide();
-      this.showDeletereviewToast();
+      // this.showDeletereviewToast();
+      this.$toast.success(`${this.reviewByToDelete}'s review has been deleted!`)
     },
     showReserveModal() {
       this.reserveModal = new Modal(document.getElementById("reserveModal"));
