@@ -6,24 +6,34 @@
             <div class="mx-4 flex-row align-content-center align-item-center" ><a href="create-room"><button class="btn btn-custom" style="border-color:#6865F2; color: white; background-color: #6865F2;">Add a new room</button></a></div>
           </div>
           <div class="d-flex flex-row align-items-center justify-content-end w-50">
-              <div class="col col-6 text-start">
+              <div class="col text-start">
                 <div class="dropdown">
                   <button class="btn btn-lg dropdown-toggle w-100 text-end input-bg text-white" type="button" id="room_type" data-bs-toggle="dropdown" aria-expanded="false">
                     <span class="fw-light" style="float: left;">{{show_select_type}}</span>
                   </button>
                   <ul class="dropdown-menu" aria-labelledby="room_type">
-                    <li style="width: 20rem" v-for="(type, index) in dropdown_room_type" :key="index"><button class="dropdown-item" type="button" @click="type_name, show_select_type = type.type_name">{{type.type_name}}</button></li>
+                    <li style="width: 20rem" v-for="(type, index) in dropdown_room_type" :key="index"><button class="dropdown-item" type="button" @click="show_select_type = type.type_name">{{type.type_name}}</button></li>
+                  </ul>
+                </div>
+            </div>
+            <div class="ms-2 col text-start">
+                <div class="dropdown">
+                  <button class="btn btn-lg dropdown-toggle w-100 text-end input-bg text-white" type="button" id="room_status" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="fw-light" style="float: left;">{{show_select_status}}</span>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="room_status">
+                    <li style="width: 20rem" v-for="(status, index) in dropdown_room_status" :key="index"><button class="dropdown-item" type="button" @click="show_select_status = status.status_name">{{status.status_name}}</button></li>
                   </ul>
                 </div>
             </div>
           </div>
       </div>
       <div class="row mt-5">
-          <div class="col-6 pb-5" style="z-index: 2" v-for="(room, index) in all_room" :key="index" v-show="show_select_type == room.room_type || show_select_type == 'All type'">
+          <div class="col-6 pb-5" style="z-index: 2" v-for="(room, index) in filter_room" :key="index">
             <a href="/room-detail" class="" style="text-decoration: none;">
               <div class="d-flex flex-row">
                 <div class="d-flex" style="width: 33%; height: 17rem">
-                  <img :src="require(`../assets/${room.room_image}`)" class="img-fluid" style="object-fit: cover" alt="">
+                  <img :src="require(`../assets/${room.room_image}`)" class="img-fluid rounded" style="object-fit: cover" alt="">
                 </div>
                 <div class="d-flex flex-column rounded" style="width: 67%; height: 17rem; background-color: #1F1C2D">
                   <div class="d-flex flex-row align-items-center justify-content-between">
@@ -74,11 +84,17 @@ export default {
     return {
       //for drop down
       show_select_type: 'All type',
+      show_select_status: 'All status',
       dropdown_room_type: [
         {type_name: 'All type'},
         {type_name: 'ห้องซ้อมดนตรี'},
         {type_name: 'ห้องอัดเสียง'},
         {type_name: 'ห้องซ้อมเต้น'}
+      ],
+      dropdown_room_status: [
+        {status_name: 'All status'},
+        {status_name: 'พร้อมใช้งาน'},
+        {status_name: 'ไม่พร้อมใช้งาน'}
       ],
       room_name: '',
       type_name: '',
@@ -150,6 +166,20 @@ export default {
       //>> for room
 
     };
+  },
+  computed: {
+    filter_room(){
+      if(this.show_select_type == 'All type' && this.show_select_status == 'All status'){
+        return this.all_room
+      }else if(this.show_select_type == 'All type'){
+        return this.all_room.filter((val) => val.room_status == this.show_select_status)
+      }else if(this.show_select_status == 'All status'){
+        return this.all_room.filter((val) => val.room_type == this.show_select_type)
+      }else{
+        return this.all_room.filter((val) => (val.room_type == this.show_select_type) && (val.room_status == this.show_select_status))
+      }
+
+    }
   }
 };
 </script>
