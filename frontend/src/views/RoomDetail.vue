@@ -2,7 +2,12 @@
   <div style="background-color: #131022" class="pb-5">
     <div>
       <div class="container-fluid p-0" style="height: 60vh">
-        <img class="w-100" :src="require(`../assets/${imageMain[0].source}`)" alt="" style="height: 60vh; object-fit: cover">
+        <img
+          class="w-100"
+          :src="require(`../assets/${imageMain[0].source}`)"
+          alt=""
+          style="height: 60vh; object-fit: cover"
+        />
       </div>
     </div>
     <div class="container">
@@ -22,7 +27,15 @@
           <span class="h2 ps-3 pe-3" style="color: #afacb6">
             {{ room.type_name }}</span
           >
-          <span class="btn mb-3 pb-1 readystatus" :class="room.room_status == 'พร้อมใช้งาน' ? 'readystatus':'unreadystatus'">{{room.room_status}}</span>
+          <span
+            class="btn mb-3 pb-1 readystatus"
+            :class="
+              room.room_status == 'พร้อมใช้งาน'
+                ? 'readystatus'
+                : 'unreadystatus'
+            "
+            >{{ room.room_status }}</span
+          >
         </div>
       </div>
       <div class="row">
@@ -34,8 +47,8 @@
           <h1 class="mt-5" style="color: #ffffff">This room includes:</h1>
           <div class="row fw-light mt-3">
             <div
-              v-for="instru in instruments"
-              :key="instru.id"
+              v-for="(instru, index) in instruments"
+              :key="index"
               class="col-6"
               style="color: #afacb6"
             >
@@ -47,7 +60,9 @@
           </div>
           <div class="row mt-5">
             <div class="col text-center">
-              <h1 style="color: #ffffff">{{ room.room_price }} บาท / ชั่วโมง</h1>
+              <h1 style="color: #ffffff">
+                {{ room.room_price }} บาท / ชั่วโมง
+              </h1>
             </div>
           </div>
         </div>
@@ -80,9 +95,11 @@
             />
           </div>
           <div class="row">
-            <div class="col-6 mt-2" v-for="time in time_value" :key="time">
+            <div class="col-6 mt-2" v-for="(time, index) in time_value" :key="index">
               <input
-                :disabled="(reserved_hour.includes(time)) || (todayDate > reserve_date)"
+                :disabled="
+                  reserved_hour.includes(time) || todayDate > reserve_date
+                "
                 type="checkbox"
                 class="btn-check"
                 :id="'btn-check' + time"
@@ -92,7 +109,9 @@
               <label
                 class="btn btn-custom w-100"
                 v-bind:class="[
-                  (reserved_hour.includes(time)) || (todayDate > reserve_date) ? disablebtn : activebtn,
+                  reserved_hour.includes(time) || todayDate > reserve_date
+                    ? disablebtn
+                    : activebtn,
                 ]"
                 :for="'btn-check' + time"
                 >{{ time }}.00 - {{ time + 1 }}.00</label
@@ -106,7 +125,22 @@
             <h1 style="color: #ffffff">{{ totalPrice }} บาท</h1>
           </div>
           <div class="col-12 mt-3 text-center">
-            <button @click="showReserveModal" id="reserveButton" style="background-color:#6366f1" :disabled="(todayDate > reserve_date) || (reserved_hour.length == 10) || (reserve_hour.length == 0) || (room.room_status == 'ไม่พร้อมใช้งาน') ? true : false" class="btn text-white">RESERVE</button>
+            <button
+              @click="showReserveModal"
+              id="reserveButton"
+              style="background-color: #6366f1"
+              :disabled="
+                todayDate > reserve_date ||
+                reserved_hour.length == 10 ||
+                reserve_hour.length == 0 ||
+                room.room_status == 'ไม่พร้อมใช้งาน'
+                  ? true
+                  : false
+              "
+              class="btn text-white"
+            >
+              RESERVE
+            </button>
           </div>
         </div>
       </div>
@@ -116,7 +150,7 @@
         <h1 style="color: #ffffff">Gallery</h1>
       </div>
       <div class="row mt-3">
-        <div v-for="image in imageNonMain" :key="image" class="col-3">
+        <div v-for="(image, index) in imageNonMain" :key="index" class="col-3">
           <img
             :src="require(`../assets/${image.source}`)"
             class="img-fluid rounded shadow-lg"
@@ -125,17 +159,45 @@
           />
         </div>
       </div>
+
+      <!-- Write Review -->
+      <div class="text-start">
+        <div class="row mt-5">
+          <h1 style="color: #ffffff">Write a review</h1>
+        </div>
+        <div class="col-12 fs-4 p-4 text-white">
+          {{ user.Name + " " + user.LastName }}
+          <span class="fw-light fs-6 ms-2" style="color: #5c5b64">{{
+            todayDate
+          }}</span>
+        </div>
+        <div class="col-12 mt-2 fw-light ps-4" style="color: #c4c4c4">
+          <textarea
+            class="form-control"
+            placeholder="Leave a review here"
+            id="floatingTextarea2"
+            style="height: 100px"
+            v-model="new_review"
+          ></textarea>
+          <label for="floatingTextarea2"></label>
+        </div>
+        <div class="col-12">
+          <button class="btn btn-purple float-end" @click="postReview()">Post review</button>
+        </div>
+      </div>
+
+      <!-- count review -->
       <div class="row mt-5">
         <div class="col-12">
           <div class="row text-start">
-            <h1 class="text-white">{{ countComment }} comments</h1>
+            <h1 class="text-white">{{ countreview }} reviews</h1>
           </div>
         </div>
       </div>
-      <!-- each comments -->
+      <!-- each reviews -->
       <div
-        v-for="comment in commentList"
-        :key="comment.commentId"
+        v-for="(review, index) in reviewList"
+        :key="index"
         class="row text-start p-4"
         style="
           border-bottom-style: solid;
@@ -144,96 +206,179 @@
         "
       >
         <div class="col-12 fs-4 text-white">
-          {{ comment.commentBy }}
+          {{ review.reviewBy }}
           <span class="fw-light fs-6 ms-2" style="color: #5c5b64">{{
-            comment.commentDate
+            review.reviewDate
           }}</span>
           <span
-            @click="showDeleteCommentModal(comment.commentBy, comment.commentId)"
-            v-show="user.userId == comment.commentById"
+            @click="showDeletereviewModal(review.reviewBy, review.reviewId)"
+            v-show="user.userId == review.reviewById"
             class="float-end bi bi-trash3 fs-6"
-            style="color: #c4c4c4; cursor: pointer;"
+            style="color: #c4c4c4; cursor: pointer"
           ></span>
         </div>
         <div class="col-12 mt-2 fw-light" style="color: #c4c4c4">
-          {{ comment.commentDetail }}
+          {{ review.reviewDetail }}
         </div>
       </div>
 
       <!-- delete modal -->
-      <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Delete Comment</h5>
-        <button type="button" class="btn-close" @click="deleteCommentModal.hide()" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body text-start">
-              Are you sure you want to delete <span class="fw-bold">{{commentByToDelete}}</span>'s comment ?
+      <div
+        class="modal fade"
+        id="deleteModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Delete review</h5>
+              <button
+                type="button"
+                class="btn-close"
+                @click="deletereviewModal.hide()"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
             </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline-danger" @click="deleteCommentModal.hide()" data-bs-dismiss="modal">CANCEL</button>
-        <button type="button" class="btn btn-danger" @click="deleteComment()">DELETE</button>
+            <div class="modal-body text-start">
+              Are you sure you want to delete
+              <span class="fw-bold">{{ reviewByToDelete }}</span
+              >'s review ?
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-outline-danger"
+                @click="deletereviewModal.hide()"
+                data-bs-dismiss="modal"
+              >
+                CANCEL
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger"
+                @click="deletereview()"
+              >
+                DELETE
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
 
       <!-- reserve modal -->
-      <div class="modal fade" id="reserveModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel"> <span><i class="bi bi-info-circle"></i></span> Information</h5>
-        <button type="button" class="btn-close" @click="reserveModal.hide()" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body text-start">
-              This room can be used when this reservation status is <span class="fw-bold">Approved</span>. You can check your reservation status at <span class="fw-bold">Reservation Status tab</span> 
+      <div
+        class="modal fade"
+        id="reserveModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">
+                <span><i class="bi bi-info-circle"></i></span> Information
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                @click="reserveModal.hide()"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
             </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline-purple" @click="reserveModal.hide()" data-bs-dismiss="modal">CANCEL</button>
-        <button type="button" class="btn btn-purple" @click="reserveRoom()">RESERVE</button>
+            <div class="modal-body text-start">
+              This room can be used when this reservation status is
+              <span class="fw-bold">Approved</span>. You can check your
+              reservation status at
+              <span class="fw-bold">Reservation Status tab</span>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-outline-purple"
+                @click="reserveModal.hide()"
+                data-bs-dismiss="modal"
+              >
+                CANCEL
+              </button>
+              <button
+                type="button"
+                class="btn btn-purple"
+                @click="reserveRoom()"
+              >
+                RESERVE
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
-      
+
       <!-- reserve toast -->
-      <div class="position-fixed bottom-0 start-0 p-3" style="z-index: 11;">
-      <div id="reserveToast" class="toast hide bg-white" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header text-white fw-light" style="background-color: #22C55E">
-          <span class="me-2"><i class="bi bi-check-circle"></i></span>
-          <strong class="me-auto">Success</strong>
-          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body text-start" style="color: #22C55E">
-          Your Reservation has been sent!
+      <div class="position-fixed bottom-0 start-0 p-3" style="z-index: 11">
+        <div
+          id="reserveToast"
+          class="toast hide bg-white"
+          role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+        >
+          <div
+            class="toast-header text-white fw-light"
+            style="background-color: #22c55e"
+          >
+            <span class="me-2"><i class="bi bi-check-circle"></i></span>
+            <strong class="me-auto">Success</strong>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="toast"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="toast-body text-start" style="color: #22c55e">
+            Your Reservation has been sent!
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- delete comment toast -->
-      <div class="position-fixed bottom-0 start-0 p-3" style="z-index: 11;">
-      <div id="deleteCommentToast" class="toast hide bg-white" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header text-white fw-light" style="background-color: #22C55E">
-          <span class="me-2"><i class="bi bi-check-circle"></i></span>
-          <strong class="me-auto">Success</strong>
-          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body text-start fw-light" style="color: #22C55E">
-        <span class="fw-normal">{{commentByToDelete}}</span>'s comment has been deleted!
-            
+      <!-- delete review toast -->
+      <div class="position-fixed bottom-0 start-0 p-3" style="z-index: 11">
+        <div
+          id="deletereviewToast"
+          class="toast hide bg-white"
+          role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+        >
+          <div
+            class="toast-header text-white fw-light"
+            style="background-color: #22c55e"
+          >
+            <span class="me-2"><i class="bi bi-check-circle"></i></span>
+            <strong class="me-auto">Success</strong>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="toast"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="toast-body text-start fw-light" style="color: #22c55e">
+            <span class="fw-normal">{{ reviewByToDelete }}</span
+            >'s review has been deleted!
+          </div>
         </div>
       </div>
-    </div>
-
-    
     </div>
   </div>
 </template>
 
 <script>
-import { Modal, Toast } from "bootstrap";
+import { Modal } from "bootstrap";
 export default {
   name: "RoomDetail",
   data() {
@@ -253,12 +398,13 @@ export default {
         room_description:
           "Beside the Studio area we also have a private lounge for both Studio A and B, a courtyard with outdoor seating, and a big garden with bar and BBQ stove,…",
         room_image: [
-        {source: "banner.jpg", main: 1},
-        {source: "roomImage1.jpg", main: 0},
-        {source: "roomImage2.jpg", main: 0},
-        {source: "roomImage3.jpg", main: 0},
-        {source: "roomImage4.jpg", main: 0}
-      ]},
+          { source: "banner.jpg", main: 1 },
+          { source: "roomImage1.jpg", main: 0 },
+          { source: "roomImage2.jpg", main: 0 },
+          { source: "roomImage3.jpg", main: 0 },
+          { source: "roomImage4.jpg", main: 0 },
+        ],
+      },
       time_value: [11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
       reserve_hour: [],
       reserved_hour: [16, 17, 18, 19, 20],
@@ -313,73 +459,84 @@ export default {
           instrument_name: "2 FENDER  STRATOCASTER JAPAN (Guitar)",
         },
       ],
-      commentList: [
+      reviewList: [
         {
-          commentId: 1,
-          commentBy: "Salinya Timklip",
-          commentById: 1,
-          commentDetail: "ดีดีดีดีดีดีดีดี",
-          commentDate: "15-04-2022",
+          reviewId: 1,
+          reviewBy: "Salinya Timklip",
+          reviewById: 1,
+          reviewDetail: "ดีดีดีดีดีดีดีดี",
+          reviewDate: "15-04-2022",
         },
         {
-          commentId: 2,
-          commentBy: "Chaiyawat Roongrueng",
-          commentById: 2,
-          commentDetail:
+          reviewId: 2,
+          reviewBy: "Chaiyawat Roongrueng",
+          reviewById: 2,
+          reviewDetail:
             "ดีมากครับ แอร์เย็น สะอาด ไม่อับ ไมค์ไม่จี่ ไม่เหม็นน้ำลาย",
-          commentDate: "20-04-2022",
+          reviewDate: "20-04-2022",
         },
         {
-          commentId: 3,
-          commentBy: "Kulasatee Dul",
-          commentById: 3,
-          commentDetail:
-            "พนักงานบริการดี เป็นกันเองค่ะ แต่แอร์ดังไปหน่อยค่ะ",
-          commentDate: "28-04-2022",
-        }
+          reviewId: 3,
+          reviewBy: "Kulasatee Dul",
+          reviewById: 3,
+          reviewDetail: "พนักงานบริการดี เป็นกันเองค่ะ แต่แอร์ดังไปหน่อยค่ะ",
+          reviewDate: "28-04-2022",
+        },
       ],
-      commentIdtoDelete: null,
-      commentByToDelete: null,
-      deleteCommentModal: null,
+      reviewIdtoDelete: null,
+      reviewByToDelete: null,
+      deletereviewModal: null,
       todayDate: null,
       reserveModal: null,
-      reserveToast: null,
-      deleteCommentToast: null,
       imageNonMain: [],
-      imageMain: []
+      imageMain: [],
+      new_review: "",
     };
   },
   methods: {
-    showDeleteCommentModal(commentBy, commentId) {
-      this.deleteCommentModal = new Modal(document.getElementById("deleteModal"));
-      this.deleteCommentModal.show();
-      this.commentIdtoDelete = commentId;
-      this.commentByToDelete = commentBy;
+    postReview(){
+      if(this.new_review == ""){
+        this.$toast.warning("Please write something in your review!")
+      }
+      else if(this.reviewList.findIndex((review) => review.reviewById == this.user.userId) != -1){
+        this.$toast.error("You have reviewed this room already!")
+      }
+      else if(this.reviewList.findIndex((review) => review.reviewById == this.user.userId) == -1){
+        this.reviewList.push({
+          reviewId: 0,
+          reviewBy: this.user.Name + ' ' + this.user.LastName,
+          reviewById: this.user.userId,
+          reviewDetail: this.new_review,
+          reviewDate: this.todayDate,
+        },)
+        this.$toast.success("Your review has been post!")
+      }
+      
     },
-    deleteComment() {
-      let index = this.commentList.findIndex(
-        (val) => val.commentId === this.commentIdtoDelete
+    showDeletereviewModal(reviewBy, reviewId) {
+      this.deletereviewModal = new Modal(
+        document.getElementById("deleteModal")
       );
-      this.commentList.splice(index, 1);
-      this.deleteCommentModal.hide();
-      this.showDeleteCommentToast();
+      this.deletereviewModal.show();
+      this.reviewIdtoDelete = reviewId;
+      this.reviewByToDelete = reviewBy;
     },
-    showReserveModal(){
+    deletereview() {
+      let index = this.reviewList.findIndex(
+        (val) => val.reviewId === this.reviewIdtoDelete
+      );
+      this.reviewList.splice(index, 1);
+      this.deletereviewModal.hide();
+      this.$toast.success(`${this.reviewByToDelete}'s review has been deleted!`)
+    },
+    showReserveModal() {
       this.reserveModal = new Modal(document.getElementById("reserveModal"));
       this.reserveModal.show();
     },
-    reserveRoom(){
-      console.log("Room ... has been reserved.")
+    reserveRoom() {
+      console.log("Room ... has been reserved.");
       this.reserveModal.hide();
-      this.showReserveToast();
-    },
-    showReserveToast(){
-      this.reserveToast = new Toast(document.getElementById("reserveToast"));
-      this.reserveToast.show();
-    },
-    showDeleteCommentToast(){
-      this.deleteCommentToast = new Toast(document.getElementById("deleteCommentToast"));
-      this.deleteCommentToast.show();
+      this.$toast.success("Your reservation has been sent!")
     }
   },
   created() {
@@ -402,9 +559,9 @@ export default {
     totalPrice() {
       return this.reserve_hour.length * this.room.room_price;
     },
-    countComment() {
-      return this.commentList.length;
-    }
+    countreview() {
+      return this.reviewList.length;
+    },
   },
 };
 </script>
@@ -413,12 +570,12 @@ export default {
 ::-webkit-calendar-picker-indicator {
   filter: invert(1);
 }
-.btn-outline-purple{
+.btn-outline-purple {
   border-color: #6366f1;
   color: #6366f1;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
-.btn-purple{
+.btn-purple {
   background-color: #6366f1;
   color: #ffffff;
 }
@@ -472,8 +629,8 @@ input[type="checkbox"]:checked + label {
 }
 .unreadystatus {
   cursor: default;
-  color: #AFACB6;
-  background-color: #2A2838;
+  color: #afacb6;
+  background-color: #2a2838;
 }
 
 .hero-image {

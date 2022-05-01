@@ -25,7 +25,7 @@
                             <label for="checkbox" class="px-2" style="color: #AFACB6">Remember me ? </label>
                         </div>
                         <div class="mt-5 text-center" type="button" style="font-size: 1rem;">
-                            <a href="/room-list" class="text-white py-2 rounded" style="text-decoration: none; background-color: #6366F1; display: block">LOG IN</a>
+                            <div class="text-white py-2 rounded" @click="validate_form()" style="text-decoration: none; background-color: #6366F1; display: block">LOG IN</div>
                         </div>
                     </div>
                 </div>
@@ -50,6 +50,16 @@ export default {
         }
         
     };
+  },
+  methods: {
+      validate_form(){
+          if(this.form_input.username == ''){
+              alert('please fill in username')
+          }else if(this.form_input.password == ''){
+               alert('please fill in password')
+          }
+          this.$router.replace('/room-list')
+      }
   }
 };
 </script>

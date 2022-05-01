@@ -14,7 +14,7 @@
               <h1 style="font-size: 3.75rem;" class="mt-3 mb-5 text-white">
                   Perform
               </h1>
-              <a href="/room-list"><button class="btn btn-custom me-3" type="button" style="border-color:#6865F2; color: white; background-color: #6865F2; font-size:1.25rem">RESERVE WITH US</button></a>
+              <router-link to="/room-list"><button class="btn btn-custom me-3" type="button" style="border-color:#6865F2; color: white; background-color: #6865F2; font-size:1.25rem">RESERVE WITH US</button></router-link>
           </div>
       </div>
     <div class="circle1"></div>

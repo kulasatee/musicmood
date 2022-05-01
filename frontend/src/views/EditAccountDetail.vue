@@ -20,17 +20,17 @@
                         </div>
                         <div class="text-white mt-4" style="font-size: 1rem">
                             <label for="phonenumber" class="form-label text-white">Phone number</label>
-                            <input type="text" class="form-control form-control-lg input-bg " id="phonenumber" v-model="account.phone_number">
+                            <input type="number" class="form-control form-control-lg input-bg " id="phonenumber" v-model="account.phone_number">
                         </div>
                         <div class="text-white mt-4" style="font-size: 1rem">
                             <label for="username" class="form-label text-white">Username</label>
-                            <input type="text" class="form-control form-control-lg input-bg " id="username" v-model="account.username">
+                            <input type="text" class="form-control form-control-lg input-bg " disabled id="username" v-model="account.username">
                         </div>
                         <div class="text-white mt-4 fw-light" style="font-size: 1rem">
                             <a href="/change-password" class="ps-1" style="color: #6865F2; text-decoration: underline">Change my password</a>
                         </div>
                         <div class="mt-5 text-center" type="button" style="font-size: 1rem;">
-                            <a href="/account-detail" class="text-white py-2 rounded" style="text-decoration: none; background-color: #6366F1; display: block" @click="saveEditProfile()">SAVE</a>
+                            <div class="text-white py-2 rounded" style="text-decoration: none; background-color: #6366F1; display: block" @click="saveEditProfile()">SAVE</div>
                         </div>
                         <div class="mt-4 text-center rounded" style="font-size: 1rem; border: solid 1px; border-color: #6366F1">
                             <a href="/account-detail" class="py-2 rounded" style="text-decoration: none; color: #6366F1; display: block">BACK</a>
@@ -61,8 +61,24 @@ export default {
         
     };
   },
-  saveEditProfile(){
-    console.log("edit account successfully")
+  methods: {
+      validate_form(){
+          if(this.account.first_name == ''){
+              this.$toast.error("Please fill in your first name")
+          }else if(this.account.last_name == ''){
+               this.$toast.error("Please fill in your last name")
+          }else if(this.account.phone_number == ''){
+               this.$toast.error("Please fill in your phone number")
+          }else{
+              this.$router.replace('/account-detail')
+              this.$toast.success("Your account has been edited!")
+          }
+          
+      },
+      saveEditProfile(){
+          console.log("edit account successfully")
+          this.validate_form()
+      }
   }
 };
 </script>
