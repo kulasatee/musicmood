@@ -101,13 +101,13 @@
       <div class="row mt-5">
         <div class="col-12">
           <div class="row text-start">
-            <h1 class="text-white">{{ countComment }} comments</h1>
+            <h1 class="text-white">{{ countreview }} reviews</h1>
           </div>
         </div>
       </div>
-      <!-- each comments -->
+      <!-- each reviews -->
       <div
-        v-for="(comment, index) in commentList"
+        v-for="(review, index) in reviewList"
         :key="index"
         class="row text-start p-4"
         style="
@@ -117,52 +117,52 @@
         "
       >
         <div class="col-12 fs-4 text-white">
-          {{ comment.commentBy }}
+          {{ review.reviewBy }}
           <span class="fw-light fs-6 ms-2" style="color: #5c5b64">{{
-            comment.commentDate
+            review.reviewDate
           }}</span>
           <span
             @click="
-              showDeleteCommentModal(comment.commentBy, comment.commentId)
+              showDeletereviewModal(review.reviewBy, review.reviewId)
             "
             class="float-end bi bi-trash3 fs-6"
             style="color: #c4c4c4; cursor: pointer"
           ></span>
         </div>
         <div class="col-12 mt-2 fw-light" style="color: #c4c4c4">
-          {{ comment.commentDetail }}
+          {{ review.reviewDetail }}
         </div>
       </div>
 
-      <!-- delete comment modal -->
+      <!-- delete review modal -->
       <div
         class="modal fade"
-        id="deleteCommentModal"
+        id="deletereviewModal"
         tabindex="-1"
         aria-hidden="true"
       >
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Delete Comment</h5>
+              <h5 class="modal-title">Delete review</h5>
               <button
                 type="button"
                 class="btn-close"
-                @click="deleteCommentModal.hide()"
+                @click="deletereviewModal.hide()"
                 data-bs-dismiss="modal"
                 aria-label="Close"
               ></button>
             </div>
             <div class="modal-body text-start">
               Are you sure you want to delete
-              <span class="fw-bold">{{ commentByToDelete }}</span
-              >'s comment ?
+              <span class="fw-bold">{{ reviewByToDelete }}</span
+              >'s review ?
             </div>
             <div class="modal-footer">
               <button
                 type="button"
                 class="btn btn-outline-danger"
-                @click="deleteCommentModal.hide()"
+                @click="deletereviewModal.hide()"
                 data-bs-dismiss="modal"
               >
                 CANCEL
@@ -170,7 +170,7 @@
               <button
                 type="button"
                 class="btn btn-danger"
-                @click="deleteComment()"
+                @click="deletereview()"
               >
                 DELETE
               </button>
@@ -224,111 +224,12 @@
         </div>
       </div>
 
-      <!-- delete comment toast -->
-      <div class="position-fixed bottom-0 start-0 p-3" style="z-index: 11">
-        <div
-          id="deleteCommentToast"
-          class="toast hide bg-white"
-          role="alert"
-          aria-live="assertive"
-          aria-atomic="true"
-        >
-          <div
-            class="toast-header text-white fw-light"
-            style="background-color: #22c55e"
-          >
-            <span class="me-2"><i class="bi bi-check-circle"></i></span>
-            <strong class="me-auto">Success</strong>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="toast"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="toast-body text-start fw-light" style="color: #22c55e">
-            <span class="fw-normal">{{ commentByToDelete }}</span
-            >'s comment has been deleted!
-          </div>
-        </div>
-      </div>
-
-      <!-- reservation modal -->
-      <div
-        class="modal fade"
-        id="reservationModal"
-        tabindex="-1"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <span class="modal-title fs-3">{{reservation.room_name}}</span><span class="ms-3 fw-light">Created Date: {{reservation.inform_date}}</span> 
-              <button v-if="reservation.reserve_status == 'pending'" type="button" disabled class="btn btn-warning btn-sm ms-3">Pending</button>
-              <button v-if="reservation.reserve_status == 'approved'" type="button" disabled class="btn btn-success btn-sm ms-3">Approved</button>
-              <button v-if="reservation.reserve_status == 'rejected'" type="button" disabled class="btn btn-danger btn-sm ms-3">Rejected</button>
-              <button
-                type="button"
-                class="btn-close"
-                @click="reservationModal.hide()"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body text-start">
-              <div class="mt-2"><span>Room Type:</span><span class="fw-light ms-3">{{reservation.type_name}}</span></div>
-              <div class="mt-2"><span>Reserve Date:</span><span class="fw-light ms-3">{{reservation.reserve_date}}</span></div>
-              <div class="mt-2"><span>Reserve Time:</span></div>
-              <div class="row mt-2">
-                <div v-for="(hour, index) in reservation.reserve_hours" :key="index" class="col-3 p-1"><input
-                disabled
-                type="checkbox"
-                class="btn-check"
-                :id="'btn-check' + hour">
-              <label
-                class="selecttimebtn w-100 text-center rounded p-1"
-                :for="'btn-check' + hour"
-                style=""
-                >{{ hour }}.00 - {{ hour + 1 }}.00</label
-              ></div>
-              </div>
-              <div class="mt-2"><span>Total Price:</span><span class="fw-light ms-3">{{reservation.room_price}}</span></div>
-              <div class="mt-2"><span>Customer Name:</span><span class="fw-light ms-3">{{user.name + ' ' + user.lastName}}</span></div>
-              <div class="mt-2"><span>Phone:</span><span class="fw-light ms-3">{{user.phone}}</span></div>
-              <div class="mt-2" v-if="reservation.reserve_status == 'pending'">
-                <label for="exampleFormControlTextarea1" class="form-label">Remark:</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="write some remark" rows="3" v-model="reservation_remark"></textarea>
-              </div>
-              <div class="mt-2" v-if="reservation.reserve_status == 'rejected' || reservation.reserve_status == 'approved'">
-              <div class="mt-2"><span>Remark:</span><span class="fw-light ms-3">{{reservation.reserve_remark}}</span></div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-outline-danger"
-                @click="reservationModal.hide()"
-                data-bs-dismiss="modal"
-              >
-                REJECT
-              </button>
-              <button
-                type="button"
-                class="btn btn-purple"
-              >
-                APPROVE
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </div>
   </div>
 </template>
 
 <script>
-import { Modal, Toast } from "bootstrap";
+import { Modal } from "bootstrap";
 export default {
   name: "StaffRoomDetail",
   data() {
@@ -403,78 +304,62 @@ export default {
           instrument_name: "2 FENDER  STRATOCASTER JAPAN (Guitar)",
         },
       ],
-      commentList: [
+      reviewList: [
         {
-          commentId: 1,
-          commentBy: "Salinya Timklip",
-          commentById: 1,
-          commentDetail: "ดีดีดีดีดีดีดีดี",
-          commentDate: "15-04-2022",
+          reviewId: 1,
+          reviewBy: "Salinya Timklip",
+          reviewById: 1,
+          reviewDetail: "ดีดีดีดีดีดีดีดี",
+          reviewDate: "15-04-2022",
         },
         {
-          commentId: 2,
-          commentBy: "Chaiyawat Roongrueng",
-          commentById: 2,
-          commentDetail:
+          reviewId: 2,
+          reviewBy: "Chaiyawat Roongrueng",
+          reviewById: 2,
+          reviewDetail:
             "ดีมากครับ แอร์เย็น สะอาด ไม่อับ ไมค์ไม่จี่ ไม่เหม็นน้ำลาย",
-          commentDate: "20-04-2022",
+          reviewDate: "20-04-2022",
         },
         {
-          commentId: 3,
-          commentBy: "Kulasatee Dul",
-          commentById: 3,
-          commentDetail: "พนักงานบริการดี เป็นกันเองค่ะ แต่แอร์ดังไปหน่อยค่ะ",
-          commentDate: "28-04-2022",
+          reviewId: 3,
+          reviewBy: "Kulasatee Dul",
+          reviewById: 3,
+          reviewDetail: "พนักงานบริการดี เป็นกันเองค่ะ แต่แอร์ดังไปหน่อยค่ะ",
+          reviewDate: "28-04-2022",
         },
       ],
       reservation:{reserve_id: 3, inform_date: '20/04/2022', room_name: 'ห้องซ้อม P03', type_name: 'ห้องอัดเสียง', room_price: 600, reserve_date: '27/04/2022', reserve_hours: [18, 19, 20], reserve_status: 'rejected', reserve_remark: 'ร้านปิดให้บริการเนื่องจากวันสงกรานต์'},
-      commentIdtoDelete: null,
-      commentByToDelete: null,
-      deleteCommentModal: null,
-      deleteCommentToast: null,
+      reviewIdtoDelete: null,
+      reviewByToDelete: null,
+      deletereviewModal: null,
       deleteRoomModal: null,
-      deleteRoomToast: null,
       roomIdtoDelete: null,
       todayDate: null,
       imageNonMain: [],
       imageMain: [],
 
-      reservationModal:null,
-      reservation_remark: null
     };
   },
   methods: {
-    showReservationModal() {
-      this. reservationModal = new Modal(
-        document.getElementById("reservationModal")
+    showDeletereviewModal(reviewBy, reviewId) {
+      // if(this.deletereviewToast != null){
+      //   this.deletereviewToast.hide();
+      // }
+      this.deletereviewModal = new Modal(
+        document.getElementById("deletereviewModal")
       );
-      this.reservationModal.show();
-    },
-    showDeleteCommentModal(commentBy, commentId) {
-      if(this.deleteCommentToast != null){
-        this.deleteCommentToast.hide();
-      }
-      this.deleteCommentModal = new Modal(
-        document.getElementById("deleteCommentModal")
-      );
-      this.deleteCommentModal.show();
-      this.commentIdtoDelete = commentId;
-      this.commentByToDelete = commentBy;
+      this.deletereviewModal.show();
+      this.reviewIdtoDelete = reviewId;
+      this.reviewByToDelete = reviewBy;
 
     },
-    deleteComment() {
-      let index = this.commentList.findIndex(
-        (val) => val.commentId === this.commentIdtoDelete
+    deletereview() {
+      let index = this.reviewList.findIndex(
+        (val) => val.reviewId === this.reviewIdtoDelete
       );
-      this.commentList.splice(index, 1);
-      this.deleteCommentModal.hide();
-      this.showDeleteCommentToast();
-    },
-    showDeleteCommentToast() {
-      this.deleteCommentToast = new Toast(
-        document.getElementById("deleteCommentToast")
-      );
-      this.deleteCommentToast.show();
+      this.reviewList.splice(index, 1);
+      this.deletereviewModal.hide();
+      this.$toast.success(`${this.reviewByToDelete}'s review has been deleted!`)
     },
     showDeleteRoomModal(room_id) {
       this.deleteRoomModal = new Modal(
@@ -484,12 +369,9 @@ export default {
       this.roomIdtoDelete = room_id;
     },
     deleteRoom() {
-      // let index = this.commentList.findIndex(
-      //   (val) => val.commentId === this.commentIdtoDelete
-      // );
-      // this.commentList.splice(index, 1);
       this.deleteRoomModal.hide();
-      window.location.href="/create-room";
+      this.$router.push("/room-list")
+      this.$toast.success(`${this.room.room_name} has been deleted`)
     }
   },
   created() {
@@ -497,8 +379,8 @@ export default {
     this.imageMain = this.room.room_image.filter((val) => val.main == 1);
   },
   computed: {
-    countComment() {
-      return this.commentList.length;
+    countreview() {
+      return this.reviewList.length;
     }
   },
 };

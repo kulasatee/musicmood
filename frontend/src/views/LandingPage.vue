@@ -29,9 +29,6 @@ export default {
   data () {
     return {
     };
-  },
-  mounted() {
-    this.$toast.success("I'm a toast!");
   }
 };
 </script>

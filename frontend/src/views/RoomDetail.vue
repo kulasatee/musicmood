@@ -378,7 +378,7 @@
 </template>
 
 <script>
-import { Modal, Toast } from "bootstrap";
+import { Modal } from "bootstrap";
 export default {
   name: "RoomDetail",
   data() {
@@ -488,8 +488,6 @@ export default {
       deletereviewModal: null,
       todayDate: null,
       reserveModal: null,
-      reserveToast: null,
-      deletereviewToast: null,
       imageNonMain: [],
       imageMain: [],
       new_review: "",
@@ -498,10 +496,10 @@ export default {
   methods: {
     postReview(){
       if(this.new_review == ""){
-        alert("Please write something for reviewing")
+        this.$toast.warning("Please write something in your review!")
       }
       else if(this.reviewList.findIndex((review) => review.reviewById == this.user.userId) != -1){
-        alert("You has been reviewed this room already !")
+        this.$toast.error("You have reviewed this room already!")
       }
       else if(this.reviewList.findIndex((review) => review.reviewById == this.user.userId) == -1){
         this.reviewList.push({
@@ -511,6 +509,7 @@ export default {
           reviewDetail: this.new_review,
           reviewDate: this.todayDate,
         },)
+        this.$toast.success("Your review has been post!")
       }
       
     },
@@ -528,7 +527,6 @@ export default {
       );
       this.reviewList.splice(index, 1);
       this.deletereviewModal.hide();
-      // this.showDeletereviewToast();
       this.$toast.success(`${this.reviewByToDelete}'s review has been deleted!`)
     },
     showReserveModal() {
@@ -538,18 +536,8 @@ export default {
     reserveRoom() {
       console.log("Room ... has been reserved.");
       this.reserveModal.hide();
-      this.showReserveToast();
-    },
-    showReserveToast() {
-      this.reserveToast = new Toast(document.getElementById("reserveToast"));
-      this.reserveToast.show();
-    },
-    showDeletereviewToast() {
-      this.deletereviewToast = new Toast(
-        document.getElementById("deletereviewToast")
-      );
-      this.deletereviewToast.show();
-    },
+      this.$toast.success("Your reservation has been sent!")
+    }
   },
   created() {
     this.todayDate = new Date();
