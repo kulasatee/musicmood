@@ -188,7 +188,7 @@ export default {
 
       this.status_for_toast = 'rejected'
       this.succcess_toast.show()
-    }
+    },
   },
   computed: {
       filteredReservation() {
