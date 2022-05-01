@@ -24,11 +24,22 @@
 
 <script>
 import {} from 'bootstrap'
+import axios from 'axios'
+
 export default {
   name: "LandingPage",
   data () {
     return {
     };
+  },
+  created() {
+    axios.get("http://localhost:3001/")
+        .then((response) => {
+          console.log(response.data)
+        })
+        .catch((err) => {
+          console.log(err);
+        });
   }
 };
 </script>
