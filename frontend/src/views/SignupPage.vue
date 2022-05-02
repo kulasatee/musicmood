@@ -52,6 +52,7 @@
 
 <script>
 import {} from 'bootstrap'
+import axios from 'axios'
 export default {
   name: "LoginPage",
   components: {
@@ -67,28 +68,38 @@ export default {
             confirm_password: '',
             checked: false
         }
-        
     };
   },
   methods: {
       validate_form(){
-          if(this.form_input.username == ''){
-              alert('please fill in username')
-          }else if(this.form_input.password == ''){
-               alert('please fill in password')
-          }
-          else if(this.form_input.first_name == ''){
-               alert('please fill in password')
+          
+          if(this.form_input.first_name == ''){
+               this.$toast.warning("Please fill in firstname")
           }
           else if(this.form_input.last_name == ''){
-               alert('please fill in password')
-          }
-          else if(this.form_input.phone_number == ''){
-               alert('please fill in password')
+               this.$toast.warning("Please fill in lastname")
+          }else if(this.form_input.phone_number == ''){
+               this.$toast.warning("Please fill in phone number")
+          }else if(this.form_input.username == ''){
+              this.$toast.warning("Please fill in username")
+          }else if(this.form_input.password == ''){
+               this.$toast.warning("Please fill in password")
           }else if(this.form_input.confirm_password == ''){
-               alert('please fill in password')
+               this.$toast.warning("Please fill in confirm password")
+          }else{
+            axios.post("http://localhost:3001/signup", this.form_input)
+                .then((response) => {
+                console.log(response.data)
+                })
+                .catch((err) => {
+                    console.log(err.response.status)
+                    if(err.response.status == 400){
+                        this.$toast.warning(err.response.data)
+                    }
+                });
           }
-          this.$router.replace('/room-list')
+
+       
       }
   }
 };
