@@ -1,12 +1,11 @@
 DROP TABLE IF EXISTS `accounts`;
 CREATE TABLE `accounts` (
   `account_id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `username` varchar(255) NOT NULL,
+  `username` varchar(255) NOT NULL UNIQUE,
   `password` varchar(255) NOT NULL,
   `role` ENUM('staff', 'customer') NOT NULL,
   PRIMARY KEY (`account_id`),
-  UNIQUE KEY `account_id` (`account_id`),
-  UNIQUE KEY `username` (`username`)
+  UNIQUE KEY `account_id` (`account_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DROP TABLE IF EXISTS `customers`;
@@ -54,7 +53,7 @@ CREATE TABLE `reservations` (
 DROP TABLE IF EXISTS `rooms`;
 CREATE TABLE `rooms` (
   `room_id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `room_name` varchar(255) NOT NULL,
+  `room_name` varchar(255) NOT NULL UNIQUE,
   `room_type` ENUM('ห้องซ้อมดนตรี', 'ห้องซ้อมเต้น', 'ห้องอัดเสียง') NOT NULL,
   `room_status` ENUM('พร้อมใช้งาน', 'ไม่พร้อมใช้งาน') NOT NULL,
   `room_price` FLOAT NOT NULL,

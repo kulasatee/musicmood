@@ -61,8 +61,8 @@ router.put("/rooms/:room_id", async function (req, res, next) {
     await conn.beginTransaction();
 
     try{
-        const [rooms, columns] = await pool.query("UPDATE rooms SET room_name = ?, room_type = ?, room_status = ?, room_price = ?, room_description = ?", 
-        [req.body.room_name, req.body.room_type, req.body.room_status, req.body.room_price, req.body.room_description]);
+        const [rooms, columns] = await pool.query("UPDATE rooms SET room_name = ?, room_type = ?, room_status = ?, room_price = ?, room_description = ? WHERE room_id = ?", 
+        [req.body.room_name, req.body.room_type, req.body.room_status, req.body.room_price, req.body.room_description, req.params.room_id]);
 
         //delete all instrument in this room
         const [deleteInstruments, columns2] = await pool.query("DELETE FROM instruments WHERE room_id = ?", [req.params.room_id]);
