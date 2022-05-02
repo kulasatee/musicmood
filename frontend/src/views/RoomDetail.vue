@@ -95,7 +95,11 @@
             />
           </div>
           <div class="row">
-            <div class="col-6 mt-2" v-for="(time, index) in time_value" :key="index">
+            <div
+              class="col-6 mt-2"
+              v-for="(time, index) in time_value"
+              :key="index"
+            >
               <input
                 :disabled="
                   reserved_hour.includes(time) || todayDate > reserve_date
@@ -161,12 +165,26 @@
       </div>
 
       <!-- Write Review -->
-      <div class="text-start">
+      <div
+        v-if="
+          user.role == 'customer' &&
+          review_list.findIndex(
+            (review) => review.account_id == user.customer_id
+          ) == -1 &&
+          reservation_customer.findIndex(
+            (reservation) =>
+              reservation.room_id == room.room_id &&
+              reservation.reserve_status == 'approved' &&
+              reservation.customer_id == user.customer_id
+          ) == -1
+        "
+        class="text-start"
+      >
         <div class="row mt-5">
           <h1 style="color: #ffffff">Write a review</h1>
         </div>
         <div class="col-12 fs-4 p-4 text-white">
-          {{ user.Name + " " + user.LastName }}
+          {{ user.firstname + " " + user.lastname }}
           <span class="fw-light fs-6 ms-2" style="color: #5c5b64">{{
             todayDate
           }}</span>
@@ -182,7 +200,9 @@
           <label for="floatingTextarea2"></label>
         </div>
         <div class="col-12">
-          <button class="btn btn-purple float-end" @click="postReview()">Post review</button>
+          <button class="btn btn-purple float-end" @click="postReview()">
+            Post review
+          </button>
         </div>
       </div>
 
@@ -196,7 +216,7 @@
       </div>
       <!-- each reviews -->
       <div
-        v-for="(review, index) in reviewList"
+        v-for="(review, index) in review_list"
         :key="index"
         class="row text-start p-4"
         style="
@@ -206,19 +226,24 @@
         "
       >
         <div class="col-12 fs-4 text-white">
-          {{ review.reviewBy }}
+          {{ review.firstname + " " + review.lastname }}
           <span class="fw-light fs-6 ms-2" style="color: #5c5b64">{{
-            review.reviewDate
+            review.review_datetime
           }}</span>
           <span
-            @click="showDeletereviewModal(review.reviewBy, review.reviewId)"
-            v-show="user.userId == review.reviewById"
+            @click="
+              showDeletereviewModal(
+                review.firstname + ' ' + review.lastname,
+                review.review_id
+              )
+            "
+            v-show="user.customer_id == review.account_id"
             class="float-end bi bi-trash3 fs-6"
             style="color: #c4c4c4; cursor: pointer"
           ></span>
         </div>
         <div class="col-12 mt-2 fw-light" style="color: #c4c4c4">
-          {{ review.reviewDetail }}
+          {{ review.review }}
         </div>
       </div>
 
@@ -379,15 +404,17 @@
 
 <script>
 import { Modal } from "bootstrap";
+import axios from "axios";
 export default {
   name: "RoomDetail",
   data() {
     return {
       user: {
-        userId: 2,
-        Name: "Chaiyawat",
-        LastName: "Roongrueng",
-        phone: "080-123-4567",
+        customer_id: 2,
+        firstname: "Salinya",
+        lastname: "Timklip",
+        phone: "0812345678",
+        role: "customer",
       },
       room: {
         room_id: 1,
@@ -405,6 +432,59 @@ export default {
           { source: "roomImage4.jpg", main: 0 },
         ],
       },
+      reservation_customer: [
+        {
+          reserve_id: 1,
+          inform_date: "20/04/2022",
+          room_id: 1,
+          room_name: "ห้องซ้อม P01",
+          type_name: "ห้องซ้อมดนตรี",
+          room_price: 600,
+          reserve_date: "27/04/2022",
+          reserve_hours: [11, 12, 13],
+          reserve_status: "pending",
+          reserve_remark: "",
+          customer_id: 1,
+          firstname: "Kulasatee",
+          lastname: "Dul",
+          phone: "082-123-4567",
+        },
+        {
+          reserve_id: 2,
+          inform_date: "20/04/2022",
+          room_id: 2,
+          room_name: "ห้องซ้อม P02",
+          type_name: "ห้องซ้อมเต้น",
+          room_price: 1800,
+          reserve_date: "27/04/2022",
+          reserve_hours: [14, 15, 16, 17, 18, 19],
+          reserve_status: "approved",
+          reserve_remark:
+            "ครั้งที่แล้วน้องลืมเก็บขยะภายในห้อง กรุณารักษาความสะอาดด้วยนะครับ",
+          customer_id: 2,
+          firstname: "Chaiyawat",
+          lastname: "Roongrueng",
+          phone: "080-123-4567",
+        },
+        {
+          reserve_id: 3,
+          inform_date: "20/04/2022",
+          room_id: 3,
+          room_name: "ห้องซ้อม P03",
+          type_name: "ห้องอัดเสียง",
+          room_price: 900,
+          reserve_date: "27/04/2022",
+          reserve_hours: [18, 19, 20],
+          reserve_status: "rejected",
+          reserve_remark:
+            "เนื่องจากเป็นวันหยุดยาว ทางร้านปิดให้บริการชั่วคราว ต้องขออภัยด้วยครับผม",
+          customer_id: 3,
+          firstname: "Salinya",
+          lastname: "Timklip",
+          phone: "085-123-4567",
+        },
+      ],
+
       time_value: [11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
       reserve_hour: [],
       reserved_hour: [16, 17, 18, 19, 20],
@@ -459,30 +539,6 @@ export default {
           instrument_name: "2 FENDER  STRATOCASTER JAPAN (Guitar)",
         },
       ],
-      reviewList: [
-        {
-          reviewId: 1,
-          reviewBy: "Salinya Timklip",
-          reviewById: 1,
-          reviewDetail: "ดีดีดีดีดีดีดีดี",
-          reviewDate: "15-04-2022",
-        },
-        {
-          reviewId: 2,
-          reviewBy: "Chaiyawat Roongrueng",
-          reviewById: 2,
-          reviewDetail:
-            "ดีมากครับ แอร์เย็น สะอาด ไม่อับ ไมค์ไม่จี่ ไม่เหม็นน้ำลาย",
-          reviewDate: "20-04-2022",
-        },
-        {
-          reviewId: 3,
-          reviewBy: "Kulasatee Dul",
-          reviewById: 3,
-          reviewDetail: "พนักงานบริการดี เป็นกันเองค่ะ แต่แอร์ดังไปหน่อยค่ะ",
-          reviewDate: "28-04-2022",
-        },
-      ],
       reviewIdtoDelete: null,
       reviewByToDelete: null,
       deletereviewModal: null,
@@ -491,43 +547,76 @@ export default {
       imageNonMain: [],
       imageMain: [],
       new_review: "",
+      review_list: [],
     };
   },
   methods: {
-    postReview(){
-      if(this.new_review == ""){
-        this.$toast.warning("Please write something in your review!")
+    postReview() {
+      if (this.new_review == "") {
+        this.$toast.warning("Please write something in your review!");
+      } else if (
+        this.review_list.findIndex(
+          (review) => review.account_id == this.user.customer_id
+        ) != -1
+      ) {
+        this.$toast.error("You have reviewed this room already!");
+      } else if (
+        this.review_list.findIndex(
+          (review) => review.account_id == this.user.customer_id
+        ) == -1
+      ) {
+        axios
+          .post("http://localhost:3001/reviews", {
+            account_id: this.user.customer_id,
+            review: this.new_review,
+            room_id: this.room.room_id,
+          })
+          .then((response) => {
+            console.log(response.data);
+            this.review_list.push({
+              account_id: this.user.customer_id,
+              firstname: this.user.firstname,
+              lastname: this.user.lastname,
+              phone: this.user.phone,
+              review: this.new_review,
+              room_id: this.room.room_id,
+              review_id: response.data,
+              review_datetime: "Just now"
+            });
+            this.new_review = "";
+          })
+          .catch((err) => {
+            console.log(err.response.data);
+          });
+        this.$toast.success("Your review has been post!");
       }
-      else if(this.reviewList.findIndex((review) => review.reviewById == this.user.userId) != -1){
-        this.$toast.error("You have reviewed this room already!")
-      }
-      else if(this.reviewList.findIndex((review) => review.reviewById == this.user.userId) == -1){
-        this.reviewList.push({
-          reviewId: 0,
-          reviewBy: this.user.Name + ' ' + this.user.LastName,
-          reviewById: this.user.userId,
-          reviewDetail: this.new_review,
-          reviewDate: this.todayDate,
-        },)
-        this.$toast.success("Your review has been post!")
-      }
-      
     },
-    showDeletereviewModal(reviewBy, reviewId) {
+    showDeletereviewModal(review_by, review_id) {
       this.deletereviewModal = new Modal(
         document.getElementById("deleteModal")
       );
       this.deletereviewModal.show();
-      this.reviewIdtoDelete = reviewId;
-      this.reviewByToDelete = reviewBy;
+      console.log(review_id);
+      this.reviewIdtoDelete = review_id;
+      this.reviewByToDelete = review_by;
     },
     deletereview() {
-      let index = this.reviewList.findIndex(
-        (val) => val.reviewId === this.reviewIdtoDelete
-      );
-      this.reviewList.splice(index, 1);
+      axios
+        .delete(`http://localhost:3001/reviews/${this.reviewIdtoDelete}`)
+        .then((response) => {
+          console.log(response.data);
+          let index = this.review_list.findIndex(
+            (val) => val.review_id === this.reviewIdtoDelete
+          );
+          this.review_list.splice(index, 1);
+          this.$toast.success(
+            `${this.reviewByToDelete}'s review has been deleted!`
+          );
+        })
+        .catch((err) => {
+          console.log(err.response.data);
+        });
       this.deletereviewModal.hide();
-      this.$toast.success(`${this.reviewByToDelete}'s review has been deleted!`)
     },
     showReserveModal() {
       this.reserveModal = new Modal(document.getElementById("reserveModal"));
@@ -536,8 +625,8 @@ export default {
     reserveRoom() {
       console.log("Room ... has been reserved.");
       this.reserveModal.hide();
-      this.$toast.success("Your reservation has been sent!")
-    }
+      this.$toast.success("Your reservation has been sent!");
+    },
   },
   created() {
     this.todayDate = new Date();
@@ -554,13 +643,23 @@ export default {
 
     this.imageNonMain = this.room.room_image.filter((val) => val.main == 0);
     this.imageMain = this.room.room_image.filter((val) => val.main == 1);
+
+    axios
+      .get(`http://localhost:3001/reviews/${this.room.room_id}`)
+      .then((response) => {
+        console.log(response.data);
+        this.review_list = response.data;
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
   },
   computed: {
     totalPrice() {
       return this.reserve_hour.length * this.room.room_price;
     },
     countreview() {
-      return this.reviewList.length;
+      return this.review_list.length;
     },
   },
 };
