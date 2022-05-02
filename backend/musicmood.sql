@@ -3,6 +3,7 @@ CREATE TABLE `accounts` (
   `account_id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
+  `role` ENUM('staff', 'customer') NOT NULL,
   PRIMARY KEY (`account_id`),
   UNIQUE KEY `account_id` (`account_id`),
   UNIQUE KEY `username` (`username`)
@@ -82,8 +83,8 @@ CREATE TABLE `images` (
   UNIQUE KEY `image_id` (`image_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `accounts` (`account_id`, `username`, `password`) VALUES
-(1, 'admin', 'admin'), (2, 'salinya', '123456'), (3, 'kulasatee', '123456'), (4, 'chaiyawat', '123456');
+INSERT INTO `accounts` (`account_id`, `username`, `password`, `role`) VALUES
+(1, 'admin', 'admin', 'staff'), (2, 'salinya', '123456', 'customer'), (3, 'kulasatee', '123456', 'customer'), (4, 'chaiyawat', '123456', 'customer');
 
 INSERT INTO `staffs` (`account_id`) VALUES
 (1);
