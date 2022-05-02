@@ -54,7 +54,7 @@ CREATE TABLE `reservations` (
 DROP TABLE IF EXISTS `rooms`;
 CREATE TABLE `rooms` (
   `room_id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `room_name` varchar(255) NOT NULL,
+  `room_name` varchar(255) NOT NULL UNIQUE,
   `room_type` ENUM('ห้องซ้อมดนตรี', 'ห้องซ้อมเต้น', 'ห้องอัดเสียง') NOT NULL,
   `room_status` ENUM('พร้อมใช้งาน', 'ไม่พร้อมใช้งาน') NOT NULL,
   `room_price` FLOAT NOT NULL,
