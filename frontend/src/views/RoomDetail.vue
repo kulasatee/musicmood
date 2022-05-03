@@ -4,7 +4,7 @@
       <div class="container-fluid p-0" style="height: 60vh">
         <img
           class="w-100"
-          :src="require(`../assets/${imageMain[0].source}`)"
+          :src="`http://localhost:3001/${image_banner[0].file_path}`"
           alt=""
           style="height: 60vh; object-fit: cover"
         />
@@ -25,7 +25,7 @@
             {{ room.room_name }}</span
           >
           <span class="h2 ps-3 pe-3" style="color: #afacb6">
-            {{ room.type_name }}</span
+            {{ room.room_type }}</span
           >
           <span
             class="btn mb-3 pb-1 readystatus"
@@ -154,14 +154,16 @@
         <h1 style="color: #ffffff">Gallery</h1>
       </div>
       <div class="row mt-3">
-        <div v-for="(image, index) in imageNonMain" :key="index" class="col-3">
+        <div v-for="(image, index) in image_nonbanner" :key="index" class="col-3">
+          <!-- <div class="text-danger">{{image.file_path}}</div> -->
           <img
-            :src="require(`../assets/${image.source}`)"
+            :src="`http://localhost:3001/${image.file_path}`"
             class="img-fluid rounded shadow-lg"
             alt="..."
             style="object-fit: cover; width: 100%; height: 15rem"
           />
         </div>
+        
       </div>
 
       <!-- Write Review -->
@@ -342,62 +344,6 @@
         </div>
       </div>
 
-      <!-- reserve toast -->
-      <div class="position-fixed bottom-0 start-0 p-3" style="z-index: 11">
-        <div
-          id="reserveToast"
-          class="toast hide bg-white"
-          role="alert"
-          aria-live="assertive"
-          aria-atomic="true"
-        >
-          <div
-            class="toast-header text-white fw-light"
-            style="background-color: #22c55e"
-          >
-            <span class="me-2"><i class="bi bi-check-circle"></i></span>
-            <strong class="me-auto">Success</strong>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="toast"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="toast-body text-start" style="color: #22c55e">
-            Your Reservation has been sent!
-          </div>
-        </div>
-      </div>
-
-      <!-- delete review toast -->
-      <div class="position-fixed bottom-0 start-0 p-3" style="z-index: 11">
-        <div
-          id="deletereviewToast"
-          class="toast hide bg-white"
-          role="alert"
-          aria-live="assertive"
-          aria-atomic="true"
-        >
-          <div
-            class="toast-header text-white fw-light"
-            style="background-color: #22c55e"
-          >
-            <span class="me-2"><i class="bi bi-check-circle"></i></span>
-            <strong class="me-auto">Success</strong>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="toast"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="toast-body text-start fw-light" style="color: #22c55e">
-            <span class="fw-normal">{{ reviewByToDelete }}</span
-            >'s review has been deleted!
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -419,18 +365,11 @@ export default {
       room: {
         room_id: 1,
         room_name: "ห้องซ้อม P01",
-        type_name: "ห้องอัดเสียง",
+        room_type: "ห้องอัดเสียง",
         room_status: "พร้อมใช้งาน",
         room_price: 300,
         room_description:
-          "Beside the Studio area we also have a private lounge for both Studio A and B, a courtyard with outdoor seating, and a big garden with bar and BBQ stove,…",
-        room_image: [
-          { source: "banner.jpg", main: 1 },
-          { source: "roomImage1.jpg", main: 0 },
-          { source: "roomImage2.jpg", main: 0 },
-          { source: "roomImage3.jpg", main: 0 },
-          { source: "roomImage4.jpg", main: 0 },
-        ],
+          "Beside the Studio area we also have a private lounge for both Studio A and B, a courtyard with outdoor seating, and a big garden with bar and BBQ stove,…"
       },
       reservation_customer: [
         {
@@ -438,7 +377,7 @@ export default {
           inform_date: "20/04/2022",
           room_id: 1,
           room_name: "ห้องซ้อม P01",
-          type_name: "ห้องซ้อมดนตรี",
+          room_type: "ห้องซ้อมดนตรี",
           room_price: 600,
           reserve_date: "27/04/2022",
           reserve_hours: [11, 12, 13],
@@ -454,7 +393,7 @@ export default {
           inform_date: "20/04/2022",
           room_id: 2,
           room_name: "ห้องซ้อม P02",
-          type_name: "ห้องซ้อมเต้น",
+          room_type: "ห้องซ้อมเต้น",
           room_price: 1800,
           reserve_date: "27/04/2022",
           reserve_hours: [14, 15, 16, 17, 18, 19],
@@ -471,7 +410,7 @@ export default {
           inform_date: "20/04/2022",
           room_id: 3,
           room_name: "ห้องซ้อม P03",
-          type_name: "ห้องอัดเสียง",
+          room_type: "ห้องอัดเสียง",
           room_price: 900,
           reserve_date: "27/04/2022",
           reserve_hours: [18, 19, 20],
@@ -491,61 +430,15 @@ export default {
       activebtn: "selecttimebtn",
       disablebtn: "reserve_hourbtn",
       reserve_date: null,
-      instruments: [
-        { id: 1, quantity: 1, instrument_name: "1 VOX TELSTAR MAPLE (Drum)" },
-        {
-          id: 2,
-          quantity: 2,
-          instrument_name: "2 FENDER  STRATOCASTER JAPAN (Guitar)",
-        },
-        {
-          id: 3,
-          quantity: 2,
-          instrument_name: "2 FENDER  STRATOCASTER JAPAN (Guitar)",
-        },
-        {
-          id: 4,
-          quantity: 2,
-          instrument_name: "2 FENDER  STRATOCASTER JAPAN (Guitar)",
-        },
-        {
-          id: 5,
-          quantity: 2,
-          instrument_name: "2 FENDER  STRATOCASTER JAPAN (Guitar)",
-        },
-        {
-          id: 6,
-          quantity: 2,
-          instrument_name: "2 FENDER  STRATOCASTER JAPAN (Guitar)",
-        },
-        {
-          id: 7,
-          quantity: 2,
-          instrument_name: "2 FENDER  STRATOCASTER JAPAN (Guitar)",
-        },
-        {
-          id: 8,
-          quantity: 2,
-          instrument_name: "2 FENDER  STRATOCASTER JAPAN (Guitar)",
-        },
-        {
-          id: 9,
-          quantity: 2,
-          instrument_name: "2 FENDER  STRATOCASTER JAPAN (Guitar)",
-        },
-        {
-          id: 10,
-          quantity: 2,
-          instrument_name: "2 FENDER  STRATOCASTER JAPAN (Guitar)",
-        },
-      ],
+      instruments: [],
+      room_image: [],
       reviewIdtoDelete: null,
       reviewByToDelete: null,
       deletereviewModal: null,
       todayDate: null,
       reserveModal: null,
-      imageNonMain: [],
-      imageMain: [],
+      image_nonbanner: [],
+      image_banner: [],
       new_review: "",
       review_list: [],
     };
@@ -641,14 +534,43 @@ export default {
 
     this.reserve_date = this.todayDate;
 
-    this.imageNonMain = this.room.room_image.filter((val) => val.main == 0);
-    this.imageMain = this.room.room_image.filter((val) => val.main == 1);
-
     axios
-      .get(`http://localhost:3001/reviews/${this.room.room_id}`)
+      .get(`http://localhost:3001/reviews/${this.$route.params.id}`)
       .then((response) => {
         console.log(response.data);
         this.review_list = response.data;
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
+
+    axios
+      .get(`http://localhost:3001/rooms/${this.$route.params.id}/instruments`)
+      .then((response) => {
+        console.log(response.data);
+        this.instruments = response.data;
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
+
+      axios
+      .get(`http://localhost:3001/rooms/${this.$route.params.id}/images`)
+      .then((response) => {
+        console.log(response.data);
+        this.room_image = response.data;
+        this.image_nonbanner = this.room_image.filter((val) => val.banner == 0);
+        this.image_banner = this.room_image.filter((val) => val.banner == 1);
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
+
+      axios
+      .get(`http://localhost:3001/rooms/${this.$route.params.id}`)
+      .then((response) => {
+        console.log(response.data);
+        this.room = response.data[0];
       })
       .catch((err) => {
         console.log(err.response.data);
