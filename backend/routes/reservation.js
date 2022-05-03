@@ -33,7 +33,7 @@ router.get("/reservations/:account_id", async function (req, res, next) {
 router.get("/reservations/date/:reserve_date/:room_id", async function (req, res, next) {
     try {
       const [reservations, columns] = await pool.query(
-        "SELECT room_id, reserve_hours FROM reservations WHERE reserve_date = ? AND room_id = ?",
+        "SELECT room_id, reserve_hours FROM reservations WHERE reserve_date = ? AND room_id = ? AND reserve_status = 'Approved'",
         [req.params.reserve_date, req.params.room_id]
       );
       return res.json(reservations);
@@ -61,6 +61,23 @@ router.post("/reservations", async function (req, res, next) {
     return next(err);
   }
 });
+
+//edit reservation status
+router.put("/reservations", async function (req, res, next) {
+    try {
+      const [reservations, columns] = await pool.query(
+        "UPDATE reservations SET reserve_status = ?, reserve_remark = ? WHERE reserve_id = ?",
+        [
+          req.body.reserve_status,
+          req.body.reserve_remark,
+          req.body.reserve_id
+        ]
+      );
+      return res.json(reservations);
+    } catch (err) {
+      return next(err);
+    }
+  });
 
 //edit room
 // router.put("/rooms/:room_id", async function (req, res, next) {
