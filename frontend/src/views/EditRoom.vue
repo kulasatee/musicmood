@@ -103,7 +103,7 @@
 
 <script>
 import {} from 'bootstrap'
-import axios from 'axios'
+import axios from "../plugins/axios";
 
 export default {
   name: 'EditRoom',
@@ -147,7 +147,7 @@ export default {
     }
   },
   created() {
-    axios.get(`http://localhost:3001/rooms/${this.$route.params.id}`)
+    axios.get(`/rooms/${this.$route.params.id}`)
         .then((response) => {
           console.log(response.data)
 
@@ -164,7 +164,7 @@ export default {
         });
         
 
-    axios.get(`http://localhost:3001/rooms/${this.$route.params.id}/instruments`)
+    axios.get(`/rooms/${this.$route.params.id}/instruments`)
         .then((response) => {
           this.instruments = response.data
           console.log(response.data)
@@ -200,26 +200,22 @@ export default {
         this.$toast.error(`Please fill out 'Room Description'`)   
       }else{
         
-      axios.delete(`http://localhost:3001/rooms/${this.$route.params.id}/instruments`, )
+      axios.delete(`/rooms/${this.$route.params.id}/instruments`, )
         .then((response) => {
           console.log(response)
             setTimeout(() => {
-        axios.put(`http://localhost:3001/rooms/${this.$route.params.id}`, editRoom)
-          .then((response) => {
-            console.log(response.data)
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }, 5000);
+              axios.put(`/rooms/${this.$route.params.id}`, editRoom)
+                .then((response) => {
+                  console.log(response.data)
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+            }, 5000);
         })
         .catch((err) => {
           console.log(err);
         });
-      
-
-        
-        
 
         this.$toast.success(`'${this.room_name}' has been edited!`)
 
