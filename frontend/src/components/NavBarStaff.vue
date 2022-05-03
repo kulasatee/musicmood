@@ -50,8 +50,11 @@ export default {
   },
   methods:{
     logout(){
-        console.log(this.$router)
         localStorage.clear()
+          this.$router.replace('/').catch(err => {
+              console.log(err)
+              this.$router.go('/')
+          })
   }
   }
 }

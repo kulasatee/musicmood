@@ -59,8 +59,8 @@ router.post("/signup", async function (req, res, next) {
     await conn.beginTransaction();
 
     try{
-      const [account_row, account_filed] = await pool.query("INSERT INTO accounts(username, password, role) VALUES(?,?,?)", [req.body.username, await bcrypt.hash(req.body.password, 10), "customer"]);
-      const [customer_row, customer_field] = await pool.query("INSERT INTO customers(account_id, firstname, lastname, phone) VALUES(?,?,?,?)", [account_row.insertId, req.body.first_name, req.body.last_name, req.body.phone_number]);
+      const [account_row, account_filed] = await conn.query("INSERT INTO accounts(username, password, role) VALUES(?,?,?)", [req.body.username, await bcrypt.hash(req.body.password, 10), "customer"]);
+      const [customer_row, customer_field] = await conn.query("INSERT INTO customers(account_id, firstname, lastname, phone) VALUES(?,?,?,?)", [account_row.insertId, req.body.first_name, req.body.last_name, req.body.phone_number]);
 
       console.log(account_row)
       console.log(customer_row)
@@ -122,7 +122,6 @@ router.post("/login", async function (req, res, next){
       }catch(err){
         return res.status(400).json("token boom")
       }
-      
     }catch(err){
       console.log(err.details)
       if(err.details != undefined){

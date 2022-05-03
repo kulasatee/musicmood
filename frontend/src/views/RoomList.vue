@@ -4,7 +4,7 @@
       <div class="d-flex flex-row justify-content-between">
           <div class="text-start d-flex flex-row align-items-center ">
             <div class="linear-color h1" >Room List</div>
-            <div v-if="user.role != 'customer' && user.role != 'anonymous'" class="mx-4 flex-row align-content-center align-item-center" ><a href="create-room"><button class="btn btn-custom" style="border-color:#6865F2; color: white; background-color: #6865F2;">Add a new room</button></a></div>
+            <div v-if="user.role != 'customer' && user.role != 'anonymous'" class="mx-4 flex-row align-content-center align-item-center" ><router-link to="create-room"><button class="btn btn-custom" style="border-color:#6865F2; color: white; background-color: #6865F2;">Add a new room</button></router-link></div>
           </div>
           <div class="d-flex flex-row align-items-center justify-content-end w-50">
               <div class="col text-start">
@@ -53,7 +53,7 @@
                       </div>
                     </div>
                     <div v-if="user.role != 'customer' && user.role != 'anonymous'"  class="text-white px-3">
-                      <a href="/edit-room"><span type="button" class="btn btn-outline-warning"> Edit </span></a>
+                      <router-link :to="`/edit-room/${room.room_id}`"><span type="button" class="btn btn-outline-warning"> Edit </span></router-link>
                     </div>
                   </div>
                   <div class="d-flex flex-column align-items-start">
