@@ -1,8 +1,8 @@
 <template>
   <div id="app" style="background-color: #131022">
-    <NavBarStaff :msg="$route.fullPath" class="pb-5" :path="'landing'" v-if="user_proxy() && user_proxy().role == 'staff'"/>
-    <NavBarCustomer :msg="$route.fullPath" class="pb-5" v-if="user_proxy() && user_proxy().role == 'customer'"/>
-    <NavBarAno :msg="$route.fullPath" class="pb-5" v-else/>
+    <NavBarStaff :msg="$route.fullPath" class="pb-3" :path="'landing'" v-if="user_proxy() && user_proxy().role == 'staff'"/>
+    <NavBarCustomer :msg="$route.fullPath" class="pb-3" v-if="user_proxy() && user_proxy().role == 'customer'"/>
+    <NavBarAno :msg="$route.fullPath" class="pb-3" v-else/>
     <router-view :key="$route.fullPath" />
   </div>
 </template>
