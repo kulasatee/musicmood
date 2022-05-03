@@ -2,7 +2,7 @@
 <div style="background-color: #131022; height: 100vh;">
   <div class="container pt-2" style="background-color: #131022;">
     <h1 class="text-start fw-bold mb-4">Edit Room</h1>
-    <form class="row">
+    <form class="row" method="POST" action="http://localhost:3001/images" enctype="multipart/form-data">
       <div class="row" style="z-index: 1">
         <!-- spilt 2 column -->
         <!-- left column -->
@@ -50,13 +50,7 @@
           <div class="row mb-4">
             <div class="col text-start">
               <label for="bannerphoto" class="form-label text-white">Choose Banner photo</label>
-              <input class="form-control form-control-lg text-white input-bg" type="file" id="bannerphoto">
-            </div>
-          </div>
-          <div class="row">
-            <div class="col text-start">
-              <label for="roomphoto" class="form-label text-white">Choose Room photo (Maximum of 4)</label>
-              <input class="form-control form-control-lg text-white input-bg" type="file" id="roomphoto" multiple>
+              <input class="form-control form-control-lg text-white input-bg" type="file" id="bannerphoto" name="bannerImage" @change="uploadFile($event)">
             </div>
           </div>
         </div>
@@ -79,9 +73,9 @@
           </div>
           <div class="row ">
             <ul class="ps-3">
-              <li class="text-start ps-3 mb-3" v-for="instrument in instruments" :key="instrument.id">
+              <li class="text-start ps-3 mb-3" v-for="(instrument, index) in instruments" :key="index">
                 {{ instrument.quantity }} {{ instrument.instrument_name }}
-                <a href="#" @click="removeInstrument(instrument.instrument_id)">
+                <a href="#" @click="removeInstrument(index)">
                   <span style="color: white; float: right">
                     <i class="bi bi-x"></i>
                   </span>
@@ -95,7 +89,7 @@
         <!-- submit form button -->
           <div class="col pt-2 text-end me-5">
             <button type="button" class="btn btn-lg btn-sec">CANCEL</button>
-            <button type="button" class="btn btn-lg btn-pri ms-4" @click="editRoom()">SAVE</button>
+            <button type="submit" value="submit" class="btn btn-lg btn-pri ms-4" @click="editRoom()">SAVE</button>
           </div>
       </div>
     </form>
@@ -103,41 +97,14 @@
     <!-- blur bg -->
     <div class="circle1"></div>
     <div class="circle2"></div>
-
-    <!-- incomplete toast -->
-    <div class="position-fixed bottom-0 start-0 p-3" style="z-index: 11;">
-      <div id="incompleteToast" class="toast hide bg-white" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header text-white bg-danger fw-light">
-          <span class="me-2"><i class="bi bi-exclamation-circle"></i></span>
-          <strong class="me-auto">Incomplete</strong>
-          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body text-danger text-start">
-          Please fill out '{{field_name}}'
-        </div>
-      </div>
-    </div>
-    
-    <!-- success toast -->
-    <div class="position-fixed bottom-0 start-0 p-3" style="z-index: 11;">
-      <div id="successToast" class="toast hide text-white" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header text-white fw-light" style="background-color: #22C55E">
-          <span class="me-2"><i class="bi bi-check-circle"></i></span>
-          <strong class="me-auto">Success</strong>
-          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body text-start" style="color: #22C55E">
-          '{{name_room_toast}}' has been edited!
-        </div>
-      </div>
-    </div>
-
   </div>
 </div>
 </template>
 
 <script>
-import {Toast} from 'bootstrap'
+import {} from 'bootstrap'
+import axios from 'axios'
+
 export default {
   name: 'EditRoom',
   data() {
@@ -168,99 +135,102 @@ export default {
       quantity: '',
       instrument_name: '',
       //>>v-model for input
-      
-      //edit this room
-      edit_room: {room_id: 1,
-            room_name: 'ห้องซ้อม P01',
-            type_name: 'ห้องซ้อมดนตรี',
-            room_status: 'พร้อมใช้งาน',
-            room_price: 300,
-            room_description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.',
-            room_instrument: [{instrument_id: 1, quantity: '1', instrument_name: 'SQUIER  JAGUAR (Bass)'},
-                                {instrument_id: 2, quantity: '2', instrument_name: 'FENDER  STRATOCASTER JAPAN (Guitar)'},
-                                {instrument_id: 3, quantity: '1', instrument_name: 'SQUIER  JAGUAR (Bass)'},
-                                {instrument_id: 4, quantity: '2', instrument_name: 'FENDER  STRATOCASTER JAPAN (Guitar)'},
-                                {instrument_id: 5, quantity: '1', instrument_name: 'SQUIER  JAGUAR (Bass)'}]}
-      ,
-      //>>edit this room
-
-      //edit room success
-      rooms: {},
-      //>>edit room success
 
       //array for instrument
       instrument_id: 0,
       instruments: [],
       //>>array for instrument
 
-      //msg for toast
-      field_name: '',
-      name_room_toast: ''
-      //>>msg for toast
+      rooms: null,
+
+      files: null,
     }
   },
   created() {
-    this.room_id = this.edit_room.room_id
-    this.room_name = this.edit_room.room_name
-    this.type_name = this.edit_room.type_name
-    this.room_status = this.edit_room.room_status
-    this.show_select_type = this.edit_room.type_name
-    this.show_select_status = this.edit_room.room_status
-    this.room_price = this.edit_room.room_price
-    this.room_description = this.edit_room.room_description
-    this.instruments = this.edit_room.room_instrument
+    axios.get(`http://localhost:3001/rooms/${this.$route.params.id}`)
+        .then((response) => {
+          console.log(response.data)
+
+          this.room_name = response.data[0].room_name
+          this.type_name = response.data[0].room_type
+          this.room_status = response.data[0].room_status
+          this.show_select_type = response.data[0].room_type
+          this.show_select_status = response.data[0].room_status
+          this.room_price = response.data[0].room_price
+          this.room_description = response.data[0].room_description
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+        
+
+    axios.get(`http://localhost:3001/rooms/${this.$route.params.id}/instruments`)
+        .then((response) => {
+          this.instruments = response.data
+          console.log(response.data)
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+    
 
     this.instrument_id = this.instruments.length
   },
   methods: {
     editRoom() {
       const editRoom = {
-        room_id: this.room_id,
         room_name: this.room_name,
         type_name: this.type_name,
         room_status: this.room_status,
         room_price: this.room_price,
         room_description: this.room_description,
-        banner: '',
-        room_photo: '',
-        room_instrument: this.instruments
+        room_instrument: this.instruments,
+        banner_image: this.files
       }
-      var option = {animation: true, autohide: true, delay: 4000}
-      var toast = document.getElementById('incompleteToast')
-      var toast2 = document.getElementById('successToast')
-      var incomplete_toast = new Toast(toast, option)
-      var succcess_toast = new Toast(toast2, option)
-
-      if(this.room_name === ''){
-        incomplete_toast.show()
-        this.field_name = 'Room Name'   
-      }else if(this.type_name === ''){
-        incomplete_toast.show()
-        this.field_name = 'Room Type'
-      }else if(this.room_status === ''){
-        incomplete_toast.show()
-        this.field_name = 'Room Status'
-      }else if(this.room_price === ''){
-        incomplete_toast.show()
-        this.field_name = 'Room Price'
-      }else if(this.room_description === ''){
-        incomplete_toast.show()
-        this.field_name = 'Room Description'
+      if(!this.room_name){
+        this.$toast.error(`Please fill out 'Room Name'`)   
+      }else if(!this.type_name){
+        this.$toast.error(`Please fill out 'Room Type'`)   
+      }else if(!this.room_status){
+        this.$toast.error(`Please fill out 'Room Status'`)   
+      }else if(!this.room_price){
+        this.$toast.error(`Please fill out 'Room Price'`)   
+      }else if(!this.room_description){
+        this.$toast.error(`Please fill out 'Room Description'`)   
       }else{
-        this.rooms = editRoom
+        
+      axios.delete(`http://localhost:3001/rooms/${this.$route.params.id}/instruments`, )
+        .then((response) => {
+          console.log(response)
+            setTimeout(() => {
+        axios.put(`http://localhost:3001/rooms/${this.$route.params.id}`, editRoom)
+          .then((response) => {
+            console.log(response.data)
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }, 5000);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      
 
-        this.name_room_toast = this.room_name
-        succcess_toast.show()
+        
+        
 
-        this.room_id = this.rooms.room_id
-        this.room_name = this.rooms.room_name
-        this.type_name = this.rooms.type_name
-        this.room_status = this.rooms.room_status
-        this.show_select_type = this.rooms.type_name
-        this.show_select_status = this.rooms.room_status
-        this.room_price = this.rooms.room_price
-        this.room_description = this.rooms.room_description
-        this.instruments = this.rooms.room_instrument
+        this.$toast.success(`'${this.room_name}' has been edited!`)
+
+        // this.room_name = this.rooms[0].room_name
+        // this.type_name = this.rooms[0].type_name
+        // this.room_status = this.rooms[0].room_status
+        // this.show_select_type = this.rooms[0].type_name
+        // this.show_select_status = this.rooms[0].room_status
+        // this.room_price = this.rooms[0].room_price
+        // this.room_description = this.rooms[0].room_description
+        // this.instruments = this.rooms[0].room_instrument
 
         this.quantity = ''
         this.instrument_name = ''
@@ -279,10 +249,14 @@ export default {
       this.quantity = ''
       this.instrument_name = ''
     },
-    removeInstrument(instrument_id) {
-      let index = this.instruments.findIndex((val) => val.instrument_id === instrument_id)
+    removeInstrument(index) {
       this.instruments.splice(index, 1)
+    },
+    uploadFile (event) {
+        this.files = event.target.files[0].name
+        console.log('files: ' + event.target.files[0].name)
     }
+    
   },
   computed: {
     isBtnDisabled() {
