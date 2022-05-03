@@ -424,8 +424,6 @@ export default {
     return {
       user: {
         account_id: 1,
-        firstname: "admin",
-        lastname: "admin",
         phone: "0830494978",
         role: "staff",
       },
@@ -599,6 +597,7 @@ export default {
   },
   created() {
     this.todayDate = new Date();
+    this.user = JSON.parse(localStorage.getItem("user"))
     var yyyy = this.todayDate.getFullYear();
     let mm = this.todayDate.getMonth() + 1; // Months start at 0!
     let dd = this.todayDate.getDate();

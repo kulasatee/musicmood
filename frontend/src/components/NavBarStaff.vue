@@ -2,7 +2,9 @@
     <div class="container">
         <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #131022;">
             <div class="container-fluid">
-                <div class="navbar-brand mx-0 my-1" @click="$router.push('/')" style="color: white; font-size: 2.25rem">
+                <div class="navbar-brand mx-0 my-1" @click="$router.push('/').catch(err => {
+                    $router.go('/')
+                })" style="color: white; font-size: 2.25rem">
                     <img src="../assets/MusicMoodLOGO.png" alt="" width="52" height="52">
                     <span class="px-3">MusicMood</span>
                 </div>
@@ -12,10 +14,10 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item" v-if="path!='landing'">
-                        <a class="nav-link active px-5" aria-current="page" href="#" style="color: white; font-size: 1.25rem" :style="compute_path=='/room-list' ? {'color': '#6865F2'}:''">Room List</a>
+                        <router-link class="nav-link active px-5" aria-current="page" to="/room-list" style="color: white; font-size: 1.25rem" :style="compute_path=='/room-list' ? {'color': '#6865F2'}:''">Room List</router-link>
                     </li>
                     <li class="nav-item px-5" v-if="path!='landing'">
-                        <a class="nav-link" href="/reservation-list" style="color: white; font-size: 1.25rem">Reservation list</a>
+                        <router-link class="nav-link" to="/reservation-list" style="color: white; font-size: 1.25rem">Reservation list</router-link>
                     </li>
                 </ul>
                 <form class="d-flex">

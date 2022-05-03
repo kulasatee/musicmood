@@ -14,10 +14,10 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active px-5" aria-current="page" href="#" style="color: white; font-size: 1.25rem">Room List</a>
+                        <router-link class="nav-link active px-5" aria-current="page" to="/room-list" style="color: white; font-size: 1.25rem">Room List</router-link>
                     </li>
                     <li class="nav-item px-5">
-                        <a class="nav-link" href="/reservation-status" style="color: white; font-size: 1.25rem">Reservation status</a>
+                        <router-link class="nav-link" to="/reservation-status" style="color: white; font-size: 1.25rem">Reservation status</router-link>
                     </li>
                 </ul>
                 <form class="d-flex">

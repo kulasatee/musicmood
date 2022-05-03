@@ -13,8 +13,8 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 </ul>
                 <form class="d-flex">
-                    <a href="/login"><button class="btn btn-custom me-3" type="button" style="border-color:#6865F2; color: white; background-color: #6865F2">Log In</button></a>
-                    <a href="/signup"><button class="btn btn-custom me-3" type="button" style="border-color:#6865F2; color:#6865F2">Sign Up</button></a>
+                    <router-link to="/login"><button class="btn btn-custom me-3" type="button" style="border-color:#6865F2; color: white; background-color: #6865F2">Log In</button></router-link>
+                    <router-link to="/signup"><button class="btn btn-custom me-3" type="button" style="border-color:#6865F2; color:#6865F2">Sign Up</button></router-link>
                 </form>
                 </div>
             </div>
