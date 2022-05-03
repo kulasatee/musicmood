@@ -3,7 +3,9 @@ const path = require("path");
 const pool = require("../config");
 const bcrypt = require("bcrypt");
 const Joi = require('joi');
-const { generateToken, isAuth } = require("./auth/jwtAuth")
+const { generateToken, isAuth } = require("./auth/jwtAuth");
+const { router } = require("./room");
+const { func } = require("joi");
 
 router = express.Router();
 
@@ -147,6 +149,29 @@ const editSchema = Joi.object({
 router.post("/edit-account", isAuth, async function(req, res, next){
   try{
     await editSchema.validateAsync({firstname: req.body.firstname, lastname: req.body.lastname, phone: req.body.phone}, {abortEarly: false})
+  }catch (err){
+    console.log(err.details)
+    if(err.details != undefined){
+      return res.status(400).json(err.details[0].message.split('" ')[0].substr(1))
+    }else{
+      return res.status(400).json("This username already exists")
+    }
+  }
+  const [account_row, account_filed] = await pool.query("UPDATE customers SET firstname=?, lastname=?, phone=? WHERE account_id=?", [req.body.firstname, req.body.lastname, req.body.phone, req.body.account_id]);
+  console.log(account_row)
+
+  return res.json(account_row[0])
+})
+
+const changepasswordSchema = Joi.object({
+  firstname: Joi.string().max(30).required().label("First name Incorrect! First name must contain only 30 character"),
+  lastname: Joi.string().max(30).required().label("Last name Incorrect!  Last name must contain only 30 character"),
+  phone: Joi.string().required().pattern(/0[0-9]{9}/).label("Phone number Incorrect!"),
+})
+
+router.post("/chenge-password", isAuth, function (req, res, next){
+  try{
+    await changepsswordSchema.validateAsync({firstname: req.body.firstname, lastname: req.body.lastname, phone: req.body.phone}, {abortEarly: false})
   }catch (err){
     console.log(err.details)
     if(err.details != undefined){
