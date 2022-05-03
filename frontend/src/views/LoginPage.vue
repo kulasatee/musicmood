@@ -10,11 +10,11 @@
               </div>
               <div class="text-white fw-light" style="font-size: 1rem">
                 Don't have an account yet?
-                <a
-                  href="/signup"
+                <router-link
+                  to="/signup"
                   class="ps-1"
                   style="color: #6865f2; text-decoration: underline"
-                  >Register here</a
+                  >Register here</router-link
                 >
               </div>
 
@@ -87,7 +87,6 @@ export default {
       } else if (this.form_input.password == "") {
         alert("please fill in password");
       } else {
-
         try{
           var response = await axios.post("/login", this.form_input)
           if(response.data.token){

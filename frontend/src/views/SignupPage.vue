@@ -1,5 +1,5 @@
 <template>
-  <div class="container pt-5">
+  <div class="container pt-2">
       <div class="row justify-content-center">
           <div class="col-10">
             <div class="row justify-content-center">
@@ -15,24 +15,29 @@
                                 <div class="text-white me-2" style="font-size: 1rem;">
                                     <label for="firstname" class="form-label text-white">First name</label>
                                     <input type="text" class="form-control form-control-lg input-bg " id="firstname" v-model="form_input.first_name">
+                                    
                                 </div>
                                 <div class="text-white ms-2" style="font-size: 1rem;">
                                     <label for="lastname" class="form-label text-white">Last name</label>
                                     <input type="text" class="form-control form-control-lg input-bg " id="lastname" v-model="form_input.last_name">
                                 </div>
                         </div>
+                        <span class="fw-light text-white-50" style="font-size: 12px;">A-Z or a-z and contain only 30 characters</span>
                         <div class="text-white mt-4" style="font-size: 1rem">
                             <label for="phonenumber" class="form-label text-white">Phone number</label>
                             <input type="text" class="form-control form-control-lg input-bg " id="phonenumber" v-model="form_input.phone_number">
                         </div>
+                        <span class="fw-light text-white-50" style="font-size: 12px;">doesn't need to fill in "-"</span>
                         <div class="text-white mt-4" style="font-size: 1rem">
                             <label for="username" class="form-label text-white">Username</label>
                             <input type="text" class="form-control form-control-lg input-bg " id="username" v-model="form_input.username">
                         </div>
+                        <span class="fw-light text-white-50" style="font-size: 12px;">A-Z or a-z only at least 8 characters</span>
                         <div class="text-white mt-4" style="font-size: 1rem">
                             <label for="password" class="form-label text-white">Password</label>
                             <input type="password" class="form-control form-control-lg input-bg " id="password" v-model="form_input.password">
                         </div>
+                        <span class="fw-light text-white-50" style="font-size: 12px;">A-Z or a-z only at least 8 characters and contain lowercase, number and 1 uppercase</span>
                         <div class="text-white mt-4" style="font-size: 1rem">
                             <label for="confirm_password" class="form-label text-white">Confirm Password</label>
                             <input type="password" class="form-control form-control-lg input-bg" id="confirm_password" v-model="form_input.confirm_password">
@@ -89,6 +94,7 @@ export default {
             axios.post("http://localhost:3001/signup", this.form_input)
                 .then((response) => {
                 console.log(response.data)
+                this.$toast.success(`Your account has been created!`)
                 this.$router.push("/")
                 })
                 .catch((err) => {

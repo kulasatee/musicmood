@@ -267,14 +267,14 @@
               >
                 <span><i class="bi bi-info-circle"></i></span
                 ><span class="fw-light ms-2"
-                  >หลังใช้บริการห้องแล้ว สามารถรีวิวห้องได้<a
+                  >หลังใช้บริการห้องแล้ว สามารถรีวิวห้องได้<div
                     @click="goToReview()"
                     style="color: #6366f1"
                     ><span
                       class="ms-1 text-decoration-underline fw-normal"
                       style="cursor: pointer"
                       >ที่นี่</span
-                    ></a
+                    ></div
                   ></span
                 >
               </div>

@@ -14,7 +14,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <router-link class="nav-link active px-5" aria-current="page" to="/room-list" style="color: white; font-size: 1.25rem" :style="compute_path=='/room-list' ? {'color': '#6865F2'}:''">Room List</router-link>
+                        <router-link class="nav-link active px-5" aria-current="page" to="/room-list" style="color: white; font-size: 1.25rem">Room List</router-link>
                     </li>
                     <li class="nav-item px-5">
                         <router-link class="nav-link" to="/reservation-list" style="color: white; font-size: 1.25rem">Reservation list</router-link>
@@ -50,8 +50,11 @@ export default {
   },
   methods:{
     logout(){
-        console.log(this.$router)
         localStorage.clear()
+          this.$router.replace('/').catch(err => {
+              console.log(err)
+              this.$router.go('/')
+          })
   }
   }
 }
