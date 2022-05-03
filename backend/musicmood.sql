@@ -46,6 +46,7 @@ CREATE TABLE `reservations` (
   `inform_datetime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `reserve_status` ENUM('pending', 'approved', 'rejected') NOT NULL,
   `reserve_remark` TEXT DEFAULT NULL,
+  `total_price` int NOT NULL,
   PRIMARY KEY (`reserve_id`),
   UNIQUE KEY `reserve_id` (`reserve_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -94,8 +95,8 @@ INSERT INTO `customers` (`account_id`, `firstname`, `lastname`, `phone`) VALUES
 INSERT INTO `reviews` (`review_id`, `account_id`, `room_id`, `review`, `review_datetime`) VALUES
 (1, 2, 1, 'ห้องสะอาดมากค่ะ อุปกรณ์ครบครัน ไว้มาใช้บริการใหม่นะคะ', CURRENT_TIMESTAMP), (2, 3, 1, 'ดีมากครับ แอร์เย็น สะอาด ไม่อับ ไมค์ไม่จี่ ไม่เหม็นน้ำลาย', CURRENT_TIMESTAMP), (3, 4, 1, 'พนักงานบริการดี เป็นกันเองค่ะ แต่แอร์ดังไปหน่อยค่ะ', CURRENT_TIMESTAMP);
 
-INSERT INTO `reservations` (`reserve_id`, `account_id`, `room_id`, `reserve_date`, `reserve_hours`, `inform_datetime`, `reserve_status`, `reserve_remark`) VALUES
-(1, 2, 1, '2022-05-25', '11,12,13', CURRENT_TIMESTAMP, 'pending', CURRENT_TIMESTAMP), (2, 3, 1, '2022-04-28', '11,12,13,14,15,16', CURRENT_TIMESTAMP, 'approved', 'ครั้งที่แล้วน้องลืมเก็บขยะภายในห้อง กรุณารักษาความสะอาดด้วยนะครับ'), (3, 4, 1, '2022-04-13', '11,12,13,14', CURRENT_TIMESTAMP, 'rejected', 'เนื่องจากเป็นวันหยุดยาว ทางร้านปิดให้บริการชั่วคราว ต้องขออภัยด้วยครับผม');
+INSERT INTO `reservations` (`reserve_id`, `account_id`, `room_id`, `reserve_date`, `reserve_hours`, `inform_datetime`, `reserve_status`, `reserve_remark`, `total_price`) VALUES
+(1, 2, 1, '2022-05-25', '11,12,13', CURRENT_TIMESTAMP, 'pending', CURRENT_TIMESTAMP, 900), (2, 3, 1, '2022-04-28', '11,12,13,14,15,16', CURRENT_TIMESTAMP, 'approved', 'ครั้งที่แล้วน้องลืมเก็บขยะภายในห้อง กรุณารักษาความสะอาดด้วยนะครับ', 2100), (3, 4, 1, '2022-04-13', '11,12,13,14', CURRENT_TIMESTAMP, 'rejected', 'เนื่องจากเป็นวันหยุดยาว ทางร้านปิดให้บริการชั่วคราว ต้องขออภัยด้วยครับผม', 2100);
 
 INSERT INTO `rooms` (`room_id`, `room_name`, `room_type`, `room_status`, `room_price`, `room_description`) VALUES
 (1, 'ห้องซ้อม P01', 'ห้องซ้อมดนตรี', 'พร้อมใช้งาน', '300', 'Beside the Studio area we also have a private lounge for both Studio A and B, a courtyard with outdoor seating, and a big garden with bar and BBQ stove,…'),

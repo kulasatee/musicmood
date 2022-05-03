@@ -65,8 +65,7 @@ export default {
             phone_number: '',
             username: '',
             password: '',
-            confirm_password: '',
-            checked: false
+            confirm_password: ''
         }
     };
   },
@@ -90,6 +89,7 @@ export default {
             axios.post("http://localhost:3001/signup", this.form_input)
                 .then((response) => {
                 console.log(response.data)
+                this.$router.push("/")
                 })
                 .catch((err) => {
                     console.log(err.response.status)

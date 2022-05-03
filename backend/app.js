@@ -24,9 +24,13 @@ app.use(express.urlencoded({ extended: true })) // for parsing application/x-www
 // routers
 const accountRouter = require('./routes/account')
 const roomRouter = require('./routes/room')
+const reviewRouter = require('./routes/review')
+const reservationRouter = require('./routes/reservation')
 
 app.use(accountRouter.router)
 app.use(roomRouter.router)
+app.use(reviewRouter.router)
+app.use(reservationRouter.router)
 
 app.listen(3001, () => {
   console.log(`Example app listening at http://localhost:3001`)

@@ -50,7 +50,7 @@ const routes = [
     component: () => import('../views/EditRoom.vue') // set home as path '/'
   },
   {
-    path: '/room-detail',
+    path: '/room-detail/:id',
     name: 'RoomDetailPage',
     component: () => import('../views/RoomDetail.vue') // set home as path '/'
   },
@@ -58,11 +58,6 @@ const routes = [
     path: '/reservation-list',
     name: 'ReservationList',
     component: () => import('../views/ReservationList.vue') // set home as path '/'
-  },
-  {
-    path: '/staff-room-detail',
-    name: 'StaffRoomDetailPage',
-    component: () => import('../views/StaffRoomDetail.vue') // set home as path '/'
   },
   {
     path: '/reservation-modal',

@@ -4,7 +4,7 @@
             <div class="container-fluid">
                 <div class="navbar-brand mx-0 my-1" @click="$router.push('/').catch(err => {
                     $router.go('/')
-                })" style="color: white; font-size: 2.25rem; cursor: pointer">
+                })" style="color: white; font-size: 2.25rem">
                     <img src="../assets/MusicMoodLOGO.png" alt="" width="52" height="52">
                     <span class="px-3">MusicMood</span>
                 </div>
@@ -14,21 +14,18 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <router-link class="nav-link active px-5" aria-current="page" to="/room-list" style="color: white; font-size: 1.25rem">Room List</router-link>
+                        <router-link class="nav-link active px-5" aria-current="page" to="/room-list" style="color: white; font-size: 1.25rem" :style="compute_path=='/room-list' ? {'color': '#6865F2'}:''">Room List</router-link>
                     </li>
                     <li class="nav-item px-5">
-                        <router-link class="nav-link" to="/reservation-status" style="color: white; font-size: 1.25rem">Reservation status</router-link>
+                        <router-link class="nav-link" to="/reservation-list" style="color: white; font-size: 1.25rem">Reservation list</router-link>
                     </li>
                 </ul>
                 <form class="d-flex">
                     <div class="dropdown">
-                        <button class="btn btn-custom dropdown-toggle" type="button" style="border-color:#6865F2; color:#6865F2" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person-circle me-2"></i>{{user_proxy().username}}</button>
+                        <button class="btn btn-custom dropdown-toggle" type="button" style="border-color:#6865F2; color:#6865F2" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person-circle me-2"></i>Staff</button>
                         <ul class="dropdown-menu" style="background-color:#1C192B" aria-labelledby="navbarDropdown">
-                            <li class="py-1"><router-link class="dropdown-item text-white btn" to="/account-detail">My Account</router-link></li>
-                            <li class="py-1"><router-link class="dropdown-item text-white btn" to="/edit-account-detail">Edit Account</router-link></li>
-                            <li class="py-1"><hr class="dropdown-divider text-white"></li>
-                            <li class="py-1"><div class="dropdown-item btn" style="color:#EF4444" @click="logout()">Log Out <span class="float-end"><i class="bi bi-box-arrow-right"></i></span>
-                            </div></li>
+                            <li class="py-1"><a class="dropdown-item btn" style="color:#EF4444" @click="logout()">Log Out <span class="float-end"><i class="bi bi-box-arrow-right"></i></span>
+                            </a></li>
                         </ul>
                     </div>
                     
@@ -40,21 +37,22 @@
 </template>
 
 <script>
-import user from '../js/script'
 export default {
-  name: 'NavCustomer',
+  name: 'NavStaff',
   props: {
     msg: String,
+    path: String
+  },
+  data() {
+    return {
+      now_path: ''
+    };
   },
   methods:{
-      logout(){
-          localStorage.clear()
-          this.$router.replace('/').catch(err => {
-              console.log(err)
-              this.$router.go('/')
-          })
-      },
-      user_proxy: user
+    logout(){
+        console.log(this.$router)
+        localStorage.clear()
+  }
   }
 }
 </script>

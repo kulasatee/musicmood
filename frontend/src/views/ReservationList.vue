@@ -36,10 +36,10 @@
 
     <div class="row mt-3">
         <ul class="list-group list-group-horizontal res-list-group py-3 text-start fw-light align-items-center" v-for="reservation in filteredReservation" :key="reservation.reservation_id" @click="showReservationModal(reservation)">
-            <li class="list-group-item ps-5" style="width: 11rem">{{reservation.inform_date}}</li>
+            <li class="list-group-item ps-5" style="width: 11rem">{{reservation.inform_datetime}}</li>
             <li class="list-group-item">{{reservation.room_name}}</li>
-            <li class="list-group-item">{{reservation.type_name}}</li>
-            <li class="list-group-item" style="width: 7rem">{{reservation.room_price}} บาท</li>
+            <li class="list-group-item">{{reservation.room_type}}</li>
+            <li class="list-group-item" style="width: 7rem">{{reservation.total_price}} บาท</li>
             <li class="list-group-item" style="width: 8rem">{{reservation.reserve_date}}</li>
             <li class="list-group-item" style="width: 29rem">{{reservation.hours}}</li>
             <li class="list-group-item" v-if="reservation.reserve_status === 'pending'"><button type="button" class="btn btn-outline-warning" style="cursor: pointer">Pending</button></li>
@@ -53,7 +53,7 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content px-2 pb-3">
           <div class="modal-header align-contents-between d-flex">
-            <div class="d-flex flex-column align-items-start"><span class="modal-title fs-3">{{selected_reservation.room_name}}</span><span class=" fw-light">Created Date: {{selected_reservation.inform_date}}</span></div> 
+            <div class="d-flex flex-column align-items-start"><span class="modal-title fs-3">{{selected_reservation.room_name}}</span><span class=" fw-light">Created Date: {{selected_reservation.inform_datetime}}</span></div> 
             <div class="d-flex flex-row me-2">
               <button v-if="selected_reservation.reserve_status == 'pending'" type="button" disabled class="btn btn-warning btn-sm ms-3">Pending</button>
               <button v-else-if="selected_reservation.reserve_status == 'approved'" type="button" disabled class="btn btn-success btn-sm ms-3">Approved</button>
@@ -62,7 +62,7 @@
             </div>
           </div>
           <div class="modal-body text-start">
-            <div class="mt-2"><span>Room Type:</span><span class="fw-light ms-3">{{selected_reservation.type_name}}</span></div>
+            <div class="mt-2"><span>Room Type:</span><span class="fw-light ms-3">{{selected_reservation.room_type}}</span></div>
             <div class="mt-2"><span>Reserve Date:</span><span class="fw-light ms-3">{{selected_reservation.reserve_date}}</span></div>
             <div class="mt-2"><span>Reserve Time:</span></div>
             <div class="row mt-2 ps-2">
@@ -70,7 +70,7 @@
                 <label class="selecttimebtn w-100 text-center rounded p-1" :for="'btn-check' + hour" style="">{{ hour }}.00 - {{ hour + 1 }}.00</label>
               </div>
             </div>
-            <div class="mt-2"><span>Total Price:</span><span class="fw-light ms-3">{{selected_reservation.room_price}} บาท</span></div>
+            <div class="mt-2"><span>Total Price:</span><span class="fw-light ms-3">{{selected_reservation.total_price}} บาท</span></div>
             <div class="mt-2"><span>Customer Name:</span><span class="fw-light ms-3">{{selected_reservation.firstname + ' ' + selected_reservation.lastname}}</span></div>
             <div class="mt-2"><span>Phone:</span><span class="fw-light ms-3">{{selected_reservation.phone}}</span></div>
             <div class="mt-2" v-if="selected_reservation.reserve_status == 'pending'">
@@ -99,15 +99,16 @@
 
 <script>
 import { Modal } from 'bootstrap';
+import axios from "axios";
 export default {
   name: 'ReservationList',
   data() {
     return {
         //array for reservation join with customer
-        reservation_customer: [
-            {reserve_id: 1, inform_date: '20/04/2022', room_name: 'ห้องซ้อม P01', type_name: 'ห้องซ้อมดนตรี', room_price: 600, reserve_date: '27/04/2022', reserve_hours: [11, 12, 13], reserve_status: 'pending', reserve_remark: '', customer_id: 1, firstname: "Kulasatee", lastname: "Dul", phone: "082-123-4567"},
-            {reserve_id: 2, inform_date: '20/04/2022', room_name: 'ห้องซ้อม P02', type_name: 'ห้องซ้อมเต้น', room_price: 1800, reserve_date: '27/04/2022', reserve_hours: [14, 15, 16, 17, 18, 19], reserve_status: 'approved', reserve_remark: 'ครั้งที่แล้วน้องลืมเก็บขยะภายในห้อง กรุณารักษาความสะอาดด้วยนะครับ', customer_id: 2, firstname: "Chaiyawat", lastname: "Roongrueng", phone: "080-123-4567"},
-            {reserve_id: 3, inform_date: '20/04/2022', room_name: 'ห้องซ้อม P03', type_name: 'ห้องอัดเสียง', room_price: 900, reserve_date: '27/04/2022', reserve_hours: [18, 19, 20], reserve_status: 'rejected', reserve_remark: 'เนื่องจากเป็นวันหยุดยาว ทางร้านปิดให้บริการชั่วคราว ต้องขออภัยด้วยครับผม', customer_id: 3, firstname: "Salinya", lastname: "Timklip", phone: "085-123-4567"},
+        reservation_list: [
+            {reserve_id: 1, inform_datetime: '20/04/2022', room_name: 'ห้องซ้อม P01', room_type: 'ห้องซ้อมดนตรี', total_price: 600, reserve_date: '27/04/2022', reserve_hours: [11, 12, 13], reserve_status: 'pending', reserve_remark: '', customer_id: 1, firstname: "Kulasatee", lastname: "Dul", phone: "082-123-4567"},
+            {reserve_id: 2, inform_datetime: '20/04/2022', room_name: 'ห้องซ้อม P02', room_type: 'ห้องซ้อมเต้น', total_price: 1800, reserve_date: '27/04/2022', reserve_hours: [14, 15, 16, 17, 18, 19], reserve_status: 'approved', reserve_remark: 'ครั้งที่แล้วน้องลืมเก็บขยะภายในห้อง กรุณารักษาความสะอาดด้วยนะครับ', customer_id: 2, firstname: "Chaiyawat", lastname: "Roongrueng", phone: "080-123-4567"},
+            {reserve_id: 3, inform_datetime: '20/04/2022', room_name: 'ห้องซ้อม P03', room_type: 'ห้องอัดเสียง', total_price: 900, reserve_date: '27/04/2022', reserve_hours: [18, 19, 20], reserve_status: 'rejected', reserve_remark: 'เนื่องจากเป็นวันหยุดยาว ทางร้านปิดให้บริการชั่วคราว ต้องขออภัยด้วยครับผม', customer_id: 3, firstname: "Salinya", lastname: "Timklip", phone: "085-123-4567"},
         ],
         //>>array for reservation join with customer
 
@@ -123,14 +124,23 @@ export default {
     }
   },
   created() {
+    axios
+      .get("http://localhost:3001/reservations")
+      .then((response) => {
+        console.log(response.data);
+        this.reservation_list = response.data;
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
     //format hours
     let hours_concat = ''
-    for(let index = 0; index < this.reservation_customer.length; index++) {
-        for (let i = 0; i < this.reservation_customer[index].reserve_hours.length; i++) {
-            hours_concat += this.reservation_customer[index].reserve_hours[i] + '.00-' + (parseInt(this.reservation_customer[index].reserve_hours[i])+1) + '.00, '
+    for(let index = 0; index < this.reservation_list.length; index++) {
+        for (let i = 0; i < this.reservation_list[index].reserve_hours.length; i++) {
+            hours_concat += this.reservation_list[index].reserve_hours[i] + '.00-' + (parseInt(this.reservation_list[index].reserve_hours[i])+1) + '.00, '
         }
         var result = hours_concat.substring(0, hours_concat.length-2);
-        (this.reservation_customer[index])['hours'] = result
+        (this.reservation_list[index])['hours'] = result
         hours_concat = ''
     }
   },
@@ -144,17 +154,18 @@ export default {
       this.reservation_modal.show();
     },
     approveReservation() {
-      let index = this.reservation_customer.findIndex((val) => val.reservation_id === this.selected_reservation.reservation_id);
-      (this.reservation_customer[index])['reserve_status'] = 'approved';
-      (this.reservation_customer[index])['reserve_remark'] = this.reservation_remark;
+
+      let index = this.reservation_list.findIndex((val) => val.reservation_id === this.selected_reservation.reservation_id);
+      (this.reservation_list[index])['reserve_status'] = 'approved';
+      (this.reservation_list[index])['reserve_remark'] = this.reservation_remark;
       
       this.reservation_modal.hide();
 
       this.$toast.success(`Reservation has been approved successfully!`)
     },
     rejectReservation() {
-      let index = this.reservation_customer.findIndex((val) => val.reservation_id === this.selected_reservation.reservation_id);
-      (this.reservation_customer[index])['reserve_status'] = 'rejected'
+      let index = this.reservation_list.findIndex((val) => val.reservation_id === this.selected_reservation.reservation_id);
+      (this.reservation_list[index])['reserve_status'] = 'rejected'
       this.reservation_modal.hide();
 
       this.$toast.success(`Reservation has been rejected successfully!`)
@@ -164,16 +175,16 @@ export default {
       filteredReservation() {
           let filter_reservation = []
           if(this.selected_status == 'pending'){
-              filter_reservation = this.reservation_customer.filter((val) => val.reserve_status == 'pending')
+              filter_reservation = this.reservation_list.filter((val) => val.reserve_status == 'pending')
               return filter_reservation
           }else if(this.selected_status == 'approved'){
-              filter_reservation = this.reservation_customer.filter((val) => val.reserve_status == 'approved')
+              filter_reservation = this.reservation_list.filter((val) => val.reserve_status == 'approved')
               return filter_reservation
           }else if(this.selected_status == 'rejected'){
-              filter_reservation = this.reservation_customer.filter((val) => val.reserve_status == 'rejected')
+              filter_reservation = this.reservation_list.filter((val) => val.reserve_status == 'rejected')
               return filter_reservation
           }else{
-              return this.reservation_customer
+              return this.reservation_list
           }
       }
   }

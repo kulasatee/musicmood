@@ -21,10 +21,10 @@
                             <input type="password" class="form-control form-control-lg input-bg " id="confirm_new_password" v-model="confirm_new_password">
                         </div>
                         <div class="mt-5 text-center" type="button" style="font-size: 1rem;">
-                            <a class="text-white py-2 rounded" style="text-decoration: none; background-color: #6366F1; display: block" @click="saveChangePassword()">SAVE</a>
+                            <router-link to="account-detail" class="text-white py-2 rounded" style="text-decoration: none; background-color: #6366F1; display: block" @click="saveChangePassword()">SAVE</router-link>
                         </div>
                         <div class="mt-4 text-center rounded" style="font-size: 1rem; border: solid 1px; border-color: #6366F1">
-                            <a href="/edit-account-detail" class="py-2 rounded" style="text-decoration: none; color: #6366F1; display: block">CANCEL</a>
+                            <router-link to="/edit-account-detail" class="py-2 rounded" style="text-decoration: none; color: #6366F1; display: block">CANCEL</router-link>
                         </div>
                     </div>
                 </div>
@@ -42,14 +42,7 @@ export default {
   name: "LoginPage",
   data () {
     return {
-        account: {
-            first_name: 'SalinyaZa007',
-            last_name: 'Timklip',
-            phone_number: '0908940562',
-            username: 'Salinya',
-            checked: false,
-            password: '123456'
-        },
+        account: {},
         current_password: null,
         new_password: null,
         confirm_new_password: null
@@ -71,11 +64,6 @@ export default {
           this.$router.replace('/edit-account-detail')
           this.$toast.success("Your password has been changed !")
         }
-      // if((this.password == this.current_password) && (this.new_password == this.confirm_new_password)){
-      //   this.password = this.confirm_new_password
-      //   this.$toast.success("Your password has been changed !")
-      //   // window.location.replace("/edit-account-detail");
-      // }
     }
   }
 };
