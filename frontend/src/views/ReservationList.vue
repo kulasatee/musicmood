@@ -154,6 +154,7 @@ export default {
       this.reservation_modal.show();
     },
     approveReservation() {
+
       let index = this.reservation_list.findIndex((val) => val.reservation_id === this.selected_reservation.reservation_id);
       (this.reservation_list[index])['reserve_status'] = 'approved';
       (this.reservation_list[index])['reserve_remark'] = this.reservation_remark;
