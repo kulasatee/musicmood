@@ -36,6 +36,23 @@
             "
             >{{ room.room_status }}</span
           >
+          <span
+            v-if="user.role == 'staff'"
+            type="button"
+            class="btn btn btn-outline-danger ms-3 mb-3 pb-1 float-end"
+            @click="showDeleteRoomModal()"
+          >
+            Delete
+          </span>
+          <router-link :to="{ path: `/edit-room/${room.room_id}`}"
+            ><span
+              v-if="user.role == 'staff'"
+              type="button"
+              class="btn btn-outline-warning mb-3 pb-1 float-end"
+            >
+              Edit
+            </span></router-link
+          >
         </div>
       </div>
       <div class="row">
@@ -70,6 +87,7 @@
 
         <!-- reservation input -->
         <div
+          v-if="user.role == 'customer'"
           class="p-5 card pb-5 col-4 text-start"
           style="
             background-color: #2a2838;
@@ -87,6 +105,7 @@
               id="reserve_date"
               placeholder="Example input placeholder"
               v-model="reserve_date"
+              @change="fetchReserveByDate()"
               style="
                 background-color: #2a2838;
                 color: #ffffff;
@@ -118,7 +137,7 @@
                     : activebtn,
                 ]"
                 :for="'btn-check' + time"
-                >{{ time }}.00 - {{ time + 1 }}.00</label
+                >{{ parseInt(time) }}.00 - {{ parseInt(time) + 1 }}.00</label
               >
             </div>
           </div>
@@ -154,7 +173,11 @@
         <h1 style="color: #ffffff">Gallery</h1>
       </div>
       <div class="row mt-3">
-        <div v-for="(image, index) in image_nonbanner" :key="index" class="col-3">
+        <div
+          v-for="(image, index) in image_nonbanner"
+          :key="index"
+          class="col-3"
+        >
           <!-- <div class="text-danger">{{image.file_path}}</div> -->
           <img
             :src="`http://localhost:3001/${image.file_path}`"
@@ -163,7 +186,6 @@
             style="object-fit: cover; width: 100%; height: 15rem"
           />
         </div>
-        
       </div>
 
       <!-- Write Review -->
@@ -171,14 +193,14 @@
         v-if="
           user.role == 'customer' &&
           review_list.findIndex(
-            (review) => review.account_id == user.customer_id
+            (review) => review.account_id == user.account_id
           ) == -1 &&
-          reservation_customer.findIndex(
+          reservation_list.findIndex(
             (reservation) =>
               reservation.room_id == room.room_id &&
               reservation.reserve_status == 'approved' &&
-              reservation.customer_id == user.customer_id
-          ) == -1
+              reservation.account_id == user.account_id
+          ) != -1
         "
         class="text-start"
       >
@@ -239,7 +261,9 @@
                 review.review_id
               )
             "
-            v-show="user.customer_id == review.account_id"
+            v-show="
+              user.account_id == review.account_id || user.role == 'staff'
+            "
             class="float-end bi bi-trash3 fs-6"
             style="color: #c4c4c4; cursor: pointer"
           ></span>
@@ -344,6 +368,49 @@
         </div>
       </div>
 
+      <!-- delete room modal -->
+      <div
+        class="modal fade"
+        id="deleteRoomModal"
+        tabindex="-1"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Delete Room</h5>
+              <button
+                type="button"
+                class="btn-close"
+                @click="deleteRoomModal.hide()"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body text-start">
+              Are you sure you want to delete
+              <span class="fw-bold">{{ room.room_name }}</span> ?
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-outline-danger"
+                @click="deleteRoomModal.hide()"
+                data-bs-dismiss="modal"
+              >
+                CANCEL
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger"
+                @click="deleteRoom()"
+              >
+                DELETE
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -356,75 +423,16 @@ export default {
   data() {
     return {
       user: {
-        customer_id: 2,
-        firstname: "Salinya",
-        lastname: "Timklip",
-        phone: "0812345678",
-        role: "customer",
+        account_id: 1,
+        firstname: "admin",
+        lastname: "admin",
+        phone: "0830494978",
+        role: "staff",
       },
-      room: {
-        room_id: 1,
-        room_name: "ห้องซ้อม P01",
-        room_type: "ห้องอัดเสียง",
-        room_status: "พร้อมใช้งาน",
-        room_price: 300,
-        room_description:
-          "Beside the Studio area we also have a private lounge for both Studio A and B, a courtyard with outdoor seating, and a big garden with bar and BBQ stove,…"
-      },
-      reservation_customer: [
-        {
-          reserve_id: 1,
-          inform_date: "20/04/2022",
-          room_id: 1,
-          room_name: "ห้องซ้อม P01",
-          room_type: "ห้องซ้อมดนตรี",
-          room_price: 600,
-          reserve_date: "27/04/2022",
-          reserve_hours: [11, 12, 13],
-          reserve_status: "pending",
-          reserve_remark: "",
-          customer_id: 1,
-          firstname: "Kulasatee",
-          lastname: "Dul",
-          phone: "082-123-4567",
-        },
-        {
-          reserve_id: 2,
-          inform_date: "20/04/2022",
-          room_id: 2,
-          room_name: "ห้องซ้อม P02",
-          room_type: "ห้องซ้อมเต้น",
-          room_price: 1800,
-          reserve_date: "27/04/2022",
-          reserve_hours: [14, 15, 16, 17, 18, 19],
-          reserve_status: "approved",
-          reserve_remark:
-            "ครั้งที่แล้วน้องลืมเก็บขยะภายในห้อง กรุณารักษาความสะอาดด้วยนะครับ",
-          customer_id: 2,
-          firstname: "Chaiyawat",
-          lastname: "Roongrueng",
-          phone: "080-123-4567",
-        },
-        {
-          reserve_id: 3,
-          inform_date: "20/04/2022",
-          room_id: 3,
-          room_name: "ห้องซ้อม P03",
-          room_type: "ห้องอัดเสียง",
-          room_price: 900,
-          reserve_date: "27/04/2022",
-          reserve_hours: [18, 19, 20],
-          reserve_status: "rejected",
-          reserve_remark:
-            "เนื่องจากเป็นวันหยุดยาว ทางร้านปิดให้บริการชั่วคราว ต้องขออภัยด้วยครับผม",
-          customer_id: 3,
-          firstname: "Salinya",
-          lastname: "Timklip",
-          phone: "085-123-4567",
-        },
-      ],
-
-      time_value: [11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+      room: null,
+      reservation_list: [],
+      new_reservation: [],
+      time_value: ["11", "12", "13", "14", "15", "16", "17", "18", "19", "20"],
       reserve_hour: [],
       reserved_hour: [16, 17, 18, 19, 20],
       activebtn: "selecttimebtn",
@@ -435,6 +443,8 @@ export default {
       reviewIdtoDelete: null,
       reviewByToDelete: null,
       deletereviewModal: null,
+      deleteRoomModal: null,
+      roomIdtoDelete: null,
       todayDate: null,
       reserveModal: null,
       image_nonbanner: [],
@@ -444,37 +454,57 @@ export default {
     };
   },
   methods: {
+    fetchReserveByDate() {
+      axios
+        .get(
+          `http://localhost:3001/reservations/date/${this.reserve_date}/${this.room.room_id}`
+        )
+        .then((response) => {
+          console.log(response.data);
+          console.log("get date & reserve time");
+          this.reserved_hour = response.data
+            .map((reserve) => {
+              return reserve.reserve_hours;
+            })
+            .join()
+            .split(",");
+        })
+        .catch((err) => {
+          console.log(err.response.data);
+        });
+      this.reserve_hour = [];
+    },
     postReview() {
       if (this.new_review == "") {
         this.$toast.warning("Please write something in your review!");
       } else if (
         this.review_list.findIndex(
-          (review) => review.account_id == this.user.customer_id
+          (review) => review.account_id == this.user.account_id
         ) != -1
       ) {
         this.$toast.error("You have reviewed this room already!");
       } else if (
         this.review_list.findIndex(
-          (review) => review.account_id == this.user.customer_id
+          (review) => review.account_id == this.user.account_id
         ) == -1
       ) {
         axios
           .post("http://localhost:3001/reviews", {
-            account_id: this.user.customer_id,
+            account_id: this.user.account_id,
             review: this.new_review,
             room_id: this.room.room_id,
           })
           .then((response) => {
             console.log(response.data);
             this.review_list.push({
-              account_id: this.user.customer_id,
+              account_id: this.user.account_id,
               firstname: this.user.firstname,
               lastname: this.user.lastname,
               phone: this.user.phone,
               review: this.new_review,
               room_id: this.room.room_id,
               review_id: response.data,
-              review_datetime: "Just now"
+              review_datetime: "Just now",
             });
             this.new_review = "";
           })
@@ -516,9 +546,55 @@ export default {
       this.reserveModal.show();
     },
     reserveRoom() {
-      console.log("Room ... has been reserved.");
-      this.reserveModal.hide();
-      this.$toast.success("Your reservation has been sent!");
+      axios
+        .post("http://localhost:3001/reservations", {
+          account_id: this.user.account_id,
+          room_id: this.room.room_id,
+          reserve_date: this.reserve_date,
+          reserve_hours: this.reserve_hour.toString(),
+          reserve_status: "pending",
+          total_price: this.totalPrice,
+        })
+        .then((response) => {
+          console.log(response.data);
+          this.reserved_hour.push(...this.reserve_hour);
+          console.log("Room ... has been reserved.");
+          this.reserveModal.hide();
+          this.$toast.success("Your reservation has been sent!");
+        })
+        .catch((err) => {
+          console.log(err.response.data);
+        });
+    },
+    showDeleteRoomModal() {
+      this.deleteRoomModal = new Modal(
+        document.getElementById("deleteRoomModal")
+      );
+      this.deleteRoomModal.show();
+      this.roomIdtoDelete = this.room.room_id;
+    },
+    deleteRoom() {
+      if (
+        this.reservation_list.findIndex(
+          (reservation) =>
+            reservation.room_id == this.room.room_id &&
+            reservation.reserve_status == "pending"
+        ) == -1
+      ) {
+        axios
+          .delete(`http://localhost:3001/rooms/${this.room.room_id}`)
+          .then((response) => {
+            console.log(response.data);
+            this.deleteRoomModal.hide();
+            this.$router.push("/room-list");
+            this.$toast.success(`${this.room.room_name} has been deleted`);
+          })
+          .catch((err) => {
+            console.log(err.response.data);
+          });
+      } else {
+        this.$toast.error(`There are pending reservations in ${this.room.room_name} !`);
+      }
     },
   },
   created() {
@@ -533,6 +609,16 @@ export default {
     this.todayDate = yyyy + "-" + mm + "-" + dd;
 
     this.reserve_date = this.todayDate;
+
+    axios
+      .get(`http://localhost:3001/rooms/${this.$route.params.id}`)
+      .then((response) => {
+        console.log(response.data);
+        this.room = response.data[0];
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
 
     axios
       .get(`http://localhost:3001/reviews/${this.$route.params.id}`)
@@ -554,7 +640,7 @@ export default {
         console.log(err.response.data);
       });
 
-      axios
+    axios
       .get(`http://localhost:3001/rooms/${this.$route.params.id}/images`)
       .then((response) => {
         console.log(response.data);
@@ -566,11 +652,11 @@ export default {
         console.log(err.response.data);
       });
 
-      axios
-      .get(`http://localhost:3001/rooms/${this.$route.params.id}`)
+    axios
+      .get(`http://localhost:3001/reservations/`)
       .then((response) => {
         console.log(response.data);
-        this.room = response.data[0];
+        this.reservation_list = response.data;
       })
       .catch((err) => {
         console.log(err.response.data);
@@ -626,6 +712,10 @@ export default {
 input[type="checkbox"]:checked + label {
   background-color: #6366f1;
   color: #ffffff;
+}
+input[type="checkbox"]:disabled + label {
+  color: #807b8a;
+  background-color: #2a2838;
 }
 .selecttimebtn {
   border-color: #6366f1;
