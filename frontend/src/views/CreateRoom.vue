@@ -50,7 +50,7 @@
           <div class="row mb-4">
             <div class="col text-start">
               <label for="bannerphoto" class="form-label text-white">Choose Banner photo</label>
-              <input class="form-control form-control-lg text-white input-bg" type="file" id="bannerphoto" name="bannerImage" @change="uploadFile($event)">
+              <input class="form-control form-control-lg text-white input-bg" type="file" id="bannerphoto" name="bannerImage" ref="bannerImage" @change="uploadFile($event)">
             </div>
           </div>
           
@@ -169,7 +169,9 @@ export default {
       }else if(!this.room_price){
         this.$toast.error(`Please fill out 'Room Price'`)   
       }else if(!this.room_description){
-        this.$toast.error(`Please fill out 'Room Description'`)   
+        this.$toast.error(`Please fill out 'Room Description'`)
+      }else if(!this.$refs.bannerImage.value){
+        this.$toast.error(`Please upload 'Banner Photo'`)
       }else{
 
         console.log(newRoom)
@@ -197,6 +199,7 @@ export default {
         this.instruments = []
         this.show_select_type = ''
         this.show_select_status = ''
+        this.$refs.bannerImage.value=null
       }
     },
     addInstrument() {
