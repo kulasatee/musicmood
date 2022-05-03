@@ -61,7 +61,7 @@ export default {
         else if(this.new_password != this.confirm_new_password){
           this.$toast.error("Your new password is mismatch")
         }else{
-          axios.post("/change-password", {current_password: this.current_password, new_password: this.new_password, confirm_new_password: this.confirm_new_password}).then((res) => {
+          axios.post("/change-password", {current_password: this.current_password, new_password: this.new_password, confirm_new_password: this.confirm_new_password, username: this.account.username}).then((res) => {
               console.log(res.data)
               this.$toast.success("Your account has been edited!")
               
@@ -72,6 +72,10 @@ export default {
           this.$toast.success("Your password has been changed !")
         }
     }
+  },
+  async created(){
+    var temp_account = JSON.parse(localStorage.getItem("user"))
+    this.account = temp_account
   }
 };
 </script>

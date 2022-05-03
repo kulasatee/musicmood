@@ -4,11 +4,8 @@ const pool = require("../config");
 const bcrypt = require("bcrypt");
 const Joi = require('joi');
 const { generateToken, isAuth } = require("./auth/jwtAuth");
-const { router } = require("./room");
-const { func } = require("joi");
 
 router = express.Router();
-
 
 const passwordValidator = (value, helpers) => {
   if(value.length < 8){
@@ -67,10 +64,14 @@ router.post("/signup", async function (req, res, next) {
 
       console.log(account_row)
       console.log(customer_row)
+      await conn.commit()
       return res.json(account_row);
     } catch (err) {
+      await conn.rollback
       console.log(err)
       return next(err);
+    } finally{
+      conn.release()
     }
 
   });
@@ -163,15 +164,27 @@ router.post("/edit-account", isAuth, async function(req, res, next){
   return res.json(account_row[0])
 })
 
+
 const changepasswordSchema = Joi.object({
-  firstname: Joi.string().max(30).required().label("First name Incorrect! First name must contain only 30 character"),
-  lastname: Joi.string().max(30).required().label("Last name Incorrect!  Last name must contain only 30 character"),
-  phone: Joi.string().required().pattern(/0[0-9]{9}/).label("Phone number Incorrect!"),
+  current: Joi.string().required(),
+  password: Joi.string().required().max(15).custom(passwordValidator).label("Password must be at least 8 characters and must contain 1 uppercase, lowercase and number"),
+  new_pass: Joi.string().required().max(15).custom(passwordValidator).label("Password must be at least 8 characters and must contain 1 uppercase, lowercase and number")
 })
 
-router.post("/chenge-password", isAuth, function (req, res, next){
+router.post("/chenge-password", isAuth, async function (req, res, next){
   try{
-    await changepsswordSchema.validateAsync({firstname: req.body.firstname, lastname: req.body.lastname, phone: req.body.phone}, {abortEarly: false})
+    await changepsswordSchema.validateAsync({current: req.body.current_password, password: req.body.new_password, new_pass: req.body.confirm_new_password}, {abortEarly: false})
+
+    const [account_row, account_filed] = await pool.query("SELECT * FROM accounts WHERE username=?", [req.body.username]);
+
+
+    console.log(await bcrypt.compare(req.body.password,account_row[0].password))
+    if(!(await bcrypt.compare(req.body.password,account_row[0].password))){
+      return res.status(401).json("Password Incorrect")
+    }
+
+
+
   }catch (err){
     console.log(err.details)
     if(err.details != undefined){
@@ -180,10 +193,26 @@ router.post("/chenge-password", isAuth, function (req, res, next){
       return res.status(400).json("This username already exists")
     }
   }
-  const [account_row, account_filed] = await pool.query("UPDATE customers SET firstname=?, lastname=?, phone=? WHERE account_id=?", [req.body.firstname, req.body.lastname, req.body.phone, req.body.account_id]);
-  console.log(account_row)
 
-  return res.json(account_row[0])
+  const conn = await pool.getConnection()
+    // Begin transaction
+    await conn.beginTransaction();
+
+    try{
+      const [changepass, changepass_filed] = await pool.query("UPDATE accounts SET password=? WHERE account_id=?", [await bcrypt.hash(req.body.new_password, 10),req.body.account_id]);
+      console.log(account_row)
+
+      
+      await conn.commit()
+      return res.json(account_row[0])
+    } catch (err) {
+      await conn.rollback
+      console.log(err)
+      return next(err);
+    } finally{
+      conn.release()
+    }
+  
 })
 
 router.post("/auth/me", isAuth, function(req, res, next){
