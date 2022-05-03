@@ -107,11 +107,7 @@ export default {
       ],
       room_name: '',
       type_name: '',
-      //>>for drop down
-
-      //for room
       room_list:[]
-
     };
   },
   computed: {
