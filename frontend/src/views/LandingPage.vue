@@ -25,8 +25,6 @@
 <script>
 import {} from 'bootstrap'
 
-// import axios from "../plugins/axios";
-
 export default {
   name: "LandingPage",
   data () {
