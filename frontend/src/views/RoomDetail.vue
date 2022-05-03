@@ -658,7 +658,7 @@ export default {
       });
 
     axios
-      .get(`http://localhost:3001/reservations/`)
+      .get(`http://localhost:3001/reservations/${this.user.account_id}`)
       .then((response) => {
         console.log(response.data);
         this.reservation_list = response.data;

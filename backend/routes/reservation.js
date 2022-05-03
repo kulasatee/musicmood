@@ -8,7 +8,7 @@ router = express.Router();
 router.get("/reservations", async function (req, res, next) {
   try {
     const [reservations, columns] = await pool.query(
-      "SELECT * FROM reservations"
+      "SELECT * FROM reservations INNER JOIN customers ON reservations.account_id = customers.account_id INNER JOIN rooms ON rooms.room_id = reservations.room_id"
     );
     return res.json(reservations);
   } catch (err) {
@@ -17,11 +17,11 @@ router.get("/reservations", async function (req, res, next) {
 });
 
 //get a reservation
-router.get("/reservations/:reserve_id", async function (req, res, next) {
+router.get("/reservations/:account_id", async function (req, res, next) {
   try {
     const [reservations, columns] = await pool.query(
-      "SELECT * FROM reservations WHERE reserve_id = ?",
-      [req.params.reserve_id]
+      "SELECT * FROM reservations INNER JOIN customers ON reservations.account_id = customers.account_id INNER JOIN rooms ON rooms.room_id = reservations.room_id WHERE reservations.account_id = ?",
+      [req.params.account_id]
     );
     return res.json(reservations);
   } catch (err) {
