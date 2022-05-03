@@ -104,7 +104,7 @@
 
 <script>
 import {} from 'bootstrap'
-import axios from 'axios'
+import axios from "../plugins/axios";
 
 export default {
   name: 'CreateRoom',
@@ -174,7 +174,7 @@ export default {
 
         console.log(newRoom)
 
-        axios.post("http://localhost:3001/rooms", newRoom)
+        axios.post("/rooms", newRoom)
         .then((response) => {
           console.log(response.data)
         })
