@@ -106,74 +106,7 @@ export default {
       ],
       room_name: '',
       type_name: '',
-      //>>for drop down
-
-      //for room
       room_list:[]
-      // all_room: [
-      //   {
-      //   room_name: "ห้องซ้อม P01",
-      //   room_id:1,
-      //   room_type: "ห้องอัดเสียง",
-      //   room_status: "พร้อมใช้งาน",
-      //   room_price: 300,
-      //   room_image: '52Studio.jpeg',
-      //   room_description:
-      //     "Beside the Studio area we also have a private lounge for both Studio A and B, a courtyard with outdoor seating, and a big garden with bar and BBQ stove,…",
-      //   },
-      //   {
-      //   room_name: "สตูดิโอ S01",
-      //   room_id:1,
-      //   room_type: "ห้องอัดเสียง",
-      //   room_status: "ไม่พร้อมใช้งาน",
-      //   room_price: 700,
-      //   room_image: 'Background Color.jpeg',
-      //   room_description:
-      //     "Beside the Studio area we also have a private lounge for both Studio A and B, a courtyard with outdoor seating, and a big garden with bar and BBQ stove,…",
-      //   },
-      //   {
-      //   room_name: "ห้องเต้น P02",
-      //   room_id:2,
-      //   room_type: "ห้องอัดเสียง",
-      //   room_status: "พร้อมใช้งาน",
-      //   room_price: 400,
-      //   room_image: '52Studio.jpeg',
-      //   room_description:
-      //     "Beside the Studio area we also have a private lounge for both Studio A and B, a courtyard with outdoor seating, and a big garden with bar and BBQ stove,…",
-      //   },
-      //   {
-      //   room_name: "ห้องซ้อม P04",
-      //   room_id:1,
-      //   room_type: "ห้องอัดเสียง",
-      //   room_status: "ไม่พร้อมใช้งาน",
-      //   room_price: 300,
-      //   room_image: '52Studio.jpeg',
-      //   room_description:
-      //     "Beside the Studio area we also have a private lounge for both Studio A and B, a courtyard with outdoor seating, and a big garden with bar and BBQ stove,…",
-      //   },
-      //   {
-      //   room_name: "ห้องซ้อม P046",
-      //   room_id:1,
-      //   room_type: "ห้องอัดเสียง",
-      //   room_status: "ไม่พร้อมใช้งาน",
-      //   room_price: 300,
-      //   room_image: '52Studio.jpeg',
-      //   room_description:
-      //     "Beside the Studio area we also have a private lounge for both Studio A and B, a courtyard with outdoor seating, and a big garden with bar and BBQ stove,…",
-      //   },
-      //   {
-      //   room_name: "ห้องซ้อม P045",
-      //   room_id:1,
-      //   room_type: "ห้องอัดเสียง",
-      //   room_status: "ไม่พร้อมใช้งาน",
-      //   room_price: 300,
-      //   room_image: '52Studio.jpeg',
-      //   room_description:
-      //     "Beside the Studio area we also have a private lounge for both Studio A and B, a courtyard with outdoor seating, and a big garden with bar and BBQ stove,…",
-      //   },
-      // ]
-      //>> for room
-
     };
   },
   computed: {
