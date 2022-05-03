@@ -22,10 +22,10 @@
                 </ul>
                 <form class="d-flex">
                     <div class="dropdown">
-                        <button class="btn btn-custom dropdown-toggle" type="button" style="border-color:#6865F2; color:#6865F2" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person-circle me-2"></i>Salinya</button>
+                        <button class="btn btn-custom dropdown-toggle" type="button" style="border-color:#6865F2; color:#6865F2" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person-circle me-2"></i>{{user_proxy().username}}</button>
                         <ul class="dropdown-menu" style="background-color:#1C192B" aria-labelledby="navbarDropdown">
-                            <li class="py-1"><a class="dropdown-item text-white btn" href="/account-detail">My Account</a></li>
-                            <li class="py-1"><a class="dropdown-item text-white btn" href="/edit-account-detail">Edit Account</a></li>
+                            <li class="py-1"><router-link class="dropdown-item text-white btn" to="/account-detail">My Account</router-link></li>
+                            <li class="py-1"><router-link class="dropdown-item text-white btn" to="/edit-account-detail">Edit Account</router-link></li>
                             <li class="py-1"><hr class="dropdown-divider text-white"></li>
                             <li class="py-1"><div class="dropdown-item btn" style="color:#EF4444" @click="logout()">Log Out <span class="float-end"><i class="bi bi-box-arrow-right"></i></span>
                             </div></li>
@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import user from '../js/script'
 export default {
   name: 'NavCustomer',
   props: {
@@ -52,7 +53,8 @@ export default {
               console.log(err)
               this.$router.go('/')
           })
-      }
+      },
+      user_proxy: user
   }
 }
 </script>

@@ -131,8 +131,40 @@ router.post("/login", async function (req, res, next){
 
 })
 
+router.post("/account", isAuth, async function(req, res, next){
+
+  const [account_row, account_filed] = await pool.query("SELECT * FROM accounts INNER JOIN customers ON accounts.account_id = customers.account_id WHERE accounts.account_id=?", [req.body.account_id]);
+
+  return res.json(account_row[0])
+})
+
+
+const editSchema = Joi.object({
+  firstname: Joi.string().max(30).required().label("First name Incorrect! First name must contain only 30 character"),
+  lastname: Joi.string().max(30).required().label("Last name Incorrect!  Last name must contain only 30 character"),
+  phone: Joi.string().required().pattern(/0[0-9]{9}/).label("Phone number Incorrect!"),
+})
+router.post("/edit-account", isAuth, async function(req, res, next){
+  try{
+    await editSchema.validateAsync({firstname: req.body.firstname, lastname: req.body.lastname, phone: req.body.phone}, {abortEarly: false})
+  }catch (err){
+    console.log(err.details)
+    if(err.details != undefined){
+      return res.status(400).json(err.details[0].message.split('" ')[0].substr(1))
+    }else{
+      return res.status(400).json("This username already exists")
+    }
+  }
+  const [account_row, account_filed] = await pool.query("UPDATE customers SET firstname=?, lastname=?, phone=? WHERE account_id=?", [req.body.firstname, req.body.lastname, req.body.phone, req.body.account_id]);
+  console.log(account_row)
+
+  return res.json(account_row[0])
+})
+
 router.post("/auth/me", isAuth, function(req, res, next){
   return res.json(req.user)
 })
+
+
 
 exports.router = router;
