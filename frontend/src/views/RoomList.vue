@@ -1,5 +1,6 @@
 <template>
-  <div class="container pt-5 mb-5">
+  
+  <div class="container mb-5">
       <div class="d-flex flex-row justify-content-between">
           <div class="text-start d-flex flex-row align-items-center ">
             <div class="linear-color h1" >Room List</div>
@@ -31,7 +32,7 @@
       <div class="row mt-5">
           <div class="col-6 pb-5" style="z-index: 2" v-for="(room, index) in filter_room" :key="index">
             <!-- <a href="/room-detail" class="" style="text-decoration: none;"> -->
-            <router-link :to="{ path: `/room-detail/${room.room_id}`}">
+            <router-link :to="{ path: `/room-detail/${room.room_id}`}" style="text-decoration: none">
               <div class="d-flex flex-row">
                 <div class="d-flex" style="width: 33%; height: 17rem">
                   <img :src="`http://localhost:3001/${room.file_path}`" class="img-fluid rounded" style="object-fit: cover" alt="">
@@ -78,15 +79,13 @@
 
 <script>
 import {} from 'bootstrap'
-import axios from "axios";
+import axios from "../plugins/axios";
 export default {
   name: "RoomList",
   data () {
     return {
       user: {
         customer_id: 2,
-        firstname: "Salinya",
-        lastname: "Timklip",
         phone: "0812345678",
         role: "staff",
       },
@@ -124,11 +123,11 @@ export default {
     }
   },
   created(){
-    axios
-      .get("http://localhost:3001/rooms/banner")
+    axios.get("/rooms/banner")
       .then((response) => {
         console.log(response.data);
-        this.room_list = response.data;
+        this.room_list = response.data.rooms;
+        this.user = JSON.parse(localStorage.getItem("user"))
       })
       .catch((err) => {
         console.log(err.response.data);

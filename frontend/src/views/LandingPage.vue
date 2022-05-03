@@ -29,7 +29,7 @@ export default {
   name: "LandingPage",
   data () {
     return {
-      data2: "sss"
+      req_user: {}
     };
   }
 };

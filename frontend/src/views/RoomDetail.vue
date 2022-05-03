@@ -423,11 +423,9 @@ export default {
   data() {
     return {
       user: {
-        account_id: 3,
-        firstname: "Kulasatee",
-        lastname: "Dul",
-        phone: "0826527820",
-        role: "customer",
+        account_id: 1,
+        phone: "0830494978",
+        role: "staff",
       },
       room: null,
       reservation_list: [],
@@ -599,6 +597,7 @@ export default {
   },
   created() {
     this.todayDate = new Date();
+    this.user = JSON.parse(localStorage.getItem("user"))
     var yyyy = this.todayDate.getFullYear();
     let mm = this.todayDate.getMonth() + 1; // Months start at 0!
     let dd = this.todayDate.getDate();
