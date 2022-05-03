@@ -131,7 +131,7 @@ router.post("/login", async function (req, res, next){
 
 })
 
-router.post("/test-token", isAuth, function(req, res, next){
+router.post("/auth/me", isAuth, function(req, res, next){
   return res.json(req.user)
 })
 

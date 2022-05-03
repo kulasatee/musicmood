@@ -81,25 +81,24 @@ export default {
     };
   },
   methods: {
-    validate_form() {
+    async validate_form() {
       if (this.form_input.username == "") {
         alert("please fill in username");
       } else if (this.form_input.password == "") {
         alert("please fill in password");
       } else {
-        axios.post("/login", this.form_input)
-          .then((response) => {
-            if(response.data.token){
-              localStorage.setItem("token", response.data.token)
-              console.log(response.data.token);
+
+        try{
+          var response = await axios.post("/login", this.form_input)
+          if(response.data.token){
+                localStorage.setItem("token", response.data.token)
+                var user = await axios.post("/auth/me")
+                localStorage.setItem("user", JSON.stringify(user.data))
+                this.$router.push('/room-list')
             }
-          })
-          .catch((err) => {
-            console.log(err.response.status);
-            if (err.response.status == 400 || err.response.status == 401) {
-              this.$toast.warning(err.response.data);
-            }
-          });
+        }catch(err){
+          this.$toast.warning(err.response.data);
+        }
         // this.$router.replace('/room-list')
       }
     },

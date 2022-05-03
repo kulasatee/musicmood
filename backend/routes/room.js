@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path")
 const pool = require("../config");
+const { isAuth } = require("./auth/jwtAuth")
 
 router = express.Router();
 
@@ -18,7 +19,7 @@ router.get("/rooms", async function (req, res, next) {
 router.get("/rooms/banner", async function (req, res, next) {
     try{
         const [rooms, columns] = await pool.query("SELECT *  FROM rooms INNER JOIN images  ON (rooms.room_id = images.room_id)  WHERE images.banner = 1");
-        return res.json(rooms);
+        return res.json({rooms: rooms, user: req.user});
     } catch (err) {
         return next(err);
     }

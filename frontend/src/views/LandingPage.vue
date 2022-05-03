@@ -25,11 +25,13 @@
 <script>
 import {} from 'bootstrap'
 
+// import axios from "../plugins/axios";
+
 export default {
   name: "LandingPage",
   data () {
     return {
-      data2: "sss"
+      req_user: {}
     };
   }
 };
