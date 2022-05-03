@@ -65,8 +65,7 @@ export default {
             phone_number: '',
             username: '',
             password: '',
-            confirm_password: '',
-            checked: false
+            confirm_password: ''
         }
     };
   },

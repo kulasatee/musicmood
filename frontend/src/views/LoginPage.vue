@@ -20,10 +20,6 @@
                             <label for="password" class="form-label text-white">Password</label>
                             <input type="password" class="form-control form-control-lg input-bg " id="password" v-model="form_input.password">
                         </div>
-                        <div class="text-white mt-4 fw-light" style="font-size: 1rem">
-                            <input type="checkbox" id="checkbox" v-model="form_input.rememberUser">
-                            <label for="checkbox" class="px-2" style="color: #AFACB6">Remember me ? </label>
-                        </div>
                         <div class="mt-5 text-center" type="button" style="font-size: 1rem;">
                             <div class="text-white py-2 rounded" @click="validate_form()" style="text-decoration: none; background-color: #6366F1; display: block">LOG IN</div>
                         </div>
@@ -39,14 +35,14 @@
 
 <script>
 import {} from 'bootstrap'
+import axios from 'axios'
 export default {
   name: "LoginPage",
   data () {
     return {
         form_input: {
             username: '',
-            password: '',
-            rememberUser: false
+            password: ''
         }
         
     };
@@ -57,8 +53,20 @@ export default {
               alert('please fill in username')
           }else if(this.form_input.password == ''){
                alert('please fill in password')
+          }else{
+            axios.post("http://localhost:3001/login", this.form_input)
+                .then((response) => {
+                console.log(response.data)
+                })
+                .catch((err) => {
+                    console.log(err.response.status)
+                    if(err.response.status == 400 || err.response.status == 401){
+                        this.$toast.warning(err.response.data)
+                    }
+                });
+            // this.$router.replace('/room-list')
           }
-          this.$router.replace('/room-list')
+          
       }
   }
 };

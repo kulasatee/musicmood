@@ -14,7 +14,7 @@
               <h1 style="font-size: 3.75rem;" class="mt-3 mb-5 text-white">
                   Perform
               </h1>
-              <router-link to="/room-list"><button class="btn btn-custom me-3" type="button" style="border-color:#6865F2; color: white; background-color: #6865F2; font-size:1.25rem">RESERVE WITH US</button></router-link>
+              <router-link :to="{path: '/room-list'}"><button class="btn btn-custom me-3" type="button" style="border-color:#6865F2; color: white; background-color: #6865F2; font-size:1.25rem">RESERVE WITH US</button></router-link>
           </div>
       </div>
     <div class="circle1"></div>
@@ -24,22 +24,13 @@
 
 <script>
 import {} from 'bootstrap'
-import axios from 'axios'
 
 export default {
   name: "LandingPage",
   data () {
     return {
+      data2: "sss"
     };
-  },
-  created() {
-    axios.get("http://localhost:3001/")
-        .then((response) => {
-          console.log(response.data)
-        })
-        .catch((err) => {
-          console.log(err);
-        });
   }
 };
 </script>
