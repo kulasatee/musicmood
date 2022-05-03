@@ -1,8 +1,9 @@
 const express = require("express");
-const path = require("path")
+const path = require("path");
 const pool = require("../config");
-const bcrypt = require("bcrypt")
-const Joi = require('joi')
+const bcrypt = require("bcrypt");
+const Joi = require('joi');
+const { generateToken, isAuth } = require("./auth/jwtAuth")
 
 router = express.Router();
 
@@ -94,13 +95,31 @@ router.post("/login", async function (req, res, next){
     try{
       await loginSchema.validateAsync(req.body, {abortEarly: false})
 
-      const [account_row, account_filed] = await pool.query("SELECT password FROM accounts WHERE username=?", [req.body.username]);
+      const [account_row, account_filed] = await pool.query("SELECT * FROM accounts WHERE username=?", [req.body.username]);
 
 
       console.log(await bcrypt.compare(req.body.password,account_row[0].password))
       if(!(await bcrypt.compare(req.body.password,account_row[0].password))){
         return res.status(401).json("Password Incorrect")
       }
+
+      try{
+        console.log(account_row[0])
+        console.log(account_row[0].username)
+        const accessToken = generateToken({
+        account_id: account_row[0].account_id,
+        username: account_row[0].username,
+        role: account_row[0].role
+        })
+
+        console.log(accessToken)
+        return res.json({
+              token: accessToken
+              })
+      }catch(err){
+        return res.status(400).json("token boom")
+      }
+      
     }catch(err){
       console.log(err.details)
       if(err.details != undefined){
@@ -110,6 +129,10 @@ router.post("/login", async function (req, res, next){
       }
     }
 
+})
+
+router.post("/test-token", isAuth, function(req, res, next){
+  return res.json(req.user)
 })
 
 exports.router = router;
