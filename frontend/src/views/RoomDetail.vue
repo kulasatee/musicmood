@@ -423,11 +423,11 @@ export default {
   data() {
     return {
       user: {
-        account_id: 1,
-        firstname: "admin",
-        lastname: "admin",
-        phone: "0830494978",
-        role: "staff",
+        account_id: 3,
+        firstname: "Kulasatee",
+        lastname: "Dul",
+        phone: "0826527820",
+        role: "customer",
       },
       room: null,
       reservation_list: [],
@@ -653,7 +653,7 @@ export default {
       });
 
     axios
-      .get(`http://localhost:3001/reservations/`)
+      .get(`http://localhost:3001/reservations/${this.user.account_id}`)
       .then((response) => {
         console.log(response.data);
         this.reservation_list = response.data;
