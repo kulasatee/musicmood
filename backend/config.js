@@ -6,7 +6,7 @@ const pool = mysql.createPool({
   password: 'root',
   database: 'musicmood',
   waitForConnections: true,
-  connectionLimit: 10,
+  connectionLimit: 50,
   queueLimit: 0,
   dateStrings: true
 });
