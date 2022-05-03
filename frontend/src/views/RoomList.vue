@@ -3,7 +3,7 @@
       <div class="d-flex flex-row justify-content-between">
           <div class="text-start d-flex flex-row align-items-center ">
             <div class="linear-color h1" >Room List</div>
-            <div class="mx-4 flex-row align-content-center align-item-center" ><a href="create-room"><button class="btn btn-custom" style="border-color:#6865F2; color: white; background-color: #6865F2;">Add a new room</button></a></div>
+            <div v-if="user.role != 'customer'" class="mx-4 flex-row align-content-center align-item-center" ><a href="create-room"><button class="btn btn-custom" style="border-color:#6865F2; color: white; background-color: #6865F2;">Add a new room</button></a></div>
           </div>
           <div class="d-flex flex-row align-items-center justify-content-end w-50">
               <div class="col text-start">
@@ -30,10 +30,11 @@
       </div>
       <div class="row mt-5">
           <div class="col-6 pb-5" style="z-index: 2" v-for="(room, index) in filter_room" :key="index">
-            <a href="/room-detail" class="" style="text-decoration: none;">
+            <!-- <a href="/room-detail" class="" style="text-decoration: none;"> -->
+            <router-link :to="{ path: `/room-detail/${room.room_id}`}">
               <div class="d-flex flex-row">
                 <div class="d-flex" style="width: 33%; height: 17rem">
-                  <img :src="require(`../assets/${room.room_image}`)" class="img-fluid rounded" style="object-fit: cover" alt="">
+                  <img :src="`http://localhost:3001/${room.file_path}`" class="img-fluid rounded" style="object-fit: cover" alt="">
                 </div>
                 <div class="d-flex flex-column rounded" style="width: 67%; height: 17rem; background-color: #1F1C2D">
                   <div class="d-flex flex-row align-items-center justify-content-between">
@@ -50,9 +51,8 @@
                         {{room.room_type}}
                       </div>
                     </div>
-                    <div class="text-white px-3">
+                    <div v-if="user.role != 'customer'" class="text-white px-3">
                       <a href="/edit-room"><span type="button" class="btn btn-outline-warning"> Edit </span></a>
-                      
                     </div>
                   </div>
                   <div class="d-flex flex-column align-items-start">
@@ -68,7 +68,7 @@
                   </div>
                 </div>
               </div>
-          </a>
+          </router-link>
         </div>
       </div>
       <div class="circle1"></div>
@@ -78,10 +78,18 @@
 
 <script>
 import {} from 'bootstrap'
+import axios from "axios";
 export default {
   name: "RoomList",
   data () {
     return {
+      user: {
+        customer_id: 2,
+        firstname: "Salinya",
+        lastname: "Timklip",
+        phone: "0812345678",
+        role: "staff",
+      },
       //for drop down
       show_select_type: 'All type',
       show_select_status: 'All status',
@@ -101,68 +109,69 @@ export default {
       //>>for drop down
 
       //for room
-      all_room: [
-        {
-        room_name: "ห้องซ้อม P01",
-        room_id:1,
-        room_type: "ห้องอัดเสียง",
-        room_status: "พร้อมใช้งาน",
-        room_price: 300,
-        room_image: '52Studio.jpeg',
-        room_description:
-          "Beside the Studio area we also have a private lounge for both Studio A and B, a courtyard with outdoor seating, and a big garden with bar and BBQ stove,…",
-        },
-        {
-        room_name: "สตูดิโอ S01",
-        room_id:1,
-        room_type: "ห้องอัดเสียง",
-        room_status: "ไม่พร้อมใช้งาน",
-        room_price: 700,
-        room_image: 'Background Color.jpeg',
-        room_description:
-          "Beside the Studio area we also have a private lounge for both Studio A and B, a courtyard with outdoor seating, and a big garden with bar and BBQ stove,…",
-        },
-        {
-        room_name: "ห้องเต้น P02",
-        room_id:2,
-        room_type: "ห้องอัดเสียง",
-        room_status: "พร้อมใช้งาน",
-        room_price: 400,
-        room_image: '52Studio.jpeg',
-        room_description:
-          "Beside the Studio area we also have a private lounge for both Studio A and B, a courtyard with outdoor seating, and a big garden with bar and BBQ stove,…",
-        },
-        {
-        room_name: "ห้องซ้อม P04",
-        room_id:1,
-        room_type: "ห้องอัดเสียง",
-        room_status: "ไม่พร้อมใช้งาน",
-        room_price: 300,
-        room_image: '52Studio.jpeg',
-        room_description:
-          "Beside the Studio area we also have a private lounge for both Studio A and B, a courtyard with outdoor seating, and a big garden with bar and BBQ stove,…",
-        },
-        {
-        room_name: "ห้องซ้อม P046",
-        room_id:1,
-        room_type: "ห้องอัดเสียง",
-        room_status: "ไม่พร้อมใช้งาน",
-        room_price: 300,
-        room_image: '52Studio.jpeg',
-        room_description:
-          "Beside the Studio area we also have a private lounge for both Studio A and B, a courtyard with outdoor seating, and a big garden with bar and BBQ stove,…",
-        },
-        {
-        room_name: "ห้องซ้อม P045",
-        room_id:1,
-        room_type: "ห้องอัดเสียง",
-        room_status: "ไม่พร้อมใช้งาน",
-        room_price: 300,
-        room_image: '52Studio.jpeg',
-        room_description:
-          "Beside the Studio area we also have a private lounge for both Studio A and B, a courtyard with outdoor seating, and a big garden with bar and BBQ stove,…",
-        },
-      ]
+      room_list:[]
+      // all_room: [
+      //   {
+      //   room_name: "ห้องซ้อม P01",
+      //   room_id:1,
+      //   room_type: "ห้องอัดเสียง",
+      //   room_status: "พร้อมใช้งาน",
+      //   room_price: 300,
+      //   room_image: '52Studio.jpeg',
+      //   room_description:
+      //     "Beside the Studio area we also have a private lounge for both Studio A and B, a courtyard with outdoor seating, and a big garden with bar and BBQ stove,…",
+      //   },
+      //   {
+      //   room_name: "สตูดิโอ S01",
+      //   room_id:1,
+      //   room_type: "ห้องอัดเสียง",
+      //   room_status: "ไม่พร้อมใช้งาน",
+      //   room_price: 700,
+      //   room_image: 'Background Color.jpeg',
+      //   room_description:
+      //     "Beside the Studio area we also have a private lounge for both Studio A and B, a courtyard with outdoor seating, and a big garden with bar and BBQ stove,…",
+      //   },
+      //   {
+      //   room_name: "ห้องเต้น P02",
+      //   room_id:2,
+      //   room_type: "ห้องอัดเสียง",
+      //   room_status: "พร้อมใช้งาน",
+      //   room_price: 400,
+      //   room_image: '52Studio.jpeg',
+      //   room_description:
+      //     "Beside the Studio area we also have a private lounge for both Studio A and B, a courtyard with outdoor seating, and a big garden with bar and BBQ stove,…",
+      //   },
+      //   {
+      //   room_name: "ห้องซ้อม P04",
+      //   room_id:1,
+      //   room_type: "ห้องอัดเสียง",
+      //   room_status: "ไม่พร้อมใช้งาน",
+      //   room_price: 300,
+      //   room_image: '52Studio.jpeg',
+      //   room_description:
+      //     "Beside the Studio area we also have a private lounge for both Studio A and B, a courtyard with outdoor seating, and a big garden with bar and BBQ stove,…",
+      //   },
+      //   {
+      //   room_name: "ห้องซ้อม P046",
+      //   room_id:1,
+      //   room_type: "ห้องอัดเสียง",
+      //   room_status: "ไม่พร้อมใช้งาน",
+      //   room_price: 300,
+      //   room_image: '52Studio.jpeg',
+      //   room_description:
+      //     "Beside the Studio area we also have a private lounge for both Studio A and B, a courtyard with outdoor seating, and a big garden with bar and BBQ stove,…",
+      //   },
+      //   {
+      //   room_name: "ห้องซ้อม P045",
+      //   room_id:1,
+      //   room_type: "ห้องอัดเสียง",
+      //   room_status: "ไม่พร้อมใช้งาน",
+      //   room_price: 300,
+      //   room_image: '52Studio.jpeg',
+      //   room_description:
+      //     "Beside the Studio area we also have a private lounge for both Studio A and B, a courtyard with outdoor seating, and a big garden with bar and BBQ stove,…",
+      //   },
+      // ]
       //>> for room
 
     };
@@ -170,16 +179,27 @@ export default {
   computed: {
     filter_room(){
       if(this.show_select_type == 'All type' && this.show_select_status == 'All status'){
-        return this.all_room
+        return this.room_list
       }else if(this.show_select_type == 'All type'){
-        return this.all_room.filter((val) => val.room_status == this.show_select_status)
+        return this.room_list.filter((val) => val.room_status == this.show_select_status)
       }else if(this.show_select_status == 'All status'){
-        return this.all_room.filter((val) => val.room_type == this.show_select_type)
+        return this.room_list.filter((val) => val.room_type == this.show_select_type)
       }else{
-        return this.all_room.filter((val) => (val.room_type == this.show_select_type) && (val.room_status == this.show_select_status))
+        return this.room_list.filter((val) => (val.room_type == this.show_select_type) && (val.room_status == this.show_select_status))
       }
 
     }
+  },
+  created(){
+    axios
+      .get("http://localhost:3001/rooms/banner")
+      .then((response) => {
+        console.log(response.data);
+        this.room_list = response.data;
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
   }
 };
 </script>

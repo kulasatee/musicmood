@@ -14,6 +14,35 @@ router.get("/rooms", async function (req, res, next) {
     }
 });
 
+//get all rooms with banner
+router.get("/rooms/banner", async function (req, res, next) {
+    try{
+        const [rooms, columns] = await pool.query("SELECT *  FROM rooms INNER JOIN images  ON (rooms.room_id = images.room_id)  WHERE images.banner = 1");
+        return res.json(rooms);
+    } catch (err) {
+        return next(err);
+    }
+});
+//get images from a room
+router.get("/rooms/:room_id/images", async function (req, res, next) {
+    try{
+        const [rooms, columns] = await pool.query("SELECT images.file_path, images.banner FROM rooms INNER JOIN images ON (rooms.room_id = images.room_id)  WHERE rooms.room_id = ?", [req.params.room_id]);
+        return res.json(rooms);
+    } catch (err) {
+        return next(err);
+    }
+});
+
+//get instruments from a room
+router.get("/rooms/:room_id/instruments", async function (req, res, next) {
+    try{
+        const [rooms, columns] = await pool.query("SELECT instruments.instrument_name, instruments.quantity FROM rooms INNER JOIN instruments ON (rooms.room_id = instruments.room_id)  WHERE rooms.room_id = ?", [req.params.room_id]);
+        return res.json(rooms);
+    } catch (err) {
+        return next(err);
+    }
+});
+
 //get room
 router.get("/rooms/:room_id", async function (req, res, next) {
     try{

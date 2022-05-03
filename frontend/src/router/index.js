@@ -50,7 +50,7 @@ const routes = [
     component: () => import('../views/EditRoom.vue') // set home as path '/'
   },
   {
-    path: '/room-detail',
+    path: '/room-detail/:id',
     name: 'RoomDetailPage',
     component: () => import('../views/RoomDetail.vue') // set home as path '/'
   },
