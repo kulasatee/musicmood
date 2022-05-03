@@ -38,6 +38,7 @@
 
 <script>
 import {} from 'bootstrap'
+import axios from "../plugins/axios";
 export default {
   name: "LoginPage",
   data () {
@@ -60,7 +61,13 @@ export default {
         else if(this.new_password != this.confirm_new_password){
           this.$toast.error("Your new password is mismatch")
         }else{
-          this.account.password = this.confirm_new_password
+          axios.post("/change-password", {current_password: this.current_password, new_password: this.new_password, confirm_new_password: this.confirm_new_password}).then((res) => {
+              console.log(res.data)
+              this.$toast.success("Your account has been edited!")
+              
+          }).catch((err) => {
+                this.$toast.warning(err.response.data)
+          })
           this.$router.replace('/edit-account-detail')
           this.$toast.success("Your password has been changed !")
         }
