@@ -11,26 +11,26 @@
                         <div class="d-flex flex-row mt-4">
                                 <div class="text-white me-2" style="font-size: 1rem;">
                                     <label for="firstname" class="form-label text-white">First name</label>
-                                    <input type="text" class="form-control form-control-lg input-bg " disabled id="firstname" v-model="account.first_name">
+                                    <input type="text" class="form-control form-control-lg input-bg " disabled id="firstname" v-model="account.firstname">
                                 </div>
                                 <div class="text-white ms-2" style="font-size: 1rem;">
                                     <label for="lastname" class="form-label text-white">Last name</label>
-                                    <input type="text" class="form-control form-control-lg input-bg " disabled id="lastname" v-model="account.last_name">
+                                    <input type="text" class="form-control form-control-lg input-bg " disabled id="lastname" v-model="account.lastname">
                                 </div>
                         </div>
                         <div class="text-white mt-4" style="font-size: 1rem">
                             <label for="phonenumber" class="form-label text-white">Phone number</label>
-                            <input type="text" class="form-control form-control-lg input-bg " disabled id="phonenumber" v-model="account.phone_number">
+                            <input type="text" class="form-control form-control-lg input-bg " disabled id="phonenumber" v-model="account.phone">
                         </div>
                         <div class="text-white mt-4" style="font-size: 1rem">
                             <label for="username" class="form-label text-white">Username</label>
                             <input type="text" class="form-control form-control-lg input-bg " disabled id="username" v-model="account.username">
                         </div>
                         <div class="mt-5 text-center" type="button" style="font-size: 1rem;">
-                            <a href="/edit-account-detail" class="text-white py-2 rounded" style="text-decoration: none; background-color: #6366F1; display: block">EDIT PROFILE</a>
+                            <router-link to="/edit-account-detail" class="text-white py-2 rounded" style="text-decoration: none; background-color: #6366F1; display: block">EDIT PROFILE</router-link>
                         </div>
                         <div class="mt-4 text-center rounded" style="font-size: 1rem; border: solid 1px; border-color: #6366F1">
-                            <a href="/room-list" class="py-2 rounded" style="text-decoration: none; color: #6366F1; display: block">BACK</a>
+                            <router-link to="/room-list" class="py-2 rounded" style="text-decoration: none; color: #6366F1; display: block">BACK</router-link>
                         </div>
                     </div>
                 </div>
@@ -43,20 +43,24 @@
 </template>
 
 <script>
-import {} from 'bootstrap'
+import {} from 'bootstrap';
+import axios from "../plugins/axios";
 export default {
   name: "LoginPage",
   data () {
     return {
-        account: {
-            first_name: 'SalinyaZa007',
-            last_name: 'Timklip',
-            phone_number: '0908940562',
-            username: 'Salinya',
-            checked: false
-        }
+        account: {}
         
     };
+  },
+  async created(){
+    try{
+      var res = await axios.post("/account", JSON.parse(localStorage.getItem("user")))
+      this.account = res.data
+      console.log(this.account)
+    }catch(err){
+      console.log(err)
+    }
   }
 };
 </script>
@@ -71,10 +75,10 @@ input{
     z-index: 2;
 }
 input:disabled{
-    background-color: #1F1C2D; 
+    background-color: rgba(31, 28, 45, 0.1); 
     border-color: #5C5B64;
     border-width: 0.5px;
-    color:#5C5B64;
+    color:#ffffff;
 }
 .circle1 {
   position: absolute;

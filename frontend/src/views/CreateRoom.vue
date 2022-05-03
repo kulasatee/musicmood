@@ -2,7 +2,7 @@
 <div style="background-color: #131022; height: 100vh;">
   <div class="container pt-2" style="background-color: #131022;">
     <h1 class="text-start fw-bold mb-4">Create New Room</h1>
-    <form class="row">
+    <form class="row" method="POST" action="http://localhost:3001/images" enctype="multipart/form-data">
       <div class="row" style="z-index: 1">
         <!-- spilt 2 column -->
         <!-- left column -->
@@ -10,15 +10,15 @@
           <div class="row mb-4">
             <div class="col col-6 text-start">
                 <label for="roomname" class="form-label text-white">Room Name</label>
-                <input type="text" class="form-control form-control-lg input-bg " id="roomname" v-model="room_name">
+                <input type="text" class="form-control form-control-lg input-bg " id="roomname" name="room_name" v-model="room_name">
             </div>
             <div class="col col-6 text-start">
                 <label for="roomtype" class="form-label text-white">Room Type</label>
-                <div class="dropdown">
-                  <button class="btn btn-lg dropdown-toggle w-100 text-end input-bg text-white" type="button" id="roomtype" data-bs-toggle="dropdown" aria-expanded="false">
-                    <span class="fw-light" style="float: left;">{{show_select_type}}</span>
+                <div class="dropdown" name="room_type">
+                  <button class="btn btn-lg dropdown-toggle w-100 text-end input-bg text-white" name="room_type" type="button" id="roomtype" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="fw-light" style="float: left;" name="room_type">{{show_select_type}}</span>
                   </button>
-                  <ul class="dropdown-menu" aria-labelledby="roomtype">
+                  <ul class="dropdown-menu" aria-labelledby="roomtype" name="room_type">
                     <li style="width: 18rem" v-for="type in dropdown_room_type" :key="type.type_name"><button class="dropdown-item" type="button" @click="type_name = type.type_name, show_select_type = type.type_name">{{type.type_name}}</button></li>
                   </ul>
                 </div>
@@ -37,28 +37,23 @@
                 </div>
             </div>
             <div class="col col-6 text-start">
-                <label for="roomname" class="form-label text-white">Room Price</label>
-                <input type="number" min="0" class="form-control form-control-lg input-bg" id="roomname" v-model="room_price">
+                <label for="roomprice" class="form-label text-white">Room Price</label>
+                <input type="number" min="0" class="form-control form-control-lg input-bg" id="roomprice" name="room_price" v-model="room_price">
             </div>
           </div>
           <div class="row mb-4">
             <div class="col text-start">
               <label for="roomdescription" class="form-label text-white">Room Description</label>
-              <textarea class="form-control form-control-lg input-bg" rows="5" aria-label="Room Description" placeholder="Write a Room Description" v-model="room_description"></textarea>
+              <textarea class="form-control form-control-lg input-bg" rows="5" aria-label="Room Description" name="room_description" placeholder="Write a Room Description" v-model="room_description"></textarea>
             </div>
           </div>
           <div class="row mb-4">
             <div class="col text-start">
               <label for="bannerphoto" class="form-label text-white">Choose Banner photo</label>
-              <input class="form-control form-control-lg text-white input-bg" type="file" id="bannerphoto">
+              <input class="form-control form-control-lg text-white input-bg" type="file" id="bannerphoto" name="bannerImage" ref="bannerImage" @change="uploadFile($event)">
             </div>
           </div>
-          <div class="row">
-            <div class="col text-start">
-              <label for="roomphoto" class="form-label text-white">Choose Room photo (Maximum of 4)</label>
-              <input class="form-control form-control-lg text-white input-bg" type="file" id="roomphoto" multiple>
-            </div>
-          </div>
+          
         </div>
         
         <!-- right column -->
@@ -79,9 +74,9 @@
           </div>
           <div class="row ">
             <ul class="ps-3">
-              <li class="text-start ps-3 mb-3" v-for="instrument in instruments" :key="instrument.id">
+              <li class="text-start ps-3 mb-3" v-for="(instrument, index) in instruments" :key="index">
                 {{ instrument.quantity }} {{ instrument.instrument_name }}
-                <a href="#" @click="removeInstrument(instrument.instrument_id)">
+                <a href="#" @click="removeInstrument(index)">
                   <span style="color: white; float: right">
                     <i class="bi bi-x"></i>
                   </span>
@@ -95,7 +90,7 @@
         <!-- submit form button -->
           <div class="col pt-2 text-end me-5">
             <button type="button" class="btn btn-lg btn-sec">CANCEL</button>
-            <button type="button" class="btn btn-lg btn-pri ms-4" @click="addRoom()">CREATE ROOM</button>
+            <button type="submit" value="submit" class="btn btn-lg btn-pri ms-4" @click="addRoom()">CREATE ROOM</button>
           </div>
       </div>
     </form>
@@ -109,6 +104,8 @@
 
 <script>
 import {} from 'bootstrap'
+import axios from "../plugins/axios";
+
 export default {
   name: 'CreateRoom',
   data() {
@@ -139,34 +136,28 @@ export default {
       quantity: '',
       instrument_name: '',
       //>>v-model for input
-
-      //array for add new room
-      rooms: [],
-      //>>array for add new room
       
       //array for instrument
       instrument_id: 0,
       instruments: [],
       //>>array for instrument
+
+      files: null
     }
   },
   created() {
-    this.room_id = this.rooms.length
     this.instrument_id = this.instruments.length
   },
   methods: {
     addRoom() {
-      this.room_id++
       const newRoom = {
-        room_id: this.room_id,
         room_name: this.room_name,
         type_name: this.type_name,
         room_status: this.room_status,
         room_price: this.room_price,
         room_description: this.room_description,
-        banner: '',
-        room_photo: '',
-        room_instrument: this.instruments
+        room_instrument: this.instruments,
+        banner_image: this.files
       }
 
       if(!this.room_name){
@@ -178,10 +169,21 @@ export default {
       }else if(!this.room_price){
         this.$toast.error(`Please fill out 'Room Price'`)   
       }else if(!this.room_description){
-        this.$toast.error(`Please fill out 'Room Description'`)   
+        this.$toast.error(`Please fill out 'Room Description'`)
+      }else if(!this.$refs.bannerImage.value){
+        this.$toast.error(`Please upload 'Banner Photo'`)
       }else{
-        this.rooms.push(newRoom)
-        
+
+        console.log(newRoom)
+
+        axios.post("/rooms", newRoom)
+        .then((response) => {
+          console.log(response.data)
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      
         this.$toast.success(`'${this.room_name}' has been created!`)
 
         this.room_id = 0
@@ -197,6 +199,7 @@ export default {
         this.instruments = []
         this.show_select_type = ''
         this.show_select_status = ''
+        this.$refs.bannerImage.value=null
       }
     },
     addInstrument() {
@@ -212,9 +215,12 @@ export default {
       this.quantity = ''
       this.instrument_name = ''
     },
-    removeInstrument(instrument_id) {
-      let index = this.instruments.findIndex((val) => val.instrument_id === instrument_id)
+    removeInstrument(index) {
       this.instruments.splice(index, 1)
+    },
+    uploadFile (event) {
+        this.files = event.target.files[0].name
+        console.log('files: ' + event.target.files[0].name)
     }
   },
   computed: {

@@ -11,29 +11,29 @@
                         <div class="d-flex flex-row mt-4">
                                 <div class="text-white me-2" style="font-size: 1rem;">
                                     <label for="firstname" class="form-label text-white">First name</label>
-                                    <input type="text" class="form-control form-control-lg input-bg " id="firstname" v-model="account.first_name">
+                                    <input type="text" class="form-control form-control-lg input-bg " id="firstname" v-model="account.firstname">
                                 </div>
                                 <div class="text-white ms-2" style="font-size: 1rem;">
                                     <label for="lastname" class="form-label text-white">Last name</label>
-                                    <input type="text" class="form-control form-control-lg input-bg " id="lastname" v-model="account.last_name">
+                                    <input type="text" class="form-control form-control-lg input-bg " id="lastname" v-model="account.lastname">
                                 </div>
                         </div>
                         <div class="text-white mt-4" style="font-size: 1rem">
                             <label for="phonenumber" class="form-label text-white">Phone number</label>
-                            <input type="number" class="form-control form-control-lg input-bg " id="phonenumber" v-model="account.phone_number">
+                            <input type="text" class="form-control form-control-lg input-bg " id="phonenumber" v-model="account.phone">
                         </div>
                         <div class="text-white mt-4" style="font-size: 1rem">
                             <label for="username" class="form-label text-white">Username</label>
                             <input type="text" class="form-control form-control-lg input-bg " disabled id="username" v-model="account.username">
                         </div>
                         <div class="text-white mt-4 fw-light" style="font-size: 1rem">
-                            <a href="/change-password" class="ps-1" style="color: #6865F2; text-decoration: underline">Change my password</a>
+                            <router-link to="/change-password" class="ps-1" style="color: #6865F2; text-decoration: underline">Change my password</router-link>
                         </div>
                         <div class="mt-5 text-center" type="button" style="font-size: 1rem;">
                             <div class="text-white py-2 rounded" style="text-decoration: none; background-color: #6366F1; display: block" @click="saveEditProfile()">SAVE</div>
                         </div>
                         <div class="mt-4 text-center rounded" style="font-size: 1rem; border: solid 1px; border-color: #6366F1">
-                            <a href="/account-detail" class="py-2 rounded" style="text-decoration: none; color: #6366F1; display: block">BACK</a>
+                            <router-link to="/account-detail" class="py-2 rounded" style="text-decoration: none; color: #6366F1; display: block">BACK</router-link>
                         </div>
                     </div>
                 </div>
@@ -47,38 +47,47 @@
 
 <script>
 import {} from 'bootstrap'
+import axios from "../plugins/axios";
 export default {
   name: "LoginPage",
   data () {
     return {
-        account: {
-            first_name: 'SalinyaZa007',
-            last_name: 'Timklip',
-            phone_number: '0908940562',
-            username: 'Salinya',
-            checked: false
-        }
-        
+        account: {}
     };
   },
   methods: {
       validate_form(){
-          if(this.account.first_name == ''){
+          if(this.account.firstname == ''){
               this.$toast.error("Please fill in your first name")
-          }else if(this.account.last_name == ''){
+          }else if(this.account.lastname == ''){
                this.$toast.error("Please fill in your last name")
-          }else if(this.account.phone_number == ''){
+          }else if(this.account.phone == ''){
                this.$toast.error("Please fill in your phone number")
           }else{
-              this.$router.replace('/account-detail')
               this.$toast.success("Your account has been edited!")
           }
-          
       },
       saveEditProfile(){
           console.log("edit account successfully")
-          this.validate_form()
+          axios.post("/edit-account", this.account).then((res) => {
+              console.log(res.data)
+              this.$toast.success("Your account has been edited!")
+              
+          }).catch((err) => {
+                this.$toast.warning(err.response.data)
+          })
+        //   this.validate_form()
       }
+  },
+  async created(){
+    var temp_account = JSON.parse(localStorage.getItem("user"))
+    try{
+      var res = await axios.post("/account", JSON.parse(localStorage.getItem("user")))
+      this.account = Object.assign({}, temp_account, res.data)
+      console.log(this.account)
+    }catch(err){
+      console.log(err)
+    }
   }
 };
 </script>
