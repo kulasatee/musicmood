@@ -45,7 +45,7 @@ const routes = [
     component: () => import('../views/ChangePassword.vue') // set home as path '/'
   },
   {  
-    path: '/edit-room',
+    path: '/edit-room/:id',
     name: 'EditRoomPage',
     component: () => import('../views/EditRoom.vue') // set home as path '/'
   },
