@@ -167,51 +167,37 @@ router.post("/edit-account", isAuth, async function(req, res, next){
 
 const changepasswordSchema = Joi.object({
   current: Joi.string().required(),
-  password: Joi.string().required().max(15).custom(passwordValidator).label("Password must be at least 8 characters and must contain 1 uppercase, lowercase and number"),
-  new_pass: Joi.string().required().max(15).custom(passwordValidator).label("Password must be at least 8 characters and must contain 1 uppercase, lowercase and number")
+  password: Joi.string().required().min(8).max(15).custom(passwordValidator).label("Password must be at least 8 characters and must contain 1 uppercase, lowercase and number"),
+  new_pass: Joi.string().valid(Joi.ref('password')).required().label("Confirm password mismatch password!")
 })
 
-router.post("/chenge-password", isAuth, async function (req, res, next){
+router.post("/change-password", isAuth, async function (req, res, next){
+  console.log(req.body)
   try{
-    await changepsswordSchema.validateAsync({current: req.body.current_password, password: req.body.new_password, new_pass: req.body.confirm_new_password}, {abortEarly: false})
+    await changepasswordSchema.validateAsync({current: req.body.current_password, password: req.body.new_password, new_pass: req.body.confirm_new_password}, {abortEarly: false})
 
     const [account_row, account_filed] = await pool.query("SELECT * FROM accounts WHERE username=?", [req.body.username]);
 
 
-    console.log(await bcrypt.compare(req.body.password,account_row[0].password))
-    if(!(await bcrypt.compare(req.body.password,account_row[0].password))){
+    console.log(await bcrypt.compare(req.body.current_password,account_row[0].password))
+    if(!(await bcrypt.compare(req.body.current_password,account_row[0].password))){
       return res.status(401).json("Password Incorrect")
     }
 
-
-
+    const [changepass, changepass_filed] = await pool.query("UPDATE accounts SET password=? WHERE account_id=?", [await bcrypt.hash(req.body.new_password, 10),req.body.account_id]);
+      // console.log(changepass)
+    console.log(changepass)
+    return res.json(changepass[0])
   }catch (err){
-    console.log(err.details)
+    console.log(err)
     if(err.details != undefined){
       return res.status(400).json(err.details[0].message.split('" ')[0].substr(1))
     }else{
       return res.status(400).json("This username already exists")
     }
+    // console.log('yeah')
   }
 
-  const conn = await pool.getConnection()
-    // Begin transaction
-    await conn.beginTransaction();
-
-    try{
-      const [changepass, changepass_filed] = await pool.query("UPDATE accounts SET password=? WHERE account_id=?", [await bcrypt.hash(req.body.new_password, 10),req.body.account_id]);
-      console.log(account_row)
-
-      
-      await conn.commit()
-      return res.json(account_row[0])
-    } catch (err) {
-      await conn.rollback
-      console.log(err)
-      return next(err);
-    } finally{
-      conn.release()
-    }
   
 })
 

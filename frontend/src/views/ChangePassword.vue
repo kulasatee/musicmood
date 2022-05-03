@@ -21,7 +21,7 @@
                             <input type="password" class="form-control form-control-lg input-bg " id="confirm_new_password" v-model="confirm_new_password">
                         </div>
                         <div class="mt-5 text-center" type="button" style="font-size: 1rem;">
-                            <router-link to="account-detail" class="text-white py-2 rounded" style="text-decoration: none; background-color: #6366F1; display: block" @click="saveChangePassword()">SAVE</router-link>
+                            <div class="text-white py-2 rounded" style="text-decoration: none; background-color: #6366F1; display: block" @click="saveChangePassword()">SAVE</div>
                         </div>
                         <div class="mt-4 text-center rounded" style="font-size: 1rem; border: solid 1px; border-color: #6366F1">
                             <router-link to="/edit-account-detail" class="py-2 rounded" style="text-decoration: none; color: #6366F1; display: block">CANCEL</router-link>
@@ -52,25 +52,14 @@ export default {
   },
   methods: {
       saveChangePassword(){
-        if(this.account.password != this.current_password){
-          this.$toast.error("Your current password is incorrect")
-        }
-        else if(this.new_password == null){
-          this.$toast.error("Please fill out your new password")
-        }
-        else if(this.new_password != this.confirm_new_password){
-          this.$toast.error("Your new password is mismatch")
-        }else{
-          axios.post("/change-password", {current_password: this.current_password, new_password: this.new_password, confirm_new_password: this.confirm_new_password, username: this.account.username}).then((res) => {
+          axios.post("/change-password", {current_password: this.current_password, new_password: this.new_password, confirm_new_password: this.confirm_new_password, username: this.account.username, account_id: this.account.account_id}).then((res) => {
               console.log(res.data)
               this.$toast.success("Your account has been edited!")
-              
+              this.$router.push("./edit-account-detail")
           }).catch((err) => {
+                console.log(err.response.data)
                 this.$toast.warning(err.response.data)
           })
-          this.$router.replace('/edit-account-detail')
-          this.$toast.success("Your password has been changed !")
-        }
     }
   },
   async created(){
