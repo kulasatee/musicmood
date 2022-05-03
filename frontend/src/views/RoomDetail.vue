@@ -44,7 +44,7 @@
           >
             Delete
           </span>
-          <router-link :to="{ path: `/edit-room/${room.room_id}`}"
+          <router-link :to="{ path: `/edit-room/${room.room_id}` }"
             ><span
               v-if="user.role == 'staff'"
               type="button"
@@ -449,18 +449,30 @@ export default {
       image_banner: [],
       new_review: "",
       review_list: [],
+      reservation_list_fetch: [],
     };
   },
   methods: {
     fetchReserveByDate() {
       axios
-        .get(
-          `http://localhost:3001/reservations/date/${this.reserve_date}/${this.room.room_id}`
-        )
+        .post("http://localhost:3001/reservations/date/", {
+          reserve_date: this.reserve_date,
+          room_id: this.room.room_id,
+        })
         .then((response) => {
-          console.log(response.data);
+          console.log(response.data + "fetch");
           console.log("get date & reserve time");
-          this.reserved_hour = response.data
+          this.reservation_list_fetch = response.data.filter((reserve) => {
+            if (reserve.account_id == this.user.account_id) {
+              if (
+                reserve.reserve_status == "pending" ||
+                reserve.reserve_status == "approved"
+              ) {
+                return reserve;
+              }
+            }
+          });
+          this.reserved_hour = this.reservation_list_fetch
             .map((reserve) => {
               return reserve.reserve_hours;
             })
@@ -559,6 +571,7 @@ export default {
           console.log("Room ... has been reserved.");
           this.reserveModal.hide();
           this.$toast.success("Your reservation has been sent!");
+          this.reserve_hour = []
         })
         .catch((err) => {
           console.log(err.response.data);
@@ -591,18 +604,20 @@ export default {
             console.log(err.response.data);
           });
       } else {
-        this.$toast.error(`There are pending reservations in ${this.room.room_name} !`);
+        this.$toast.error(
+          `There are pending reservations in ${this.room.room_name} !`
+        );
       }
     },
   },
   created() {
     this.todayDate = new Date();
-    if(JSON.parse(localStorage.getItem("user")) == null){
-          this.user = {
-            role: "anonymous",
-          }
-    }else{
-      this.user = JSON.parse(localStorage.getItem("user"))
+    if (JSON.parse(localStorage.getItem("user")) == null) {
+      this.user = {
+        role: "anonymous",
+      };
+    } else {
+      this.user = JSON.parse(localStorage.getItem("user"));
     }
     var yyyy = this.todayDate.getFullYear();
     let mm = this.todayDate.getMonth() + 1; // Months start at 0!
@@ -620,6 +635,7 @@ export default {
       .then((response) => {
         console.log(response.data);
         this.room = response.data[0];
+        this.fetchReserveByDate();
       })
       .catch((err) => {
         console.log(err.response.data);
@@ -667,6 +683,7 @@ export default {
         console.log(err.response.data);
       });
   },
+  mounted() {},
   computed: {
     totalPrice() {
       return this.reserve_hour.length * this.room.room_price;

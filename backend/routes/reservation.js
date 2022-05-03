@@ -30,11 +30,12 @@ router.get("/reservations/:account_id", async function (req, res, next) {
 });
 
 //get a reservation by date
-router.get("/reservations/date/:reserve_date/:room_id", async function (req, res, next) {
+router.post("/reservations/date", async function (req, res, next) {
+    console.log(req.body)
     try {
       const [reservations, columns] = await pool.query(
-        "SELECT room_id, reserve_hours FROM reservations WHERE reserve_date = ? AND room_id = ? AND reserve_status = 'Approved'",
-        [req.params.reserve_date, req.params.room_id]
+        "SELECT * FROM reservations WHERE reserve_date = ? AND room_id = ?",
+        [req.body.reserve_date, req.body.room_id]
       );
       return res.json(reservations);
     } catch (err) {

@@ -2,7 +2,7 @@
   <div id="app" style="background-color: #131022">
     <NavBarStaff :msg="$route.fullPath" class="pb-3" :path="'landing'" v-if="user_proxy() && user_proxy().role == 'staff'"/>
     <NavBarCustomer :msg="$route.fullPath" class="pb-3" v-if="user_proxy() && user_proxy().role == 'customer'"/>
-    <NavBarAno :msg="$route.fullPath" class="pb-3" v-else/>
+    <NavBarAno :msg="$route.fullPath" class="pb-3" v-if="user_proxy() == null"/>
     <router-view :key="$route.fullPath" />
   </div>
 </template>
@@ -28,6 +28,7 @@ export default {
   mounted(){
     this.req_user = JSON.parse(localStorage.getItem("user"))
     console.log(this.req_user)
+    console.log(JSON.parse(localStorage.getItem("user")))
   },
   methods:{
     user_proxy: user
