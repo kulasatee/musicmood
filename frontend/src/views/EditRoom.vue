@@ -75,11 +75,11 @@
             <ul class="ps-3">
               <li class="text-start ps-3 mb-3" v-for="(instrument, index) in instruments" :key="index">
                 {{ instrument.quantity }} {{ instrument.instrument_name }}
-                <a href="#" @click="removeInstrument(index)">
+                <div @click="removeInstrument(index)">
                   <span style="color: white; float: right">
                     <i class="bi bi-x"></i>
                   </span>
-                </a>
+                </div>
               </li>
             </ul>
           </div>
@@ -178,7 +178,7 @@ export default {
     this.instrument_id = this.instruments.length
   },
   methods: {
-    editRoom() {
+    async editRoom() {
       const editRoom = {
         room_name: this.room_name,
         type_name: this.type_name,
@@ -200,22 +200,37 @@ export default {
         this.$toast.error(`Please fill out 'Room Description'`)   
       }else{
         
-      axios.delete(`/rooms/${this.$route.params.id}/instruments`, )
-        .then((response) => {
+        try{
+          var response = await axios.delete(`/rooms/${this.$route.params.id}/instruments`, )
           console.log(response)
-            setTimeout(() => {
-              axios.put(`/rooms/${this.$route.params.id}`, editRoom)
-                .then((response) => {
-                  console.log(response.data)
-                })
-                .catch((err) => {
-                  console.log(err);
-                });
+            setTimeout(async () => {
+              try{
+                var res = await axios.put(`/rooms/${this.$route.params.id}`, editRoom)
+                console.log(res)
+              }catch(err){
+                console.log(err)
+              }
             }, 5000);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+        }catch(err){
+          console.log(err)
+        }
+
+      // axios.delete(`/rooms/${this.$route.params.id}/instruments`, )
+      //   .then((response) => {
+      //     console.log(response)
+      //       setTimeout(() => {
+      //         axios.put(`/rooms/${this.$route.params.id}`, editRoom)
+      //           .then((response) => {
+      //             console.log(response.data)
+      //           })
+      //           .catch((err) => {
+      //             console.log(err);
+      //           });
+      //       }, 5000);
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
 
         this.$toast.success(`'${this.room_name}' has been edited!`)
 

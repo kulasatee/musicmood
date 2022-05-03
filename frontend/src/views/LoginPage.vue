@@ -87,7 +87,6 @@ export default {
       } else if (this.form_input.password == "") {
         alert("please fill in password");
       } else {
-
         try{
           var response = await axios.post("/login", this.form_input)
           if(response.data.token){
