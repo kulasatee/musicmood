@@ -4,7 +4,7 @@
       <div class="d-flex flex-row justify-content-between">
           <div class="text-start d-flex flex-row align-items-center ">
             <div class="linear-color h1" >Room List</div>
-            <div v-if="user.role != 'customer'" class="mx-4 flex-row align-content-center align-item-center" ><a href="create-room"><button class="btn btn-custom" style="border-color:#6865F2; color: white; background-color: #6865F2;">Add a new room</button></a></div>
+            <div v-if="user.role != 'customer' && user.role != 'anonymous'" class="mx-4 flex-row align-content-center align-item-center" ><a href="create-room"><button class="btn btn-custom" style="border-color:#6865F2; color: white; background-color: #6865F2;">Add a new room</button></a></div>
           </div>
           <div class="d-flex flex-row align-items-center justify-content-end w-50">
               <div class="col text-start">
@@ -52,7 +52,7 @@
                         {{room.room_type}}
                       </div>
                     </div>
-                    <div v-if="user.role != 'customer'" class="text-white px-3">
+                    <div v-if="user.role != 'customer' && user.role != 'anonymous'"  class="text-white px-3">
                       <a href="/edit-room"><span type="button" class="btn btn-outline-warning"> Edit </span></a>
                     </div>
                   </div>
@@ -127,7 +127,13 @@ export default {
       .then((response) => {
         console.log(response.data);
         this.room_list = response.data.rooms;
-        this.user = JSON.parse(localStorage.getItem("user"))
+        if(JSON.parse(localStorage.getItem("user")) == null){
+          this.user = {
+            role: "anonymous",
+          }
+        }else{
+          this.user = JSON.parse(localStorage.getItem("user"))
+        }
       })
       .catch((err) => {
         console.log(err.response.data);
