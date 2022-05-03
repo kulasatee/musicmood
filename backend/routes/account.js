@@ -29,12 +29,12 @@ const usernameDuplicateValidator = async (value, helpers) => {
 
 
 const signupSchema = Joi.object({
-  first_name: Joi.string().max(30).required().label("First name Incorrect! First name must contain only 30 character"),
-  last_name: Joi.string().max(30).required().label("Last name Incorrect!  Last name must contain only 30 character"),
-  phone_number: Joi.string().required().pattern(/0[0-9]{9}/).label("Phone number Incorrect!"),
-  username: Joi.string().required().external(usernameDuplicateValidator).min(8).label("Username must be at least 8 characters!"),
-  password: Joi.string().required().max(15).custom(passwordValidator).label("Password must be at least 8 characters and must contain 1 uppercase, lowercase and number"),
-  confirm_password: Joi.string().valid(Joi.ref('password')).required().label("Confirm password mismatch password!")
+  first_name: Joi.string().max(30).alphanum().required().label("Firstname must be A-Z or a-z only and contain only 30 characters"),
+  last_name: Joi.string().max(30).alphanum().required().label("Lastname must be A-Z or a-z only and contain only 30 characters"),
+  phone_number: Joi.string().length(10).pattern(/^[0-9]+$/).required().label("Phone number Incorrect!"),
+  username: Joi.string().alphanum().required().external(usernameDuplicateValidator).min(8).label("Username must be A-Z or a-z only at least 8 characters!"),
+  password: Joi.string().alphanum().required().max(15).custom(passwordValidator).label("Password must be A-Z or a-z only at least 8 characters and contain lowercase, number and 1 uppercase"),
+  confirm_password: Joi.string().valid(Joi.ref('password')).required().label("Confirm password does not match!")
 })
 
 router.post("/signup", async function (req, res, next) {
