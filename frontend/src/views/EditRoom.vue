@@ -75,11 +75,11 @@
             <ul class="ps-3">
               <li class="text-start ps-3 mb-3" v-for="(instrument, index) in instruments" :key="index">
                 {{ instrument.quantity }} {{ instrument.instrument_name }}
-                <div @click="removeInstrument(index)">
+                <span @click="removeInstrument(index)" style="cursor: pointer">
                   <span style="color: white; float: right">
                     <i class="bi bi-x"></i>
                   </span>
-                </div>
+                </span>
               </li>
             </ul>
           </div>
@@ -199,38 +199,10 @@ export default {
       }else if(!this.room_description){
         this.$toast.error(`Please fill out 'Room Description'`)   
       }else{
+  
         
-        try{
-          var response = await axios.delete(`/rooms/${this.$route.params.id}/instruments`, )
-          console.log(response)
-            setTimeout(async () => {
-              try{
-                var res = await axios.put(`/rooms/${this.$route.params.id}`, editRoom)
-                console.log(res)
-              }catch(err){
-                console.log(err)
-              }
-            }, 5000);
-        }catch(err){
-          console.log(err)
-        }
-
-      // axios.delete(`/rooms/${this.$route.params.id}/instruments`, )
-      //   .then((response) => {
-      //     console.log(response)
-      //       setTimeout(() => {
-      //         axios.put(`/rooms/${this.$route.params.id}`, editRoom)
-      //           .then((response) => {
-      //             console.log(response.data)
-      //           })
-      //           .catch((err) => {
-      //             console.log(err);
-      //           });
-      //       }, 5000);
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   });
+      var res = await axios.put(`/rooms/${this.$route.params.id}`, editRoom)
+      console.log(res)
 
         this.$toast.success(`'${this.room_name}' has been edited!`)
 

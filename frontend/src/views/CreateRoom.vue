@@ -76,11 +76,11 @@
             <ul class="ps-3">
               <li class="text-start ps-3 mb-3" v-for="(instrument, index) in instruments" :key="index">
                 {{ instrument.quantity }} {{ instrument.instrument_name }}
-                <div @click="removeInstrument(index)">
+                <span @click="removeInstrument(index)" style="cursor: pointer">
                   <span style="color: white; float: right">
                     <i class="bi bi-x"></i>
                   </span>
-                </div>
+                </span>
               </li>
             </ul>
           </div>

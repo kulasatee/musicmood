@@ -128,90 +128,46 @@ router.post("/images", upload.any(), async function (req, res, next) {
 
 //edit room
 router.put("/rooms/:room_id", async function (req, res, next) {
-
+    console.log(req.params.room_id)
     console.log(req.body)
     const conn = await pool.getConnection()
     // Begin transaction
     await conn.beginTransaction();
 
     try{
-        //add room
-        const [rooms, columns] = await pool.query("UPDATE rooms SET room_name = ?, room_type = ?, room_status = ?, room_price = ?, room_description = ? WHERE room_id = ?", 
+        //delete all instrument in this room
+        const [deleteInstruments, columns2] = await conn.query("DELETE FROM instruments WHERE room_id = ?", [req.params.room_id]);
+
+        if(req.body.banner_image != null){
+            //delete images in this room
+            const deleteimages = await pool.query("DELETE FROM images WHERE room_id = ?", [req.params.room_id]);
+        }
+
+        // //add room
+        const [rooms, columns] = await conn.query("UPDATE rooms SET room_name = ?, room_type = ?, room_status = ?, room_price = ?, room_description = ? WHERE room_id = ?", 
         [req.body.room_name, req.body.type_name, req.body.room_status, req.body.room_price, req.body.room_description, req.params.room_id]);
 
         //add instrument
         for (let index = 0; index < req.body.room_instrument.length; index++) {
-            const instruments = await pool.query(
+            console.log(req.body.room_instrument[index].instrument_name)
+            console.log(req.body.room_instrument[index].quantity)
+            const instruments = await conn.query(
                 'INSERT INTO instruments(room_id, quantity, instrument_name) VALUES(?, ?, ?)', 
-                [req.params.room_id, req.body.room_instrument[index].quantity, req.body.room_instrument[index].instrument_name]);
+                [parseInt(req.params.room_id), req.body.room_instrument[index].quantity, req.body.room_instrument[index].instrument_name]);
             }
 
-        //for add banner
-        var banner_photo_path = 'bannerImage-' + req.body.banner_image
-        const images = await pool.query(
-            'INSERT INTO images(room_id, file_path, banner) VALUES(?, ?, ?)', 
-            [req.params.room_id, '/uploads/'+banner_photo_path, 1]);
-
-
-        // //delete all instrument in this room
-        // const deleteInstruments = await pool.query("DELETE FROM instruments WHERE room_id = ?", [req.params.room_id]);
-
-        //delete images in this room
-        // const deleteimages = await pool.query("DELETE FROM images WHERE room_id = ?", [req.params.room_id]);
-
-        // Promise.all([deleteInstruments, deleteimages])
-        // .then(async(results) => {
-        //     // add instrument
-        //     for (let index = 0; index < req.body.room_instrument.length; index++) {
-        //     const instruments = await pool.query(
-        //         'INSERT INTO instruments(room_id, quantity, instrument_name) VALUES(?, ?, ?)', 
-        //         [req.params.room_id, req.body.room_instrument[index].quantity, req.body.room_instrument[index].instrument_name]);
-        //     }
-
-        //     // const instruments = await pool.query(
-        //     //     'INSERT INTO instruments(room_id, quantity, instrument_name) VALUES("7", "1", "เบส"), ("7", "2", "แอม"), ("7", "3", "กีต้า"), ("7", "4", "แอมม")');
-
-            
-        //     // var values = [[7, 5, 'amp'],[7, 6, 'amp'],[7, 7, 'amp'],[7, 8, 'amp']];
-        //     // const instruments = await pool.query(
-        //     //     'INSERT INTO instruments(room_id, quantity, instrument_name) VALUES ?', 
-        //     //     [req.body.room_instrument.map(item => [req.params.room_id, item.quantity, item.instrument_name])]);
-    
-        //     //for banner
-        //     var banner_photo_path = 'bannerImage-' + req.body.banner_image
-        //     const images = await pool.query(
-        //         'INSERT INTO images(room_id, file_path, banner) VALUES(?, ?, ?)', 
-        //         [req.params.room_id, '/uploads/'+banner_photo_path, 1]);
-        // })
-        // .catch((err) => {
-        // return next(err);
-        // });
         
+        if(req.body.banner_image != null){
+            //for add banner
+            var banner_photo_path = 'bannerImage-' + req.body.banner_image
+            const images = await conn.query(
+                'INSERT INTO images(room_id, file_path, banner) VALUES(?, ?, ?)', 
+                [req.params.room_id, '/uploads/'+banner_photo_path, 1]);
+        }
+        
+
+        await conn.commit()
         return res.send('Room ID ' + req.params.room_id + ' is updated.');
-    } catch (err) {
-        await conn.rollback();
-        return next(err);
-    } finally {
-        console.log('finally')
-        conn.release();
-    }
-});
-
-//delete instrument and image
-router.delete("/rooms/:room_id/instruments", async function (req, res, next) {
-
-    const conn = await pool.getConnection()
-    // Begin transaction
-    await conn.beginTransaction();
-
-    try{
-        //delete all instrument in this room
-        const [deleteInstruments, columns2] = await pool.query("DELETE FROM instruments WHERE room_id = ?", [req.params.room_id]);
-
-        //delete images in this room
-        // const deleteimages = await pool.query("DELETE FROM images WHERE room_id = ?", [req.params.room_id]);
-
-        return res.send('delete instrument success');
     } catch (err) {
         await conn.rollback();
         return next(err);
@@ -237,6 +193,7 @@ router.delete("/rooms/:room_id", async function (req, res, next) {
         //delete images in this room
         const [images, columns3] = await pool.query("DELETE FROM images WHERE room_id = ?", [req.params.room_id]);
 
+        await conn.commit()
         return res.send('Room ID ' + req.params.room_id + ' is deleted.');
     } catch (err) {
         await conn.rollback();
