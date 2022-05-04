@@ -149,7 +149,7 @@ export default {
     this.instrument_id = this.instruments.length
   },
   methods: {
-    addRoom() {
+    async addRoom() {
       const newRoom = {
         room_name: this.room_name,
         type_name: this.type_name,
@@ -176,13 +176,15 @@ export default {
 
         console.log(newRoom)
 
-        axios.post("/rooms", newRoom)
-        .then((response) => {
-          console.log(response.data)
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+        try {
+          var res = await axios.post("/rooms", newRoom)
+          console.log(res)
+        } catch (error) {
+          console.log(error)
+        }
+        
+
+       
       
         this.$toast.success(`'${this.room_name}' has been created!`)
 

@@ -115,7 +115,7 @@ router.post("/rooms", async function (req, res, next) {
 });
 
 //add image multer
-router.post("/images", upload.any(), async function (req, res, next) {
+router.post("/images", upload.any(), function (req, res, next) {
     const file = req.file;
     
     // if (!file) {
