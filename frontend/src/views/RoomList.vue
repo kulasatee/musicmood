@@ -35,7 +35,7 @@
             <router-link :to="{ path: `/room-detail/${room.room_id}`}" style="text-decoration: none">
               <div class="d-flex flex-row">
                 <div class="d-flex" style="width: 33%; height: 17rem">
-                  <img :src="`http://localhost:3001/${room.file_path}`" class="img-fluid rounded" style="object-fit: cover" alt="">
+                  <img :src="`http://localhost:3001${room.file_path}`" class="img-fluid rounded" style="object-fit: cover" alt="">
                 </div>
                 <div class="d-flex flex-column rounded" style="width: 67%; height: 17rem; background-color: #1F1C2D">
                   <div class="d-flex flex-row align-items-center justify-content-between">

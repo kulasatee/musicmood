@@ -46,7 +46,7 @@
                 style="font-size: 1rem"
               >
                 <div
-                  class="text-white py-2 rounded"
+                  class="text-white py-2 rounded bg-danger"
                   @click="validate_form()"
                   style="
                     text-decoration: none;
