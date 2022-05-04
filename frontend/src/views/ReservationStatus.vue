@@ -292,7 +292,7 @@
 
 <script>
 import { Modal } from "bootstrap";
-import axios from "axios";
+import axios from "../plugins/axios";
 export default {
   name: "ReservationList",
   data() {
@@ -332,7 +332,7 @@ export default {
       this.user = JSON.parse(localStorage.getItem("user"));
     }
     axios
-      .get(`http://localhost:3001/reservations/${this.user.account_id}`)
+      .get(`/reservations/${this.user.account_id}`)
       .then((response) => {
         // console.log(response.data);
         this.reservation_list = response.data;

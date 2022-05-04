@@ -180,7 +180,7 @@
         >
           <!-- <div class="text-danger">{{image.file_path}}</div> -->
           <img
-            :src="`http://localhost:3001/${image.file_path}`"
+            :src="image"
             class="img-fluid rounded shadow-lg"
             alt="..."
             style="object-fit: cover; width: 100%; height: 15rem"
@@ -445,7 +445,7 @@ export default {
       roomIdtoDelete: null,
       todayDate: null,
       reserveModal: null,
-      image_nonbanner: [],
+      image_nonbanner: [require('../assets/52Studio.jpeg'),require('../assets/Background Color.png'), require('../assets/roomImage2.jpg'), require('../assets/roomImage4.jpg')],
       image_banner: [],
       new_review: "",
       review_list: [],
@@ -463,20 +463,12 @@ export default {
           console.log(response.data + "fetch");
           console.log("get date & reserve time");
           this.reservation_list_fetch = response.data.filter((reserve) => {
-            if (reserve.account_id == this.user.account_id) {
               if (
                 reserve.reserve_status == "pending" ||
                 reserve.reserve_status == "approved"
               ) {
                 return reserve;
               }
-            }else{
-              if (
-                reserve.reserve_status == "approved"
-              ) {
-                return reserve;
-              }
-            }
           });
           this.reserved_hour = this.reservation_list_fetch
             .map((reserve) => {
@@ -679,7 +671,6 @@ export default {
       .then((response) => {
         console.log(response.data);
         this.room_image = response.data;
-        this.image_nonbanner = this.room_image.filter((val) => val.banner == 0);
         this.image_banner = this.room_image.filter((val) => val.banner == 1);
       })
       .catch((err) => {

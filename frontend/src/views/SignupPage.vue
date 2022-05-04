@@ -57,7 +57,7 @@
 
 <script>
 import {} from 'bootstrap'
-import axios from 'axios'
+import axios from "../plugins/axios";
 export default {
   name: "LoginPage",
   components: {
@@ -91,7 +91,7 @@ export default {
           }else if(this.form_input.confirm_password == ''){
                this.$toast.warning("Please fill in confirm password")
           }else{
-            axios.post("http://localhost:3001/signup", this.form_input)
+            axios.post("/signup", this.form_input)
                 .then((response) => {
                 console.log(response.data)
                 this.$toast.success(`Your account has been created!`)

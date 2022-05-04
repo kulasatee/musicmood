@@ -27,7 +27,17 @@ function isAuth(req, res, next){
     })
 }
 
+function isStaff(req,res,next){
+    if(req.user.role != 'staff'){
+        console.log("non")
+        return res.status(403).send("You do not have permission to perform this action");
+    }else{
+        next()
+    }
+}
+
 module.exports = {
     generateToken,
-    isAuth
+    isAuth,
+    isStaff
 }

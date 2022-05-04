@@ -1,11 +1,12 @@
 const express = require("express");
 const path = require("path");
 const pool = require("../config");
+const { isAuth, isStaff } = require("./auth/jwtAuth");
 
 router = express.Router();
 
 //get all reservations
-router.get("/reservations", async function (req, res, next) {
+router.get("/reservations", isAuth, isStaff, async function (req, res, next) {
   try {
     const [reservations, columns] = await pool.query(
       "SELECT * FROM reservations INNER JOIN customers ON reservations.account_id = customers.account_id INNER JOIN rooms ON rooms.room_id = reservations.room_id"
@@ -17,7 +18,7 @@ router.get("/reservations", async function (req, res, next) {
 });
 
 //get a reservation
-router.get("/reservations/:account_id", async function (req, res, next) {
+router.get("/reservations/:account_id",isAuth, async function (req, res, next) {
   try {
     const [reservations, columns] = await pool.query(
       "SELECT * FROM reservations INNER JOIN customers ON reservations.account_id = customers.account_id INNER JOIN rooms ON rooms.room_id = reservations.room_id WHERE reservations.account_id = ?",
@@ -30,7 +31,7 @@ router.get("/reservations/:account_id", async function (req, res, next) {
 });
 
 //get a reservation by date
-router.post("/reservations/date", async function (req, res, next) {
+router.post("/reservations/date",isAuth, async function (req, res, next) {
     console.log(req.body)
     try {
       const [reservations, columns] = await pool.query(
@@ -44,7 +45,7 @@ router.post("/reservations/date", async function (req, res, next) {
   });
 
 //add new reservation
-router.post("/reservations", async function (req, res, next) {
+router.post("/reservations",isAuth, async function (req, res, next) {
   try {
     const [reservations, columns] = await pool.query(
       "INSERT INTO reservations(account_id, room_id, reserve_date, reserve_hours, reserve_status, total_price) VALUES(?, ?, ?, ?, ?, ?)",
@@ -64,7 +65,7 @@ router.post("/reservations", async function (req, res, next) {
 });
 
 //edit reservation status
-router.put("/reservations", async function (req, res, next) {
+router.put("/reservations",isAuth, isStaff, async function (req, res, next) {
     try {
       const [reservations, columns] = await pool.query(
         "UPDATE reservations SET reserve_status = ?, reserve_remark = ? WHERE reserve_id = ?",

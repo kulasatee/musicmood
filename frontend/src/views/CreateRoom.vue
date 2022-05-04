@@ -179,14 +179,12 @@ export default {
         try {
           var res = await axios.post("/rooms", newRoom)
           console.log(res)
+          this.$toast.success(`'${this.room_name}' has been created!`)
         } catch (error) {
           console.log(error)
+          this.$toast.error(error.message)
         }
         
-
-       
-      
-        this.$toast.success(`'${this.room_name}' has been created!`)
 
         this.room_id = 0
         this.room_name = ''

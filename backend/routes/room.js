@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path")
 const pool = require("../config");
 const multer = require('multer')
-const { isAuth } = require("./auth/jwtAuth")
+const { isAuth, isStaff } = require("./auth/jwtAuth")
 
 router = express.Router();
 
@@ -79,7 +79,7 @@ router.get("/rooms/:room_id/instruments", async function (req, res, next) {
 });
 
 //add new room
-router.post("/rooms", async function (req, res, next) {
+router.post("/rooms",isAuth, isStaff, async function (req, res, next) {
     console.log(req.body)
 
     const conn = await pool.getConnection()
@@ -127,7 +127,7 @@ router.post("/images", upload.any(), function (req, res, next) {
 });
 
 //edit room
-router.put("/rooms/:room_id", async function (req, res, next) {
+router.put("/rooms/:room_id",isAuth, isStaff, async function (req, res, next) {
     console.log(req.params.room_id)
     console.log(req.body)
     const conn = await pool.getConnection()
@@ -178,20 +178,20 @@ router.put("/rooms/:room_id", async function (req, res, next) {
 });
 
 //delete room
-router.delete("/rooms/:room_id", async function (req, res, next) {
+router.delete("/rooms/:room_id",isAuth, isStaff, async function (req, res, next) {
 
     const conn = await pool.getConnection()
     // Begin transaction
     await conn.beginTransaction();
 
     try{
-        const [rooms, columns] = await pool.query("DELETE FROM rooms WHERE room_id = ?", [req.params.room_id]);
+        const [rooms, columns] = await conn.query("DELETE FROM rooms WHERE room_id = ?", [req.params.room_id]);
 
         //delete all instrument in this room
-        const [deleteInstruments, columns2] = await pool.query("DELETE FROM instruments WHERE room_id = ?", [req.params.room_id]);
+        const [deleteInstruments, columns2] = await conn.query("DELETE FROM instruments WHERE room_id = ?", [req.params.room_id]);
 
         //delete images in this room
-        const [images, columns3] = await pool.query("DELETE FROM images WHERE room_id = ?", [req.params.room_id]);
+        const [images, columns3] = await conn.query("DELETE FROM images WHERE room_id = ?", [req.params.room_id]);
 
         await conn.commit()
         return res.send('Room ID ' + req.params.room_id + ' is deleted.');

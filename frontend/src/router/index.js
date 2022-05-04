@@ -60,11 +60,6 @@ const routes = [
     component: () => import('../views/ReservationList.vue') // set home as path '/'
   },
   {
-    path: '/reservation-modal',
-    name: 'ReservationModal',
-    component: () => import('../views/ReservationModal.vue') // set home as path '/'
-  },
-  {
     path: '/reservation-status',
     name: 'ReservationStatus',
     component: () => import('../views/ReservationStatus.vue') // set home as path '/'

@@ -317,7 +317,7 @@
 
 <script>
 import { Modal } from "bootstrap";
-import axios from "axios";
+import axios from "../plugins/axios";
 export default {
   name: "ReservationList",
   data() {
@@ -350,7 +350,7 @@ export default {
       this.user = JSON.parse(localStorage.getItem("user"));
     }
     axios
-      .get("http://localhost:3001/reservations")
+      .get("/reservations")
       .then((response) => {
         console.log(response.data);
         this.reservation_list = response.data;
@@ -405,7 +405,7 @@ export default {
       this.reservation_modal.show();
 
       axios
-        .post("http://localhost:3001/reservations/date/", {
+        .post("/reservations/date/", {
           reserve_date: this.reserve_datetime_modal,
           room_id: this.selected_reservation.room_id,
         })
@@ -443,7 +443,7 @@ export default {
         this.$toast.error(`Time overlap !`);
       } else {
         axios
-        .put("http://localhost:3001/reservations", {
+        .put("/reservations", {
           reserve_status: "approved",
           reserve_remark: this.reservation_remark,
           reserve_id: this.selected_reservation.reserve_id,
@@ -467,13 +467,28 @@ export default {
     },
 
     rejectReservation() {
-      let index = this.reservation_list.findIndex(
-        (val) => val.reserve_id === this.selected_reservation.reserve_id
-      );
-      this.reservation_list[index]["reserve_status"] = "rejected";
-      this.reservation_modal.hide();
+      
 
-      this.$toast.success(`Reservation has been rejected successfully!`);
+      axios
+        .put("/reservations", {
+          reserve_status: "rejected",
+          reserve_remark: this.reservation_remark,
+          reserve_id: this.selected_reservation.reserve_id,
+        })
+        .then((response) => {
+          console.log(response.data);
+          let index = this.reservation_list.findIndex(
+            (val) => val.reserve_id === this.selected_reservation.reserve_id
+          );
+          this.reservation_list[index]["reserve_status"] = "rejected";
+          this.reservation_modal.hide();
+          this.$toast.success(`Reservation has been rejected successfully!`);
+        })
+        .catch((err) => {
+          console.log(err.response.data);
+        });
+
+      
     },
   },
   computed: {

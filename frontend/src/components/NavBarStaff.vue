@@ -4,7 +4,7 @@
             <div class="container-fluid">
                 <div class="navbar-brand mx-0 my-1" @click="$router.push('/').catch(err => {
                     $router.go('/')
-                })" style="color: white; font-size: 2.25rem">
+                })" style="color: white; font-size: 2.25rem; cursor: pointer">
                     <img src="../assets/MusicMoodLOGO.png" alt="" width="52" height="52">
                     <span class="px-3">MusicMood</span>
                 </div>
