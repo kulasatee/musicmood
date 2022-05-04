@@ -96,7 +96,7 @@ const loginSchema = Joi.object({
 router.post("/login", async function (req, res, next){
     console.log(req.body)
     try{
-      await loginSchema.validateAsync(req.body, {abortEarly: false})
+      await loginSchema.validateAsync({username: req.body.username, password: req.body.password}, {abortEarly: false})
 
       const [account_row, account_filed] = await pool.query("SELECT * FROM accounts WHERE username=?", [req.body.username]);
 
@@ -135,7 +135,7 @@ router.post("/login", async function (req, res, next){
 
 router.post("/account", isAuth, async function(req, res, next){
 
-  const [account_row, account_filed] = await pool.query("SELECT * FROM accounts INNER JOIN customers ON accounts.account_id = customers.account_id WHERE accounts.account_id=?", [req.body.account_id]);
+  const [account_row, account_filed] = await pool.query("SELECT accounts.account_id, accounts.username, accounts.role, customers.firstname, customers.lastname, customers.phone FROM accounts INNER JOIN customers ON accounts.account_id = customers.account_id WHERE accounts.account_id=?", [req.body.account_id]);
 
   return res.json(account_row[0])
 })

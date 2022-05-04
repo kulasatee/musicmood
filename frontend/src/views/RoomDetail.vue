@@ -417,7 +417,7 @@
 
 <script>
 import { Modal } from "bootstrap";
-import axios from "axios";
+import axios from "../plugins/axios";
 export default {
   name: "RoomDetail",
   data() {
@@ -455,7 +455,7 @@ export default {
   methods: {
     fetchReserveByDate() {
       axios
-        .post("http://localhost:3001/reservations/date/", {
+        .post("/reservations/date/", {
           reserve_date: this.reserve_date,
           room_id: this.room.room_id,
         })
@@ -466,6 +466,12 @@ export default {
             if (reserve.account_id == this.user.account_id) {
               if (
                 reserve.reserve_status == "pending" ||
+                reserve.reserve_status == "approved"
+              ) {
+                return reserve;
+              }
+            }else{
+              if (
                 reserve.reserve_status == "approved"
               ) {
                 return reserve;
@@ -499,7 +505,7 @@ export default {
         ) == -1
       ) {
         axios
-          .post("http://localhost:3001/reviews", {
+          .post("/reviews", {
             account_id: this.user.account_id,
             review: this.new_review,
             room_id: this.room.room_id,
@@ -535,7 +541,7 @@ export default {
     },
     deletereview() {
       axios
-        .delete(`http://localhost:3001/reviews/${this.reviewIdtoDelete}`)
+        .delete(`/reviews/${this.reviewIdtoDelete}`)
         .then((response) => {
           console.log(response.data);
           let index = this.review_list.findIndex(
@@ -557,7 +563,7 @@ export default {
     },
     reserveRoom() {
       axios
-        .post("http://localhost:3001/reservations", {
+        .post("/reservations", {
           account_id: this.user.account_id,
           room_id: this.room.room_id,
           reserve_date: this.reserve_date,
@@ -593,7 +599,7 @@ export default {
         ) == -1
       ) {
         axios
-          .delete(`http://localhost:3001/rooms/${this.room.room_id}`)
+          .delete(`/rooms/${this.room.room_id}`)
           .then((response) => {
             console.log(response.data);
             this.deleteRoomModal.hide();
@@ -630,8 +636,15 @@ export default {
 
     this.reserve_date = this.todayDate;
 
+    axios.post("/account", this.user).then((response) =>{
+      this.user = response.data
+      console.log(response.data)
+    }).catch((err) => {
+        console.log(err)
+    })
+
     axios
-      .get(`http://localhost:3001/rooms/${this.$route.params.id}`)
+      .get(`/rooms/${this.$route.params.id}`)
       .then((response) => {
         console.log(response.data);
         this.room = response.data[0];
@@ -642,7 +655,7 @@ export default {
       });
 
     axios
-      .get(`http://localhost:3001/reviews/${this.$route.params.id}`)
+      .get(`/reviews/${this.$route.params.id}`)
       .then((response) => {
         console.log(response.data);
         this.review_list = response.data;
@@ -652,7 +665,7 @@ export default {
       });
 
     axios
-      .get(`http://localhost:3001/rooms/${this.$route.params.id}/instruments`)
+      .get(`/rooms/${this.$route.params.id}/instruments`)
       .then((response) => {
         console.log(response.data);
         this.instruments = response.data;
@@ -662,7 +675,7 @@ export default {
       });
 
     axios
-      .get(`http://localhost:3001/rooms/${this.$route.params.id}/images`)
+      .get(`/rooms/${this.$route.params.id}/images`)
       .then((response) => {
         console.log(response.data);
         this.room_image = response.data;
@@ -674,7 +687,7 @@ export default {
       });
 
     axios
-      .get(`http://localhost:3001/reservations/${this.user.account_id}`)
+      .get(`/reservations/${this.user.account_id}`)
       .then((response) => {
         console.log(response.data);
         this.reservation_list = response.data;
