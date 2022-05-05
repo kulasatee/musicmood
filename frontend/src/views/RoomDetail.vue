@@ -71,6 +71,7 @@
             >
               <p>
                 <i class="bi bi-check-circle textpurple"></i>
+                <span class="ms-2 me-1">{{instru.quantity }}</span>
                 {{ instru.instrument_name }}
               </p>
             </div>
@@ -478,7 +479,7 @@ export default {
             .split(",");
         })
         .catch((err) => {
-          console.log(err.response.data);
+          console.log(err);
         });
       this.reserve_hour = [];
     },
@@ -640,7 +641,9 @@ export default {
       .then((response) => {
         console.log(response.data);
         this.room = response.data[0];
-        this.fetchReserveByDate();
+        if(this.user.role == 'customer'){
+          this.fetchReserveByDate();
+        }
       })
       .catch((err) => {
         console.log(err.response.data);

@@ -32,7 +32,6 @@ router.get("/reservations/:account_id",isAuth, async function (req, res, next) {
 
 //get a reservation by date
 router.post("/reservations/date",isAuth, async function (req, res, next) {
-    console.log(req.body)
     try {
       const [reservations, columns] = await pool.query(
         "SELECT * FROM reservations WHERE reserve_date = ? AND room_id = ?",

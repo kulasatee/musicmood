@@ -39,7 +39,6 @@ const signupSchema = Joi.object({
 
 router.post("/signup", async function (req, res, next) {
     // Your code here
-    console.log(req.body)
 
     try{
       await signupSchema.validateAsync(req.body, {abortEarly: false})
@@ -62,8 +61,6 @@ router.post("/signup", async function (req, res, next) {
       const [account_row, account_filed] = await conn.query("INSERT INTO accounts(username, password, role) VALUES(?,?,?)", [req.body.username, await bcrypt.hash(req.body.password, 10), "customer"]);
       const [customer_row, customer_field] = await conn.query("INSERT INTO customers(account_id, firstname, lastname, phone) VALUES(?,?,?,?)", [account_row.insertId, req.body.first_name, req.body.last_name, req.body.phone_number]);
 
-      console.log(account_row)
-      console.log(customer_row)
       await conn.commit()
       return res.json(account_row);
     } catch (err) {
@@ -94,28 +91,23 @@ const loginSchema = Joi.object({
     
 })
 router.post("/login", async function (req, res, next){
-    console.log(req.body)
     try{
       await loginSchema.validateAsync({username: req.body.username, password: req.body.password}, {abortEarly: false})
 
       const [account_row, account_filed] = await pool.query("SELECT * FROM accounts WHERE BINARY username=?", [req.body.username]);
 
 
-      console.log(await bcrypt.compare(req.body.password,account_row[0].password))
       if(!(await bcrypt.compare(req.body.password,account_row[0].password))){
         return res.status(401).json("Password Incorrect")
       }
 
       try{
-        console.log(account_row[0])
-        console.log(account_row[0].username)
         const accessToken = generateToken({
         account_id: account_row[0].account_id,
         username: account_row[0].username,
         role: account_row[0].role
         })
 
-        console.log(accessToken)
         return res.json({
               token: accessToken
               })
@@ -158,7 +150,6 @@ router.post("/edit-account", isAuth, async function(req, res, next){
     }
   }
   const [account_row, account_filed] = await pool.query("UPDATE customers SET firstname=?, lastname=?, phone=? WHERE account_id=?", [req.body.firstname, req.body.lastname, req.body.phone, req.body.account_id]);
-  console.log(account_row)
 
   return res.json(account_row[0])
 })
@@ -171,21 +162,18 @@ const changepasswordSchema = Joi.object({
 })
 
 router.post("/change-password", isAuth, async function (req, res, next){
-  console.log(req.body)
   try{
     await changepasswordSchema.validateAsync({current: req.body.current_password, password: req.body.new_password, new_pass: req.body.confirm_new_password}, {abortEarly: false})
 
     const [account_row, account_filed] = await pool.query("SELECT * FROM accounts WHERE username=?", [req.body.username]);
 
 
-    console.log(await bcrypt.compare(req.body.current_password,account_row[0].password))
     if(!(await bcrypt.compare(req.body.current_password,account_row[0].password))){
       return res.status(401).json("Password Incorrect")
     }
 
     const [changepass, changepass_filed] = await pool.query("UPDATE accounts SET password=? WHERE account_id=?", [await bcrypt.hash(req.body.new_password, 10),req.body.account_id]);
       // console.log(changepass)
-    console.log(changepass)
     return res.json(changepass[0])
   }catch (err){
     console.log(err)

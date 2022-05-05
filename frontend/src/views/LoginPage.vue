@@ -83,9 +83,9 @@ export default {
   methods: {
     async validate_form() {
       if (this.form_input.username == "") {
-        alert("please fill in username");
+        this.$toast.warning("please fill in username");
       } else if (this.form_input.password == "") {
-        alert("please fill in password");
+        this.$toast.warning("please fill in password");
       } else {
         try{
           var response = await axios.post("/login", this.form_input)
@@ -98,7 +98,6 @@ export default {
         }catch(err){
           this.$toast.warning(err.response.data);
         }
-        // this.$router.replace('/room-list')
       }
     },
   },

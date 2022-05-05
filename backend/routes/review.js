@@ -6,7 +6,7 @@ const { isAuth } = require("./auth/jwtAuth");
 router = express.Router();
 
 //get all reviews
-router.get("/reviews",isAuth, async function (req, res, next) {
+router.get("/reviews", async function (req, res, next) {
     try{
         const [reviews, columns] = await pool.query("SELECT * FROM reviews INNER JOIN customers ON reviews.account_id = customers.account_id");
         return res.json(reviews);
@@ -16,7 +16,7 @@ router.get("/reviews",isAuth, async function (req, res, next) {
 });
 
 //get all reviews by room id
-router.get("/reviews/:room_id",isAuth, async function (req, res, next) {
+router.get("/reviews/:room_id", async function (req, res, next) {
     try{
         const [reviews, columns] = await pool.query("SELECT * FROM reviews INNER JOIN customers ON (reviews.account_id = customers.account_id) WHERE reviews.room_id = ?", [req.params.room_id]);
         return res.json(reviews);
@@ -34,19 +34,6 @@ router.post("/reviews",isAuth, async function (req, res, next) {
             [req.body.account_id, req.body.room_id, req.body.review]);
         
         return res.json(reviews.insertId);
-    } catch (err) {
-        return next(err);
-    }
-});
-
-//edit review
-router.put("/reviews/:review_id",isAuth, async function (req, res, next) {
-    try{
-        const [reviews, columns] = await pool.query(
-            'UPDATE reviews SET review = ? WHERE review_id = ?', 
-            [req.body.review, req.params.review_id]);
-        
-        return res.send('Review (Review ID: ' + req.params.review_id + ') has been edited');
     } catch (err) {
         return next(err);
     }
