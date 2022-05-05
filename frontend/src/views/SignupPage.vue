@@ -78,7 +78,7 @@ export default {
       validate_form(){
           
           if(this.form_input.first_name == ''){
-               this.$toast.warning("Please fill in firstname")
+            this.$toast.warning("Please fill in firstname")
           }
           else if(this.form_input.last_name == ''){
                this.$toast.warning("Please fill in lastname")
