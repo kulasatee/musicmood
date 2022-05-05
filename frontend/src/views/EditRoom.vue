@@ -210,6 +210,8 @@ export default {
 
           this.quantity = ''
           this.instrument_name = ''
+
+          this.$router.push(`/room-list`)
         } catch (error) {
           this.$toast.error(error.response.data)
         }

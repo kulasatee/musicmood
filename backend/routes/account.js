@@ -131,9 +131,9 @@ router.post("/account", isAuth, async function(req, res, next){
 
 
 const editSchema = Joi.object({
-  firstname: Joi.string().max(30).required().label("First name Incorrect! First name must contain only 30 character"),
-  lastname: Joi.string().max(30).required().label("Last name Incorrect!  Last name must contain only 30 character"),
-  phone: Joi.string().required().pattern(/0[0-9]{9}/).label("Phone number Incorrect!"),
+  firstname: Joi.string().alphanum().max(30).required().label("Firstname must be A-Z or a-z only and contain only 30 characters"),
+  lastname: Joi.string().alphanum().max(30).required().label("Lastname must be A-Z or a-z only and contain only 30 characters"),
+  phone: Joi.string().length(10).pattern(/^[0-9]+$/).required().label("Phone number Incorrect!"),
 })
 router.post("/edit-account", isAuth, async function(req, res, next){
   try{

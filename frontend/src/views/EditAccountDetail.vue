@@ -71,6 +71,7 @@ export default {
           axios.post("/edit-account", this.account).then((res) => {
               console.log(res.data)
               this.$toast.success("Your account has been edited!")
+              this.$router.push(`/account-detail`)
               
           }).catch((err) => {
                 this.$toast.warning(err.response.data)
