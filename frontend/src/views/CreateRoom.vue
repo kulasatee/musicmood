@@ -175,12 +175,8 @@ export default {
         this.$toast.error(`Please upload Banner Photo`)
       }else{
 
-        console.log(newRoom)
-
         try {
           var res = await axios.post("/rooms", newRoom)
-          console.log(res.data)
-          console.log('this')
           this.$toast.success(`'${this.room_name}' has been created!`)
           this.$router.push({
           path: `/room-detail/${res.data.id}`,
@@ -214,7 +210,6 @@ export default {
     },
     uploadFile (event) {
         this.files = event.target.files[0].name
-        console.log('files: ' + event.target.files[0].name)
     }
   },
   computed: {

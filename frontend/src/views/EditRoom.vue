@@ -238,7 +238,6 @@ export default {
     },
     uploadFile (event) {
         this.files = event.target.files[0].name
-        console.log('files: ' + event.target.files[0].name)
     }
     
   },

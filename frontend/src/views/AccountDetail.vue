@@ -57,7 +57,6 @@ export default {
     try{
       var res = await axios.post("/account", JSON.parse(localStorage.getItem("user")))
       this.account = res.data
-      console.log(this.account)
     }catch(err){
       console.log(err)
     }

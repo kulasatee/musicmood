@@ -22,7 +22,6 @@ const usernameDuplicateValidator = async (value, helpers) => {
   const [account_rows, account_field] = await pool.query('SELECT username FROM accounts WHERE username=?',[value])
 
   if(account_rows.length > 0){
-    console.log(account_rows.length)
     throw new Joi.ValidationError('This username is already taken')
   }
 } 
@@ -78,10 +77,8 @@ const usernameCheckValidator = async (value, helpers) => {
   const [account_rows, account_field] = await pool.query('SELECT username FROM accounts WHERE BINARY username=?',[value])
 
   if(account_rows.length == 0){
-    console.log(account_rows.length)
     throw new Joi.ValidationError("Your username doesn't exists")
   }
-  console.log(account_rows.length)
 } 
 
 
@@ -173,7 +170,7 @@ router.post("/change-password", isAuth, async function (req, res, next){
     }
 
     const [changepass, changepass_filed] = await pool.query("UPDATE accounts SET password=? WHERE account_id=?", [await bcrypt.hash(req.body.new_password, 10),req.body.account_id]);
-      // console.log(changepass)
+
     return res.json(changepass[0])
   }catch (err){
     console.log(err)
@@ -182,7 +179,7 @@ router.post("/change-password", isAuth, async function (req, res, next){
     }else{
       return res.status(400).json("This username already exists")
     }
-    // console.log('yeah')
+
   }
 
   

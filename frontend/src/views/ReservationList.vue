@@ -155,9 +155,7 @@ export default {
           this.hours_for_show = reserve.reserve_hours.split(",");
           this.hours_for_show.forEach((hour) => {
             hours_concat += parseInt(hour) + '.00-' + (parseInt(hour)+1) + '.00, '
-            console.log(hours_concat)
           })
-          console.log(this.hours_for_show)
           hours_concat = hours_concat.substring(0, hours_concat.length-2)
           this.reservation_list[index]['hours'] = hours_concat
           hours_concat = ''
@@ -216,8 +214,6 @@ export default {
       res_hour = res_hour.join(",").split(",");
 
       console.log(res_hour);
-      console.log(this.selected_reservation.reserve_hours.split(','))
-      // console.log(res_hour.includes(this.selected_reservation.reserve_hours.split(',')))
 
         var isOverlap = "";
         this.selected_reservation.reserve_hours

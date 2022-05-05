@@ -89,7 +89,6 @@ const manageRoomSchema = Joi.object({
 
 //add new room
 router.post("/rooms",isAuth, isStaff, async function (req, res, next) {
-    console.log(req.body)
 
     const validateField= {
         room_name: req.body.room_name, 
@@ -100,8 +99,6 @@ router.post("/rooms",isAuth, isStaff, async function (req, res, next) {
     }
 
     try{
-        console.log(validateField)
-        console.log('this')
         await manageRoomSchema.validateAsync(validateField, {abortEarly: false})
     }catch (err){
         console.log(err.details)
@@ -137,27 +134,16 @@ router.post("/rooms",isAuth, isStaff, async function (req, res, next) {
         await conn.rollback();
         return next(err);
     } finally {
-        console.log('finally')
         conn.release();
     }
 });
 
 //add image multer
 router.post("/images", upload.any(), function (req, res, next) {
-    // const file = req.file;
-    // return res.send("upload image successfully")
-    // if (!file) {
-    //     const error = new Error("Please upload a file");
-    //     error.httpStatusCode = 400;
-    //     return next(error);
-    // }
-
 });
 
 //edit room
 router.put("/rooms/:room_id",isAuth, isStaff, async function (req, res, next) {
-    console.log(req.params.room_id)
-    console.log(req.body)
 
     const validateField= {
         room_name: req.body.room_name, 
@@ -195,8 +181,6 @@ router.put("/rooms/:room_id",isAuth, isStaff, async function (req, res, next) {
 
         //add instrument
         for (let index = 0; index < req.body.room_instrument.length; index++) {
-            console.log(req.body.room_instrument[index].instrument_name)
-            console.log(req.body.room_instrument[index].quantity)
             const instruments = await conn.query(
                 'INSERT INTO instruments(room_id, quantity, instrument_name) VALUES(?, ?, ?)', 
                 [parseInt(req.params.room_id), req.body.room_instrument[index].quantity, req.body.room_instrument[index].instrument_name]);
@@ -218,7 +202,6 @@ router.put("/rooms/:room_id",isAuth, isStaff, async function (req, res, next) {
         await conn.rollback();
         return next(err);
     } finally {
-        console.log('finally')
         conn.release();
     }
 });
@@ -245,7 +228,6 @@ router.delete("/rooms/:room_id",isAuth, isStaff, async function (req, res, next)
         await conn.rollback();
         return next(err);
     } finally {
-        console.log('finally')
         conn.release();
     }
 });

@@ -140,7 +140,6 @@ export default {
     axios
       .get(`/reservations/${this.user.account_id}`)
       .then((response) => {
-        // console.log(response.data);
         this.reservation_list = response.data;
         var hours_concat = "";
         this.reservation_list.forEach((reserve, index) => {
@@ -148,9 +147,7 @@ export default {
           this.hours_for_show.forEach((hour) => {
             hours_concat +=
               parseInt(hour) + ".00-" + (parseInt(hour) + 1) + ".00, ";
-            console.log(hours_concat);
           });
-          console.log(this.hours_for_show);
           hours_concat = hours_concat.substring(0, hours_concat.length - 2);
           this.reservation_list[index]["hours"] = hours_concat;
           hours_concat = "";

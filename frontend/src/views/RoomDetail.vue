@@ -462,7 +462,6 @@ export default {
         })
         .then((response) => {
           console.log(response.data + "fetch");
-          console.log("get date & reserve time");
           this.reservation_list_fetch = response.data.filter((reserve) => {
               if (
                 reserve.reserve_status == "pending" ||
@@ -528,7 +527,6 @@ export default {
         document.getElementById("deleteModal")
       );
       this.deletereviewModal.show();
-      console.log(review_id);
       this.reviewIdtoDelete = review_id;
       this.reviewByToDelete = review_by;
     },
@@ -567,7 +565,6 @@ export default {
         .then((response) => {
           console.log(response.data);
           this.reserved_hour.push(...this.reserve_hour);
-          console.log("Room ... has been reserved.");
           this.reserveModal.hide();
           this.$toast.success("Your reservation has been sent!");
           this.reserve_hour = []

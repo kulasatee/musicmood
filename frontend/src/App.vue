@@ -22,13 +22,7 @@ export default {
   },
   data(){
     return {
-      req_user: {},
     }
-  },
-  mounted(){
-    this.req_user = JSON.parse(localStorage.getItem("user"))
-    console.log(this.req_user)
-    console.log(JSON.parse(localStorage.getItem("user")))
   },
   methods:{
     user_proxy: user

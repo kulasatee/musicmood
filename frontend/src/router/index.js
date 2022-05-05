@@ -113,12 +113,6 @@ const routes = [
   {
     path: '*',
     name: 'ErrorPage',
-    component: () => import('../views/ReservationStatus.vue') // set home as path '/'
-    // ทุกคนเข้าได้
-  },
-  {
-    path: '*',
-    name: 'ErrorPage',
     component: () => import('../views/ErrorPage.vue') // set home as path '/'
   },
 ]

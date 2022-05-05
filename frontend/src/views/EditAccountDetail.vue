@@ -68,7 +68,6 @@ export default {
           }
       },
       saveEditProfile(){
-          console.log("edit account successfully")
           axios.post("/edit-account", this.account).then((res) => {
               console.log(res.data)
               this.$toast.success("Your account has been edited!")
@@ -84,7 +83,6 @@ export default {
     try{
       var res = await axios.post("/account", JSON.parse(localStorage.getItem("user")))
       this.account = Object.assign({}, temp_account, res.data)
-      console.log(this.account)
     }catch(err){
       console.log(err)
     }
