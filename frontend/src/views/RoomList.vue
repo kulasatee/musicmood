@@ -119,7 +119,6 @@ export default {
       }else{
         return this.room_list.filter((val) => (val.room_type == this.show_select_type) && (val.room_status == this.show_select_status))
       }
-
     }
   },
   created(){

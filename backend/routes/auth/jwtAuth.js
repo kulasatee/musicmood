@@ -19,7 +19,7 @@ function isAuth(req, res, next){
     const token = authHeader.split(" ")[1];
     jwt.verify(token, tokenSecret, (err, user) => {
         if(err) {
-            return res.status(403).json(err.message);
+            return res.status(403).json(err);
         }
         req.user = user;
         next()

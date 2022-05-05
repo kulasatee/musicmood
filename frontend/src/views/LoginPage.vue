@@ -93,7 +93,7 @@ export default {
                 localStorage.setItem("token", response.data.token)
                 var user = await axios.post("/auth/me")
                 localStorage.setItem("user", JSON.stringify(user.data))
-                this.$router.push('/room-list')
+                this.$router.replace('/room-list')
             }
         }catch(err){
           this.$toast.warning(err.response.data);

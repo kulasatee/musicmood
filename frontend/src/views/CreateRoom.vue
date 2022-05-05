@@ -11,6 +11,7 @@
             <div class="col col-6 text-start">
                 <label for="roomname" class="form-label text-white">Room Name</label>
                 <input type="text" class="form-control form-control-lg input-bg " id="roomname" name="room_name" v-model="room_name">
+                <span class="fw-light text-white-50" style="font-size: 12px;">contain only 30 characters</span>
             </div>
             <div class="col col-6 text-start">
                 <label for="roomtype" class="form-label text-white">Room Type</label>
@@ -45,6 +46,7 @@
             <div class="col text-start">
               <label for="roomdescription" class="form-label text-white">Room Description</label>
               <textarea class="form-control form-control-lg input-bg" rows="5" aria-label="Room Description" name="room_description" placeholder="Write a Room Description" v-model="room_description"></textarea>
+              <span class="fw-light text-white-50" style="font-size: 12px;">contain only 420 characters</span>
             </div>
           </div>
           <div class="row mb-4">
@@ -132,7 +134,7 @@ export default {
       room_description: '',
       banner: '',
       room_photo: '',
-      quantity: '',
+      quantity: null,
       instrument_name: '',
       //>>v-model for input
       
@@ -191,17 +193,21 @@ export default {
       }
     },
     addInstrument() {
-      this.instrument_id++
-      const newInstrument = {
-        instrument: this.instrument_id,
-        quantity: this.quantity,
-        instrument_name: this.instrument_name 
-      }
+      if(!this.quantity.includes('.')){
+        this.instrument_id++
+        const newInstrument = {
+          instrument: this.instrument_id,
+          quantity: this.quantity,
+          instrument_name: this.instrument_name 
+        }
 
       this.instruments.push(newInstrument)
 
-      this.quantity = ''
+      this.quantity = null
       this.instrument_name = ''
+      }else{
+        this.$toast.error("Quantity must be integer!")
+      }
     },
     removeInstrument(index) {
       this.instruments.splice(index, 1)

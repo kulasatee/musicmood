@@ -2,7 +2,7 @@
   <div style="background-color: #131022" class="pb-5">
     <div>
       <div class="container-fluid p-0" style="height: 60vh">
-        <img
+        <img v-if="image_banner.length > 0"
           class="w-100"
           :src="`http://localhost:3001/${image_banner[0].file_path}`"
           alt=""
@@ -10,7 +10,7 @@
         />
       </div>
     </div>
-    <div class="container">
+    <div class="container" v-if="room">
       <div class="row">
         <div class="col py-5 ps-0 text-start">
           <span

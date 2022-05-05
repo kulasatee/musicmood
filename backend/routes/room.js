@@ -144,8 +144,8 @@ router.post("/rooms",isAuth, isStaff, async function (req, res, next) {
 
 //add image multer
 router.post("/images", upload.any(), function (req, res, next) {
-    const file = req.file;
-    
+    // const file = req.file;
+    // return res.send("upload image successfully")
     // if (!file) {
     //     const error = new Error("Please upload a file");
     //     error.httpStatusCode = 400;
