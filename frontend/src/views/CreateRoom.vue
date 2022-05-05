@@ -125,7 +125,6 @@ export default {
       //>>for dropdown
 
       //v-model for input
-      room_id: 0,
       room_name: '',
       type_name: '',
       room_status: '',
@@ -161,45 +160,34 @@ export default {
       }
 
       if(!this.room_name){
-        this.$toast.error(`Please fill out 'Room Name'`)   
+        this.$toast.error(`Please fill in Room Name`)   
       }else if(!this.type_name){
-        this.$toast.error(`Please fill out 'Room Type'`)   
+        this.$toast.error(`Please select Room Type`)   
       }else if(!this.room_status){
-        this.$toast.error(`Please fill out 'Room Status'`)   
+        this.$toast.error(`Please select Room Status`)   
       }else if(!this.room_price){
-        this.$toast.error(`Please fill out 'Room Price'`)   
+        this.$toast.error(`Please fill in Room Price`)   
       }else if(!this.room_description){
-        this.$toast.error(`Please fill out 'Room Description'`)
+        this.$toast.error(`Please fill in Room Description`)
       }else if(!this.$refs.bannerImage.value){
-        this.$toast.error(`Please upload 'Banner Photo'`)
+        this.$toast.error(`Please upload Banner Photo`)
       }else{
 
         console.log(newRoom)
 
         try {
           var res = await axios.post("/rooms", newRoom)
-          console.log(res)
+          console.log(res.data)
+          console.log('this')
           this.$toast.success(`'${this.room_name}' has been created!`)
+          this.$router.push({
+          path: `/room-detail/${res.data.id}`,
+      });
+
         } catch (error) {
           console.log(error)
-          this.$toast.error(error.message)
+          this.$toast.error(error.response.data)
         }
-        
-
-        this.room_id = 0
-        this.room_name = ''
-        this.type_name = ''
-        this.room_status = ''
-        this.room_price = ''
-        this.room_description = ''
-        this.banner = ''
-        this.room_photo = ''
-        this.quantity = ''
-        this.instrument_name = ''
-        this.instruments = []
-        this.show_select_type = ''
-        this.show_select_status = ''
-        this.$refs.bannerImage.value=null
       }
     },
     addInstrument() {
