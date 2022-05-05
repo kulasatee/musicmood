@@ -6,78 +6,15 @@
       <!-- Status nav -->
       <div class="row">
         <div class="btn-group">
-          <input
-            class="btn-check"
-            type="radio"
-            name="status-check"
-            id="all"
-            value="all"
-            v-model="selected_status"
-          />
-          <label
-            class="btn btn-custom status-bar"
-            :class="
-              selected_status == 'all' ? 'select-status-bar' : 'status-bar'
-            "
-            for="all"
-            >All Reservation</label
-          >
-
-          <input
-            class="btn-check"
-            type="radio"
-            name="status-check"
-            id="pending"
-            value="pending"
-            v-model="selected_status"
-          />
-          <label
-            class="btn btn-custom status-bar"
-            :class="
-              selected_status == 'pending' ? 'select-status-bar' : 'status-bar'
-            "
-            for="pending"
-            >Pending</label
-          >
-
-          <input
-            class="btn-check"
-            type="radio"
-            name="status-check"
-            id="approved"
-            value="approved"
-            v-model="selected_status"
-          />
-          <label
-            class="btn btn-custom status-bar"
-            :class="
-              selected_status == 'approved' ? 'select-status-bar' : 'status-bar'
-            "
-            for="approved"
-            >Approved</label
-          >
-
-          <input
-            class="btn-check"
-            type="radio"
-            name="status-check"
-            id="rejected"
-            value="rejected"
-            v-model="selected_status"
-          />
-          <label
-            class="btn btn-custom status-bar"
-            :class="
-              selected_status == 'rejected' ? 'select-status-bar' : 'status-bar'
-            "
-            for="rejected"
-            >Rejected</label
-          >
-
-          <label
-            class="btn status-bar"
-            style="width: 49rem; cursor: default"
-          ></label>
+          <input class="btn-check" type="radio" name="status-check" id="all" value="all" v-model="selected_status"/>
+          <label class="btn btn-custom status-bar" :class="selected_status == 'all' ? 'select-status-bar' : 'status-bar'" for="all">All Reservation</label>
+          <input class="btn-check" type="radio" name="status-check" id="pending" value="pending" v-model="selected_status"/>
+          <label class="btn btn-custom status-bar" :class="selected_status == 'pending' ? 'select-status-bar' : 'status-bar'" for="pending">Pending</label>
+          <input class="btn-check" type="radio" name="status-check" id="approved" value="approved" v-model="selected_status"/>
+          <label class="btn btn-custom status-bar" :class="selected_status == 'approved' ? 'select-status-bar' : 'status-bar'" for="approved">Approved</label>
+          <input class="btn-check" type="radio" name="status-check" id="rejected" value="rejected" v-model="selected_status"/>
+          <label class="btn btn-custom status-bar" :class="selected_status == 'rejected' ? 'select-status-bar' : 'status-bar'" for="rejected">Rejected</label>
+          <label class="btn status-bar" style="width: 49rem; cursor: default"></label>
         </div>
       </div>
 
@@ -94,215 +31,74 @@
       </div>
 
       <div class="row mt-3">
-        <ul
-          class="list-group list-group-horizontal res-list-group py-3 text-start fw-light align-items-center"
-          v-for="reservation in filteredReservation"
-          :key="reservation.reserve_id"
-          @click="showReservationModal(reservation)"
-        >
-          <li class="list-group-item ps-5" style="width: 11rem">
-            {{ reservation.inform_datetime }}
-          </li>
+        <ul class="list-group list-group-horizontal res-list-group py-3 text-start fw-light align-items-center" v-for="reservation in filteredReservation" :key="reservation.reserve_id" @click="showReservationModal(reservation)">
+          <li class="list-group-item ps-5" style="width: 11rem">{{ reservation.inform_datetime }}</li>
           <li class="list-group-item">{{ reservation.room_name }}</li>
           <li class="list-group-item">{{ reservation.room_type }}</li>
-          <li class="list-group-item" style="width: 7rem">
-            {{ reservation.total_price }} บาท
+          <li class="list-group-item" style="width: 7rem">{{ reservation.total_price }} บาท</li>
+          <li class="list-group-item" style="width: 8rem">{{ reservation.reserve_date}}</li>
+          <li class="list-group-item" style="width: 29rem">{{ reservation.hours }}</li>
+          <li class="list-group-item" v-if="reservation.reserve_status === 'pending'">
+            <button type="button" class="btn btn-outline-warning" style="cursor: pointer">Pending</button>
           </li>
-          <li class="list-group-item" style="width: 8rem">
-            {{ reservation.reserve_date}}
-          </li>
-          <li class="list-group-item" style="width: 29rem">
-            {{ reservation.hours }}
-          </li>
-          <li
-            class="list-group-item"
-            v-if="reservation.reserve_status === 'pending'"
-          >
-            <button
-              type="button"
-              class="btn btn-outline-warning"
-              style="cursor: pointer"
-            >
-              Pending
-            </button>
-          </li>
-          <li
-            class="list-group-item"
-            v-else-if="reservation.reserve_status === 'approved'"
-          >
-            <span class="fw-normal" style="color: #22c55e">Approved</span>
-          </li>
-          <li
-            class="list-group-item"
-            v-else-if="reservation.reserve_status === 'rejected'"
-          >
-            <span class="fw-normal text-danger">Rejected</span>
-          </li>
+          <li class="list-group-item" v-else-if="reservation.reserve_status === 'approved'"><span class="fw-normal" style="color: #22c55e">Approved</span></li>
+          <li class="list-group-item" v-else-if="reservation.reserve_status === 'rejected'"><span class="fw-normal text-danger">Rejected</span></li>
         </ul>
       </div>
 
       <!-- reservation modal -->
-      <div
-        class="modal fade"
-        id="reservationModal"
-        tabindex="-1"
-        aria-hidden="true"
-      >
+      <div class="modal fade" id="reservationModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content px-2 pb-3">
             <div class="modal-header align-contents-between d-flex">
               <div class="d-flex flex-column align-items-start">
-                <span class="modal-title fs-3">{{
-                  selected_reservation.room_name
-                }}</span
-                ><span class="fw-light"
-                  >Created Date:
-                  {{ selected_reservation.inform_datetime }}</span
-                >
+                <span class="modal-title fs-3">{{selected_reservation.room_name}}</span><span class="fw-light">Created Date: {{ selected_reservation.inform_datetime }}</span>
               </div>
               <div class="d-flex flex-row me-2">
-                <button
-                  v-if="selected_reservation.reserve_status == 'pending'"
-                  type="button"
-                  disabled
-                  class="btn btn-warning btn-sm ms-3"
-                >
-                  Pending
-                </button>
-                <button
-                  v-else-if="selected_reservation.reserve_status == 'approved'"
-                  type="button"
-                  disabled
-                  class="btn btn-success btn-sm ms-3"
-                >
-                  Approved
-                </button>
-                <button
-                  v-else-if="selected_reservation.reserve_status == 'rejected'"
-                  type="button"
-                  disabled
-                  class="btn btn-danger btn-sm ms-3"
-                >
-                  Rejected
-                </button>
-                <button
-                  type="button"
-                  class="btn-close ms-3"
-                  @click="reservation_modal.hide()"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
+                <button v-if="selected_reservation.reserve_status == 'pending'" type="button" disabled class="btn btn-warning btn-sm ms-3">Pending</button>
+                <button v-else-if="selected_reservation.reserve_status == 'approved'" type="button" disabled class="btn btn-success btn-sm ms-3">Approved</button>
+                <button v-else-if="selected_reservation.reserve_status == 'rejected'" type="button" disabled class="btn btn-danger btn-sm ms-3">Rejected</button>
+                <button type="button" class="btn-close ms-3" @click="reservation_modal.hide()" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
             </div>
             <div class="modal-body text-start">
               <div class="mt-2">
-                <span>Room Type:</span
-                ><span class="fw-light ms-3">{{
-                  selected_reservation.room_type
-                }}</span>
+                <span>Room Type:</span><span class="fw-light ms-3">{{selected_reservation.room_type}}</span>
               </div>
               <div class="mt-2">
-                <span>Reserve Date:</span
-                ><span class="fw-light ms-3">{{
-                  selected_reservation.reserve_date
-                }}</span>
+                <span>Reserve Date:</span><span class="fw-light ms-3">{{selected_reservation.reserve_date}}</span>
               </div>
-              <div class="mt-2"><span>Reserve Time:</span></div>
+              <div class="mt-2">
+                <span>Reserve Time:</span>
+              </div>
               <div class="row mt-2 ps-2">
-                <div
-                  v-for="(hour, index) in reserve_hours_modal"
-                  :key="index"
-                  class="col-3 p-1"
-                >
-                  <input
-                    disabled
-                    type="checkbox"
-                    class="btn-check"
-                    :id="'btn-check' + hour"
-                  />
-                  <label
-                    class="selecttimebtn w-100 text-center rounded p-1"
-                    :for="'btn-check' + hour"
-                    style=""
-                    >{{ parseInt(hour) }}.00 - {{ parseInt(hour) + 1 }}.00</label
-                  >
+                <div v-for="(hour, index) in reserve_hours_modal" :key="index" class="col-3 p-1">
+                  <input disabled type="checkbox" class="btn-check" :id="'btn-check' + hour"/>
+                  <label class="selecttimebtn w-100 text-center rounded p-1" :for="'btn-check' + hour" style="">{{ parseInt(hour) }}.00 - {{ parseInt(hour) + 1 }}.00</label>
                 </div>
               </div>
               <div class="mt-2">
-                <span>Total Price:</span
-                ><span class="fw-light ms-3"
-                  >{{ selected_reservation.total_price }} บาท</span
-                >
+                <span>Total Price:</span><span class="fw-light ms-3">{{ selected_reservation.total_price }} บาท</span>
               </div>
               <div class="mt-2">
-                <span>Customer Name:</span
-                ><span class="fw-light ms-3">{{
-                  selected_reservation.firstname +
-                  " " +
-                  selected_reservation.lastname
-                }}</span>
+                <span>Customer Name:</span><span class="fw-light ms-3">{{ selected_reservation.firstname + " " + selected_reservation.lastname }}</span>
               </div>
               <div class="mt-2">
-                <span>Phone:</span
-                ><span class="fw-light ms-3">{{
-                  selected_reservation.phone
-                }}</span>
+                <span>Phone:</span><span class="fw-light ms-3">{{ selected_reservation.phone }}</span>
+              </div>
+              <div class="mt-2" v-if="selected_reservation.reserve_status == 'pending'">
+                <label for="exampleFormControlTextarea1" class="form-label">Remark:</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="write some remark" rows="3" v-model="reservation_remark" style="resize: none"></textarea>
               </div>
               <div
-                class="mt-2"
-                v-if="selected_reservation.reserve_status == 'pending'"
-              >
-                <label for="exampleFormControlTextarea1" class="form-label"
-                  >Remark:</label
-                >
-                <textarea
-                  class="form-control"
-                  id="exampleFormControlTextarea1"
-                  placeholder="write some remark"
-                  rows="3"
-                  v-model="reservation_remark"
-                  style="resize: none"
-                ></textarea>
-              </div>
-              <div
-                class="mt-2"
-                v-else-if="
-                  selected_reservation.reserve_status == 'rejected' ||
-                  selected_reservation.reserve_status == 'approved'
-                "
-              >
-                <label for="exampleFormControlTextarea2" class="form-label"
-                  >Remark:</label
-                >
-                <textarea
-                  class="form-control"
-                  id="exampleFormControlTextarea2"
-                  rows="3"
-                  disabled
-                  v-model="selected_reservation.reserve_remark"
-                  style="resize: none"
-                ></textarea>
+                class="mt-2" v-else-if="selected_reservation.reserve_status == 'rejected' || selected_reservation.reserve_status == 'approved'">
+                <label for="exampleFormControlTextarea2" class="form-label">Remark:</label>
+                <textarea class="form-control" id="exampleFormControlTextarea2" rows="3" disabled v-model="selected_reservation.reserve_remark" style="resize: none"></textarea>
               </div>
             </div>
-            <div
-              class="modal-footer"
-              v-if="selected_reservation.reserve_status == 'pending'"
-            >
-              <button
-                type="button"
-                class="btn btn-outline-danger"
-                @click="rejectReservation()"
-                data-bs-dismiss="modal"
-              >
-                REJECT
-              </button>
-              <button
-                type="button"
-                class="btn btn-green"
-                @click="approveReservation()"
-              >
-                APPROVE
-              </button>
+            <div class="modal-footer" v-if="selected_reservation.reserve_status == 'pending'">
+              <button type="button" class="btn btn-outline-danger" @click="rejectReservation()" data-bs-dismiss="modal">REJECT</button>
+              <button type="button" class="btn btn-green" @click="approveReservation()">APPROVE</button>
             </div>
           </div>
         </div>
@@ -370,24 +166,21 @@ export default {
       .catch((err) => {
         console.log(err.response.data);
       });
+    
     //format hours
-    let hours_concat = "";
-    for (let index = 0; index < this.reservation_list.length; index++) {
-      for (
-        let i = 0;
-        i < this.reservation_list[index].reserve_hours.length;
-        i++
-      ) {
-        hours_concat +=
-          this.reservation_list[index].reserve_hours[i] +
-          ".00-" +
-          (parseInt(this.reservation_list[index].reserve_hours[i]) + 1) +
-          ".00, ";
-      }
-      var result = hours_concat.substring(0, hours_concat.length - 2);
-      this.reservation_list[index]["hours"] = result;
-      hours_concat = "";
-    }
+    // let hours_concat = "";
+    // for (let index = 0; index < this.reservation_list.length; index++) {
+    //   for (let i = 0; i < this.reservation_list[index].reserve_hours.length; i++) {
+    //     hours_concat +=
+    //       this.reservation_list[index].reserve_hours[i] +
+    //       ".00-" +
+    //       (parseInt(this.reservation_list[index].reserve_hours[i]) + 1) +
+    //       ".00, ";
+    //   }
+    //   var result = hours_concat.substring(0, hours_concat.length - 2);
+    //   this.reservation_list[index]["hours"] = result;
+    //   hours_concat = "";
+    // }
   },
   methods: {
     showReservationModal(reservation) {
@@ -397,10 +190,8 @@ export default {
 
       this.selected_reservation = reservation;
 
-      this.inform_datetime_modal =
-        this.selected_reservation.inform_datetime.substring(0, 10);
-      this.reserve_datetime_modal =
-        this.selected_reservation.reserve_date.substring(0, 10);
+      this.inform_datetime_modal = this.selected_reservation.inform_datetime.substring(0, 10);
+      this.reserve_datetime_modal = this.selected_reservation.reserve_date.substring(0, 10);
       this.reserve_hours_modal = this.selected_reservation.reserve_hours.split(',')
       this.reservation_modal.show();
 
@@ -411,10 +202,7 @@ export default {
         })
         .then((response) => {
           this.reservation_specific_date = response.data;
-          this.reservation_specific_date =
-            this.reservation_specific_date.filter(
-              (val) => val.reserve_status == "approved"
-            );
+          this.reservation_specific_date = this.reservation_specific_date.filter((val) => val.reserve_status == "approved");
         })
         .catch((err) => {
           console.log(err.response.data);

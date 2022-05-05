@@ -3,6 +3,7 @@ const path = require("path")
 const pool = require("../config");
 const multer = require('multer')
 const { isAuth, isStaff } = require("./auth/jwtAuth")
+const Joi = require('joi');
 
 router = express.Router();
 
@@ -78,9 +79,36 @@ router.get("/rooms/:room_id/instruments", async function (req, res, next) {
     }
 });
 
+const manageRoomSchema = Joi.object({
+    room_name: Joi.string().max(30).required().label("Room Name must be contain only 30 characters"),
+    type_name: Joi.string().required().label("Please select Room type"),
+    room_status: Joi.string().required().label("Please select Room Status"),
+    room_price: Joi.number().integer().required().label("Please fill in Room Price"),
+    room_description: Joi.string().max(420).required().label("Room Description must be contain only 420 characters"),
+})
+
 //add new room
 router.post("/rooms",isAuth, isStaff, async function (req, res, next) {
     console.log(req.body)
+
+    const validateField= {
+        room_name: req.body.room_name, 
+        type_name: req.body.type_name, 
+        room_status: req.body.room_status, 
+        room_price: req.body.room_price, 
+        room_description: req.body.room_description
+    }
+
+    try{
+        console.log(validateField)
+        console.log('this')
+        await manageRoomSchema.validateAsync(validateField, {abortEarly: false})
+    }catch (err){
+        console.log(err.details)
+        if(err.details != undefined){
+          return res.status(400).json(err.details[0].message.split('" ')[0].substr(1))
+        }
+    }
 
     const conn = await pool.getConnection()
     // Begin transaction
@@ -104,7 +132,7 @@ router.post("/rooms",isAuth, isStaff, async function (req, res, next) {
             [rooms.insertId, '/uploads/'+banner_image_path, 1]);
         
         await conn.commit()
-        return res.send('A new room is added (ID: '+ rooms.insertId +')');
+        return res.json({id: rooms.insertId})
     } catch (err) {
         await conn.rollback();
         return next(err);
@@ -130,6 +158,24 @@ router.post("/images", upload.any(), function (req, res, next) {
 router.put("/rooms/:room_id",isAuth, isStaff, async function (req, res, next) {
     console.log(req.params.room_id)
     console.log(req.body)
+
+    const validateField= {
+        room_name: req.body.room_name, 
+        type_name: req.body.type_name, 
+        room_status: req.body.room_status, 
+        room_price: req.body.room_price, 
+        room_description: req.body.room_description
+    }
+
+    try{
+        await manageRoomSchema.validateAsync(validateField, {abortEarly: false})
+    }catch (err){
+        console.log(err.details)
+        if(err.details != undefined){
+          return res.status(400).json(err.details[0].message.split('" ')[0].substr(1))
+        }
+    }
+
     const conn = await pool.getConnection()
     // Begin transaction
     await conn.beginTransaction();

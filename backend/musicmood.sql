@@ -57,7 +57,7 @@ CREATE TABLE `rooms` (
   `room_name` varchar(255) NOT NULL UNIQUE,
   `room_type` ENUM('ห้องซ้อมดนตรี', 'ห้องซ้อมเต้น', 'ห้องอัดเสียง') NOT NULL,
   `room_status` ENUM('พร้อมใช้งาน', 'ไม่พร้อมใช้งาน') NOT NULL,
-  `room_price` FLOAT NOT NULL,
+  `room_price` int NOT NULL,
   `room_description` TEXT NOT NULL,
   PRIMARY KEY (`room_id`),
   UNIQUE KEY `room_id` (`room_id`)

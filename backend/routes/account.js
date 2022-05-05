@@ -75,7 +75,7 @@ router.post("/signup", async function (req, res, next) {
 
 
 const usernameCheckValidator = async (value, helpers) => {
-  const [account_rows, account_field] = await pool.query('SELECT username FROM accounts WHERE username=?',[value])
+  const [account_rows, account_field] = await pool.query('SELECT username FROM accounts WHERE BINARY username=?',[value])
 
   if(account_rows.length == 0){
     console.log(account_rows.length)
@@ -94,7 +94,7 @@ router.post("/login", async function (req, res, next){
     try{
       await loginSchema.validateAsync({username: req.body.username, password: req.body.password}, {abortEarly: false})
 
-      const [account_row, account_filed] = await pool.query("SELECT * FROM accounts WHERE username=?", [req.body.username]);
+      const [account_row, account_filed] = await pool.query("SELECT * FROM accounts WHERE BINARY username=?", [req.body.username]);
 
 
       if(!(await bcrypt.compare(req.body.password,account_row[0].password))){

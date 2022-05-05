@@ -189,34 +189,29 @@ export default {
         banner_image: this.files
       }
       if(!this.room_name){
-        this.$toast.error(`Please fill out 'Room Name'`)   
+        this.$toast.error(`Please fill in Room Name`)   
       }else if(!this.type_name){
-        this.$toast.error(`Please fill out 'Room Type'`)   
+        this.$toast.error(`Please select Room Type`)   
       }else if(!this.room_status){
-        this.$toast.error(`Please fill out 'Room Status'`)   
+        this.$toast.error(`Please select Room Status`)   
       }else if(!this.room_price){
-        this.$toast.error(`Please fill out 'Room Price'`)   
+        this.$toast.error(`Please fill in Room Price`)   
       }else if(!this.room_description){
-        this.$toast.error(`Please fill out 'Room Description'`)   
+        this.$toast.error(`Please fill in Room Description`)   
       }else{
   
+        try {
+          var res = await axios.put(`/rooms/${this.$route.params.id}`, editRoom)
+          console.log(res)
+
+          this.$toast.success(`'${this.room_name}' has been edited!`)
+
+          this.quantity = ''
+          this.instrument_name = ''
+        } catch (error) {
+          this.$toast.error(error.response.data)
+        }
         
-      var res = await axios.put(`/rooms/${this.$route.params.id}`, editRoom)
-      console.log(res)
-
-        this.$toast.success(`'${this.room_name}' has been edited!`)
-
-        // this.room_name = this.rooms[0].room_name
-        // this.type_name = this.rooms[0].type_name
-        // this.room_status = this.rooms[0].room_status
-        // this.show_select_type = this.rooms[0].type_name
-        // this.show_select_status = this.rooms[0].room_status
-        // this.room_price = this.rooms[0].room_price
-        // this.room_description = this.rooms[0].room_description
-        // this.instruments = this.rooms[0].room_instrument
-
-        this.quantity = ''
-        this.instrument_name = ''
       }
     },
     addInstrument() {
