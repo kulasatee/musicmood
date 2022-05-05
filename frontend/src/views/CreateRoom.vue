@@ -89,7 +89,7 @@
       <div class="row h-25">
         <!-- submit form button -->
           <div class="col pt-2 text-end me-5">
-            <button type="button" class="btn btn-lg btn-sec">CANCEL</button>
+            <router-link to="/room-list" type="button" class="btn btn-lg btn-sec">CANCEL</router-link>
             <button type="submit" value="submit" class="btn btn-lg btn-pri ms-4" @click="addRoom()">CREATE ROOM</button>
           </div>
       </div>

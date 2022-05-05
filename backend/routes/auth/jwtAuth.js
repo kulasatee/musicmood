@@ -22,14 +22,12 @@ function isAuth(req, res, next){
             return res.status(403).json(err.message);
         }
         req.user = user;
-        console.log(req.user)
         next()
     })
 }
 
 function isStaff(req,res,next){
     if(req.user.role != 'staff'){
-        console.log("non")
         return res.status(403).send("You do not have permission to perform this action");
     }else{
         next()
