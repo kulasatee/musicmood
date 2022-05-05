@@ -64,6 +64,11 @@ const routes = [
     name: 'ReservationStatus',
     component: () => import('../views/ReservationStatus.vue') // set home as path '/'
   },
+  {
+    path: '*',
+    name: 'ErrorPage',
+    component: () => import('../views/ErrorPage.vue') // set home as path '/'
+  },
 ]
 
 const router = new VueRouter({
